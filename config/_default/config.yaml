@@ -1,6 +1,5 @@
 baseurl: https://zhaoyifengf.github.io/
 languageCode: zh-cn
-theme: hugo-theme-stack
 title: 峰峰的博客
 copyright: 峰峰
 
@@ -17,9 +16,6 @@ languages:
         languageName: 中文
         title: 峰峰的博客
         weight: 2
-        params:
-            sidebar:
-                subtitle: 峰峰的博客
 
 services:
     # Change it to your Disqus shortname before using
