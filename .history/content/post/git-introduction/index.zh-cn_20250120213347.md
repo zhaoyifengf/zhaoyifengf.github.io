@@ -244,6 +244,7 @@ git config --global user.email "邮箱"
 			git merge --ff(fast-forward): 如果能快进则快进分支即移动指针
 			git merge --no-ff(no-fast-forword): 即使能快进也会创建一个新的commit(内容和被合并分支的commit相同)
 			git merge --squash: 将被合并节点的修改的内容（保存删除操作）加载到工作区和暂存区，等待一次新的提交
+
    8. 合并时发生冲突：如果不同分支修改了同一部分，那合并时可能发生冲突。
 		```
 		git merge iss53
@@ -261,220 +262,235 @@ git config --global user.email "邮箱"
 		</div>
 		>>>>>>> iss53:index.html
 		```
-		=======上面是当前分支文件中的内容，下面是iss53分支的内容。手动解决冲突，然后执行`git add index.html`，一旦进入暂存区就代表冲突已解决。再执行`git commit`。
-   9. 删除分支：`git branch -d 分支名`，删除指定的分支。
-   10. 分支的管理
-		查看当前有哪些分支，其中*表示当前分支即HEAD指向的分支`git branch`
-		```
-		zhaoyifeng@MacBook-Air-6 test % git branch 
-		* master
-		testing
-		```
-		查看分支最后一次提交的信息`git branch -v`
-		```
-		zhaoyifeng@MacBook-Air-6 test % git branch -v
-		* master  e13db42 Merge branch 'testing'
-		testing ad69ccd testing第四次提交
-		```
-   11. 查看已合并到当前分支的分支：`git branch --merged`
+=======上面是当前分支文件中的内容，下面是iss53分支的内容。手动解决冲突，然后执行`git add index.html`，一旦进入暂存区就代表冲突已解决。再执行`git commit`。
 
-   12. 查看未合并到当前分支的分支：`git branch --no-merged`
+1. 删除分支：`git branch -d 分支名`，删除指定的分支。
 
-   13. 远程分支
-       - 远程仓库的添加与查看
-		添加远程仓库，url是远程仓库的地址，shorname是给url对应的远程仓库的命名。执行`git clone url`后会自动添加一个远程仓库并将其命名为origin，并且克隆这个远程仓库到本地。
-			````
-			git remote add <shortname> <url>	
-			````
-		查看远程仓库
-			````
-			zhaoyifeng@MacBook-Air-6 mytest % git remote
-			origin
-			````
-		查看远程仓库和对应的URL，fetch表示拉取的链接，push表示推送的链接。
-			````
-			zhaoyifeng@MacBook-Air-6 mytest % git remote -v
-			origin	https://gitee.com/zhao-jufeng/mytest/ (fetch)
-			origin	https://gitee.com/zhao-jufeng/mytest/ (push)
-			````
-		查看某个远程仓库的具体信息
+2.  分支的管理
+查看当前有哪些分支，其中*表示当前分支即HEAD指向的分支`git branch`
+```
+zhaoyifeng@MacBook-Air-6 test % git branch 
+* master
+  testing
+```
+查看分支最后一次提交的信息`git branch -v`
+```
+zhaoyifeng@MacBook-Air-6 test % git branch -v
+* master  e13db42 Merge branch 'testing'
+  testing ad69ccd testing第四次提交
+```
 
-			````
-			zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
-			* 远程 origin
-			获取地址：https://gitee.com/zhao-jufeng/mytest/
-			推送地址：https://gitee.com/zhao-jufeng/mytest/
-			HEAD 分支：master
-			远程分支：
-			dev    已跟踪
-			master 已跟踪
-			为 'git pull' 配置的本地分支：ƒ
-			master 与远程 master 合并
-			为 'git push' 配置的本地引用：
-			master 推送至 master (最新)
-			````
+1.  查看已合并到当前分支的分支：`git branch --merged`
+
+2.  查看未合并到当前分支的分支：`git branch --no-merged`
+
+3.  远程分支
+- 远程仓库的添加与查看
 	
-       - 远程分支的查看：远程分支是存储在本地对应着远程数据库中分支的分支。
+	添加远程仓库，url是远程仓库的地址，shorname是给url对应的远程仓库的命名。执行`git clone url`后会自动添加一个远程仓库并将其命名为origin，并且克隆这个远程仓库到本地。
 
-			`git branch`：只能查看本地分支
+	````
+	git remote add <shortname> <url>	
+	````
 
-			`git branch -r`：查看远程分支
+	查看远程仓库
 
-			远程仓库含有master和dev分支，执行`git clone https://gitee.com/zhao-jufeng/mytest/`命令后执行`git branch -r`可以得到：
-				```
-				zhaoyifeng@MacBook-Air-6 mytest % git branch -r
-				origin/HEAD -> origin/master
-				origin/dev
-				origin/master
-				```
-			可以看到有两个远程分支，origin是远程仓库的名字，执行clone命令时默命名为origin。需要注意的是，这些分支也存储在本地，与远程仓库作一一映射。
+	````
+	zhaoyifeng@MacBook-Air-6 mytest % git remote
+	origin
 
-			执行`tree .git`查看.git的目录结构：
+	````
+	查看远程仓库和对应的URL，fetch表示拉取的链接，push表示推送的链接。
 
-				```
-				zhaoyifeng@MacBook-Air-6 mytest % tree .git
-				.git
-				├── HEAD
-				├── config
-				├── description
-				├── hooks
-				│   ├── applypatch-msg.sample
-				│   ├── commit-msg.sample
-				│   ├── fsmonitor-watchman.sample
-				│   ├── post-update.sample
-				│   ├── pre-applypatch.sample
-				│   ├── pre-commit.sample
-				│   ├── pre-merge-commit.sample
-				│   ├── pre-push.sample
-				│   ├── pre-rebase.sample
-				│   ├── pre-receive.sample
-				│   ├── prepare-commit-msg.sample
-				│   ├── push-to-checkout.sample
-				│   ├── sendemail-validate.sample
-				│   └── update.sample
-				├── index
-				├── info
-				│   └── exclude
-				├── logs
-				│   ├── HEAD
-				│   └── refs
-				│       ├── heads
-				│       │   └── master
-				│       └── remotes
-				│           └── origin
-				│               └── HEAD
-				├── objects
-				│   ├── info
-				│   └── pack
-				│       ├── pack-d93bb5ea2faba296524bc440149ae8b102f490cf.idx
-				│       ├── pack-d93bb5ea2faba296524bc440149ae8b102f490cf.pack
-				│       └── pack-d93bb5ea2faba296524bc440149ae8b102f490cf.rev
-				├── packed-refs
-				└── refs
-					├── heads
-					│   └── master
-					├── remotes
-					│   └── origin
-					│       └── HEAD
-					└── tags
-				```
-			远程的refs中的内容被压缩到了packed-refs中，查看其内容可以看到两个远程分支。
-				```
-				cat .git/packed-refs
-				# pack-refs with: peeled fully-peeled sorted 
-				7eb1322ce1fa2104ac76d996c08eb1a861860cc1 refs/remotes/origin/dev
-				7eb1322ce1fa2104ac76d996c08eb1a861860cc1 refs/remotes/origin/master
-				```
-			如果refs中含有远程分支，则该分支是最新的，packed-refs对远程分支的压缩有延迟。
-			执行`git log`可以查看历史，master, origin/master, origin/dev, origin/HEAD都指向了一个commit对象。
-			```
-			zhaoyifeng@MacBook-Air-6 mytest % git log
-			commit 7eb1322ce1fa2104ac76d996c08eb1a861860cc1 (HEAD -> master, origin/master, origin/dev, origin/HEAD)
-			Author: 赵已峰 <zhaoyifeng@lixiang.com>
-			Date:   Fri Jul 7 01:25:14 2023 +0000
+	````
+	zhaoyifeng@MacBook-Air-6 mytest % git remote -v
+	origin	https://gitee.com/zhao-jufeng/mytest/ (fetch)
+	origin	https://gitee.com/zhao-jufeng/mytest/ (push)
+	````
 
-				add test.txt.
-			
-				Signed-off-by: 赵已峰 <zhaoyifeng@lixiang.com>
+	查看某个远程仓库的具体信息
 
-			commit d6ce159ed51c87cd4e7531dfbbeb6015e5c22f1f
-			Author: 赵已峰 <zhaoyifeng@lixiang.com>
-			Date:   Fri Jul 7 01:24:38 2023 +0000
+	````
+	zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
+	* 远程 origin
+  获取地址：https://gitee.com/zhao-jufeng/mytest/
+  推送地址：https://gitee.com/zhao-jufeng/mytest/
+  HEAD 分支：master
+  远程分支：
+    dev    已跟踪
+    master 已跟踪
+  为 'git pull' 配置的本地分支：ƒ
+    master 与远程 master 合并
+  为 'git push' 配置的本地引用：
+    master 推送至 master (最新)
+	````
+	
+- 远程分支的查看：远程分支是存储在本地对应着远程数据库中分支的分支。
 
-				Initial commit
-			```
+	`git branch`：只能查看本地分支
+
+	`git branch -r`：查看远程分支
+
+	远程仓库含有master和dev分支，执行`git clone https://gitee.com/zhao-jufeng/mytest/`命令后执行`git branch -r`可以得到：
+	```
+	zhaoyifeng@MacBook-Air-6 mytest % git branch -r
+  	origin/HEAD -> origin/master
+  	origin/dev
+  	origin/master
+	```
+	可以看到有两个远程分支，origin是远程仓库的名字，执行clone命令时默命名为origin。需要注意的是，这些分支也存储在本地，与远程仓库作一一映射。
+
+	执行`tree .git`查看.git的目录结构：
+
+	```
+	zhaoyifeng@MacBook-Air-6 mytest % tree .git
+	.git
+	├── HEAD
+	├── config
+	├── description
+	├── hooks
+	│   ├── applypatch-msg.sample
+	│   ├── commit-msg.sample
+	│   ├── fsmonitor-watchman.sample
+	│   ├── post-update.sample
+	│   ├── pre-applypatch.sample
+	│   ├── pre-commit.sample
+	│   ├── pre-merge-commit.sample
+	│   ├── pre-push.sample
+	│   ├── pre-rebase.sample
+	│   ├── pre-receive.sample
+	│   ├── prepare-commit-msg.sample
+	│   ├── push-to-checkout.sample
+	│   ├── sendemail-validate.sample
+	│   └── update.sample
+	├── index
+	├── info
+	│   └── exclude
+	├── logs
+	│   ├── HEAD
+	│   └── refs
+	│       ├── heads
+	│       │   └── master
+	│       └── remotes
+	│           └── origin
+	│               └── HEAD
+	├── objects
+	│   ├── info
+	│   └── pack
+	│       ├── pack-d93bb5ea2faba296524bc440149ae8b102f490cf.idx
+	│       ├── pack-d93bb5ea2faba296524bc440149ae8b102f490cf.pack
+	│       └── pack-d93bb5ea2faba296524bc440149ae8b102f490cf.rev
+	├── packed-refs
+	└── refs
+	    ├── heads
+	    │   └── master
+	    ├── remotes
+	    │   └── origin
+	    │       └── HEAD
+	    └── tags
+	```
+	远程的refs中的内容被压缩到了packed-refs中，查看其内容可以看到两个远程分支。
+	```
+	cat .git/packed-refs
+	# pack-refs with: peeled fully-peeled sorted 
+	7eb1322ce1fa2104ac76d996c08eb1a861860cc1 refs/remotes/origin/dev
+	7eb1322ce1fa2104ac76d996c08eb1a861860cc1 refs/remotes/origin/master
+	```
+	如果refs中含有远程分支，则该分支是最新的，packed-refs对远程分支的压缩有延迟。
+
+	执行`git log`可以查看历史，master, origin/master, origin/dev, origin/HEAD都指向了一个commit对象。
+	```
+	zhaoyifeng@MacBook-Air-6 mytest % git log
+	commit 7eb1322ce1fa2104ac76d996c08eb1a861860cc1 (HEAD -> master, origin/master, origin/dev, origin/HEAD)
+	Author: 赵已峰 <zhaoyifeng@lixiang.com>
+	Date:   Fri Jul 7 01:25:14 2023 +0000
+
+	    add test.txt.
+    
+	    Signed-off-by: 赵已峰 <zhaoyifeng@lixiang.com>
+
+	commit d6ce159ed51c87cd4e7531dfbbeb6015e5c22f1f
+	Author: 赵已峰 <zhaoyifeng@lixiang.com>
+	Date:   Fri Jul 7 01:24:38 2023 +0000
+
+	    Initial commit
+	```
  
-       - 同步远程仓库中的分支到本地：在远程分支（本地存储的远程仓库的分支并不是远程仓库中的分支）上修改后提交或者执行merge命令不会移动远程分支，只有通过`git fetch`或者`git pull`才会改变远程分支。这是为了保持远程分支和远程仓库中的分支的对应关系，避免在本地对远程分支进行修改。 
+- 同步远程仓库中的分支到本地：在远程分支（本地存储的远程仓库的分支并不是远程仓库中的分支）上修改后提交或者执行merge命令不会移动远程分支，只有通过`git fetch`或者`git pull`才会改变远程分支。这是为了保持远程分支和远程仓库中的分支的对应关系，避免在本地对远程分支进行修改。 
 
-     	- `git fetch [remote-name]`：从远程仓库中拉取本地仓库没有的数据，这个操作会移动远程分支。
+	- `git fetch [remote-name]`：从远程仓库中拉取本地仓库没有的数据，这个操作会移动远程分支。
 
-			```
-			zhaoyifeng@MacBook-Air-6 mytest % git fetch
-			remote: Enumerating objects: 4, done.
-			remote: Counting objects: 100% (4/4), done.
-			remote: Compressing objects: 100% (2/2), done.
-			remote: Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
-			展开对象中: 100% (3/3), 967 字节 | 193.00 KiB/s, 完成.
-			来自 https://gitee.com/zhao-jufeng/mytest
-			7eb1322..f20bd41  master     -> origin/master
-			```
+	```
+	zhaoyifeng@MacBook-Air-6 mytest % git fetch
+	remote: Enumerating objects: 4, done.
+	remote: Counting objects: 100% (4/4), done.
+	remote: Compressing objects: 100% (2/2), done.
+	remote: Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
+	展开对象中: 100% (3/3), 967 字节 | 193.00 KiB/s, 完成.
+	来自 https://gitee.com/zhao-jufeng/mytest
+   7eb1322..f20bd41  master     -> origin/master
+	```
 
-     	- `git pull `：`git fetch`和`git merge`命名的组合
-			```
-			git pull 远程仓库名 远程仓库分支名:本地分支名
-			```
-			拉取远程仓库中的分支在与本地分支merge（需要注意的是这会拉取远程仓库中的所有分支）
-			如何入当前分支合并则可以省略本地分支名，简写为：
-			```
-			git pull 远程仓库名 远程仓库分支名
-			```
+	- `git pull `：`git fetch`和`git merge`命名的组合
+
+		```
+		git pull 远程仓库名 远程仓库分支名:本地分支名
+		```
+
+		拉取远程仓库中的分支在与本地分支merge（需要注意的是这会拉取远程仓库中的所有分支）
+
+		如何入当前分支合并则可以省略本地分支名，简写为：
+		
+		```
+		git pull 远程仓库名 远程仓库分支名
+		```
 
 		
-     - 删除远程分支：
-     	删除远程仓库中的分支再查看会出现如下提示：
+- 删除远程分支：
 
-     	```
-     	zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
-     	* 远程 origin
-        获取地址：https://gitee.com/zhao-jufeng/mytest/
-        推送地址：https://gitee.com/zhao-jufeng/mytest/
-        HEAD 分支：master
-        远程分支：
-        master                  已跟踪
-        refs/remotes/origin/dev 已过期（使用 'git remote prune' 来移除）
-        为 'git pull' 配置的本地分支：
-        master 与远程 master 合并
-        为 'git push' 配置的本地引用：
-        master 推送至 master (本地已过时)
-     	```
+	删除远程仓库中的分支再查看会出现如下提示：
 
-     	提示远程分支已过期，建议删除。执行如下命名删除：
+	```
+	zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
+	* 远程 origin
+  获取地址：https://gitee.com/zhao-jufeng/mytest/
+  推送地址：https://gitee.com/zhao-jufeng/mytest/
+  HEAD 分支：master
+  远程分支：
+    master                  已跟踪
+    refs/remotes/origin/dev 已过期（使用 'git remote prune' 来移除）
+  为 'git pull' 配置的本地分支：
+    master 与远程 master 合并
+  为 'git push' 配置的本地引用：
+    master 推送至 master (本地已过时)
+	```
+	提示远程分支已过期，建议删除。执行如下命名删除：
 
-     	```
-     	zhaoyifeng@MacBook-Air-6 mytest % git remote prune origin
-     	修剪 origin
-     	URL：https://gitee.com/zhao-jufeng/mytest/
-     	* [已删除] origin/dev
-     	```
-     	或者`git fetch --prune`先删远程仓库中没有的本地远程分支，然后再拉取远程仓库中的数据。
+	```
+	zhaoyifeng@MacBook-Air-6 mytest % git remote prune origin
+	修剪 origin
+	URL：https://gitee.com/zhao-jufeng/mytest/
+	* [已删除] origin/dev
+	```
+	或者`git fetch --prune`先删远程仓库中没有的本地远程分支，然后再拉取远程仓库中的数据。
 
-     - 本地仓库同步到远程仓库
+- 本地仓库同步到远程仓库
 
-     	- `git push 远程仓库名 本地分支名:远程仓库中的分支名`：用本地仓库中的分支更新远程仓库的分支，这会让远程仓库的分支直接指向本地仓库的分支指向的commit，此外，与远程仓库中对应的远程分支也会指向本地分支指向的commit。注意，这并不要本地仓库中有远程仓库中对应的远程分支。
+	- `git push 远程仓库名 本地分支名:远程仓库中的分支名`：用本地仓库中的分支更新远程仓库的分支，这会让远程仓库的分支直接指向本地仓库的分支指向的commit，此外，与远程仓库中对应的远程分支也会指向本地分支指向的commit。注意，这并不要本地仓库中有远程仓库中对应的远程分支。
 
-     	- 如果本地分支名与远程仓库中的分支名相同，则可以简写为`git push 远程仓库名 分支名`
+	- 如果本地分支名与远程仓库中的分支名相同，则可以简写为`git push 远程仓库名 分支名`
 
-     	- 跟踪分支：执行git push命令时需要同指定远程仓库名、本地分支名和远程分支名，而跟踪分支则可简化这个操作。
-     	
-     		跟踪分支：本地分支和某个远程分支建立联系后那这个本地分支就变成一个跟踪分支。在跟踪分支上执行`git push`和`git pull`命令时无需指定远程仓库名、本地分支名和远程分支名。
+	- 跟踪分支：执行git push命令时需要同指定远程仓库名、本地分支名和远程分支名，而跟踪分支则可简化这个操作。
+	
+		跟踪分支：本地分支和某个远程分支建立联系后那这个本地分支就变成一个跟踪分支。在跟踪分支上执行`git push`和`git pull`命令时无需指定远程仓库名、本地分支名和远程分支名。
 
-     	- 跟踪分支的创建
-     	
-     		- 在远程分支上创建分支时指定其为远程分支（建的本地分支名与远程分支名相同）：`$ git checkout --track 远程仓库名/远程分支名`
+	- 跟踪分支的创建
+	
+		- 在远程分支上创建分支时指定其为远程分支（建的本地分支名与远程分支名相同）：`$ git checkout --track 远程仓库名/远程分支名`
 
-     		- 在远程分支上创建分支时指定其为远程分支（指定本地分支名）：`git checkout -b 本地分支名 远程仓库名/远程分支名`
+		- 在远程分支上创建分支时指定其为远程分支（指定本地分支名）：`git checkout -b 本地分支名 远程仓库名/远程分支名`
 
-     		- 指定已有的本地分支为莫哥远程分支的跟踪分支：`git branch -u 远程仓库名/远程分支名`
+		- 指定已有的本地分支为莫哥远程分支的跟踪分支：`git branch -u 远程仓库名/远程分支名`
 
 ## git中的标签
 ### 什么是标签
