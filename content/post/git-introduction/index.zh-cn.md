@@ -3,7 +3,7 @@ title: Git Introduction
 description: 
 slug: git-introduction
 date: 2025-01-03 22:04:00+0000
-image: cover.jpg
+image: cover.png
 categories:
     - Git
 tags:
