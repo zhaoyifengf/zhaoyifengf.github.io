@@ -469,7 +469,7 @@ weight: 1       # You can add weight to some posts to override the default sorti
   
      		跟踪分支：本地分支和某个远程分支建立联系后那这个本地分支就变成一个跟踪分支。在跟踪分支上执行`git push`和`git pull`命令时无需指定远程仓库名、本地分支名和远程分支名。
 
-       - 跟踪分支的创建
+     	- 跟踪分支的创建
      	
      		- 在远程分支上创建分支时指定其为远程分支（建的本地分支名与远程分支名相同）：`$ git checkout --track 远程仓库名/远程分支名`
 

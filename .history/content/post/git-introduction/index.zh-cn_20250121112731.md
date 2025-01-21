@@ -434,42 +434,42 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
      		删除远程仓库中的分支再查看会出现如下提示：
 
-			```
-			zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
-			* 远程 origin
-			获取地址：https://gitee.com/zhao-jufeng/mytest/
-			推送地址：https://gitee.com/zhao-jufeng/mytest/
-			HEAD 分支：master
-			远程分支：
-			master                  已跟踪
-			refs/remotes/origin/dev 已过期（使用 'git remote prune' 来移除）
-			为 'git pull' 配置的本地分支：
-			master 与远程 master 合并
-			为 'git push' 配置的本地引用：
-			master 推送至 master (本地已过时)
-			```
+     	```
+     	zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
+     	* 远程 origin
+        获取地址：https://gitee.com/zhao-jufeng/mytest/
+        推送地址：https://gitee.com/zhao-jufeng/mytest/
+        HEAD 分支：master
+        远程分支：
+        master                  已跟踪
+        refs/remotes/origin/dev 已过期（使用 'git remote prune' 来移除）
+        为 'git pull' 配置的本地分支：
+        master 与远程 master 合并
+        为 'git push' 配置的本地引用：
+        master 推送至 master (本地已过时)
+     	```
 
-     		提示远程分支已过期，建议删除。执行如下命名删除：
+     	提示远程分支已过期，建议删除。执行如下命名删除：
 
-			```
-			zhaoyifeng@MacBook-Air-6 mytest % git remote prune origin
-			修剪 origin
-			URL：https://gitee.com/zhao-jufeng/mytest/
-			* [已删除] origin/dev
-			```
-     		或者`git fetch --prune`先删远程仓库中没有的本地远程分支，然后再拉取远程仓库中的数据。
+     	```
+     	zhaoyifeng@MacBook-Air-6 mytest % git remote prune origin
+     	修剪 origin
+     	URL：https://gitee.com/zhao-jufeng/mytest/
+     	* [已删除] origin/dev
+     	```
+     	或者`git fetch --prune`先删远程仓库中没有的本地远程分支，然后再拉取远程仓库中的数据。
 
-       - 本地仓库同步到远程仓库
+     - 本地仓库同步到远程仓库
 
-         - `git push 远程仓库名 本地分支名:远程仓库中的分支名`：用本地仓库中的分支更新远程仓库的分支，这会让远程仓库的分支直接指向本地仓库的分支指向的commit，此外，与远程仓库中对应的远程分支也会指向本地分支指向的commit。注意，这并不要本地仓库中有远程仓库中对应的远程分支。
+     	- `git push 远程仓库名 本地分支名:远程仓库中的分支名`：用本地仓库中的分支更新远程仓库的分支，这会让远程仓库的分支直接指向本地仓库的分支指向的commit，此外，与远程仓库中对应的远程分支也会指向本地分支指向的commit。注意，这并不要本地仓库中有远程仓库中对应的远程分支。
 
-         - 如果本地分支名与远程仓库中的分支名相同，则可以简写为`git push 远程仓库名 分支名`
+     	- 如果本地分支名与远程仓库中的分支名相同，则可以简写为`git push 远程仓库名 分支名`
 
-       - 跟踪分支：执行git push命令时需要同指定远程仓库名、本地分支名和远程分支名，而跟踪分支则可简化这个操作。
-  
+     	- 跟踪分支：执行git push命令时需要同指定远程仓库名、本地分支名和远程分支名，而跟踪分支则可简化这个操作。
+     	
      		跟踪分支：本地分支和某个远程分支建立联系后那这个本地分支就变成一个跟踪分支。在跟踪分支上执行`git push`和`git pull`命令时无需指定远程仓库名、本地分支名和远程分支名。
 
-       - 跟踪分支的创建
+     	- 跟踪分支的创建
      	
      		- 在远程分支上创建分支时指定其为远程分支（建的本地分支名与远程分支名相同）：`$ git checkout --track 远程仓库名/远程分支名`
 

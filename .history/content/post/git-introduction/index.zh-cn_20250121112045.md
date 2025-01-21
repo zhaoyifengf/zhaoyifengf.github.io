@@ -123,34 +123,34 @@ weight: 1       # You can add weight to some posts to override the default sorti
       - 进入该文件夹执行`git init`命令
 
    2. 添加文件到本地仓库
-      1. 在创建的文件夹中新建一个文件
-      2. 使用`git add xxx.xx`命令将工作区中的文件添加到暂存区，文件状态由未跟踪变为已跟踪。
-			```
-			zhaoyifeng@MacBook-Air-6 test % vim test.txt
-			zhaoyifeng@MacBook-Air-6 test % git add test.txt
-			```
-			版本库只能跟踪和管理文本文件，视频、图片等文件虽然可由git管理，但git只能记录其大小而无法记录具体修改的内容。
-			`git add .`将所有文件添加到暂存区。
-      3. 取消暂存：`git reset HEAD 文件名`：取消暂存某一文件
-      4. 使`git commit -m "xxxx"`将暂存区中的内容提交到本地仓库，`-m`后面的参数是本次提交的描述
-			```
-			zhaoyifeng@MacBook-Air-6 test % git commit -m "第一次提交"
-			[master（根提交） f9de3df] 第一次提交
-				1 file changed, 1 insertion(+)
-				create mode 100644 test.txt
-			```
-			使用`git commit -m -a`进行先暂存再提交
-      5. 在工作目录中回退到最近一次提交的版本：`git checkout -- <file>`
-      6. 修改commit的注释
-         	- 执行如下命令
-         	```
-         	git commit --amend
-         	```
-         	- 进入编辑器，修改注释信息
+   	1. 在创建的文件夹中新建一个文件
+   	2. 使用`git add xxx.xx`命令将工作区中的文件添加到暂存区，文件状态由未跟踪变为已跟踪。
+		```
+		zhaoyifeng@MacBook-Air-6 test % vim test.txt
+		zhaoyifeng@MacBook-Air-6 test % git add test.txt
+		```
+		版本库只能跟踪和管理文本文件，视频、图片等文件虽然可由git管理，但git只能记录其大小而无法记录具体修改的内容。
+		`git add .`将所有文件添加到暂存区。
+   	3. 取消暂存：`git reset HEAD 文件名`：取消暂存某一文件
+   	4. 使`git commit -m "xxxx"`将暂存区中的内容提交到本地仓库，`-m`后面的参数是本次提交的描述
+		```
+		zhaoyifeng@MacBook-Air-6 test % git commit -m "第一次提交"
+		[master（根提交） f9de3df] 第一次提交
+			1 file changed, 1 insertion(+)
+			create mode 100644 test.txt
+		```
+		使用`git commit -m -a`进行先暂存再提交
+   	5. 在工作目录中回退到最近一次提交的版本：`git checkout -- <file>`
+   	6. 修改commit的注释
+      	- 执行如下命令
+      	```
+      	git commit --amend
+      	```
+      	- 进入编辑器，修改注释信息
 
-         	- 修改后输入 control + o 然后输入输入回车进行写入
+      	- 修改后输入 control + o 然后输入输入回车进行写入
 
-         	- 退出编译器
+      	- 退出编译器
    3. 忽略文件
 		新建.gitignore文件，在里面添加需要忽略的文件
 
@@ -203,13 +203,14 @@ weight: 1       # You can add weight to some posts to override the default sorti
 		![](https://gitee.com/progit/figures/18333fig0307-tn.png)
 		切换到一个分支时会将工作目录中的内容加载为该分支指向的快照中的内容，这会导致原来的工作目录中的内容丢失。
    6. 分支分叉：如果切换到master分支并在修改后进行提交那就会产生分支的分叉。
-		```
-		git checkout master
-		vim test rb
-		git commit -a -m 'made other change'
-		```
 
-		![](https://gitee.com/progit/figures/18333fig0309-tn.png)
+	```
+	git checkout master
+	vim test rb
+	git commit -a -m 'made other change'
+	```
+
+	![](https://gitee.com/progit/figures/18333fig0309-tn.png)
    7. 分支的合并：
          - 未分叉分支的合并
 
@@ -281,23 +282,22 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
    13. 远程分支
        - 远程仓库的添加与查看
-  
-			添加远程仓库，url是远程仓库的地址，shorname是给url对应的远程仓库的命名。执行`git clone url`后会自动添加一个远程仓库并将其命名为origin，并且克隆这个远程仓库到本地。
+		添加远程仓库，url是远程仓库的地址，shorname是给url对应的远程仓库的命名。执行`git clone url`后会自动添加一个远程仓库并将其命名为origin，并且克隆这个远程仓库到本地。
 			````
 			git remote add <shortname> <url>	
 			````
-			查看远程仓库
+		查看远程仓库
 			````
 			zhaoyifeng@MacBook-Air-6 mytest % git remote
 			origin
 			````
-			查看远程仓库和对应的URL，fetch表示拉取的链接，push表示推送的链接。
+		查看远程仓库和对应的URL，fetch表示拉取的链接，push表示推送的链接。
 			````
 			zhaoyifeng@MacBook-Air-6 mytest % git remote -v
 			origin	https://gitee.com/zhao-jufeng/mytest/ (fetch)
 			origin	https://gitee.com/zhao-jufeng/mytest/ (push)
 			````
-			查看某个远程仓库的具体信息
+		查看某个远程仓库的具体信息
 
 			````
 			zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
@@ -430,46 +430,45 @@ weight: 1       # You can add weight to some posts to override the default sorti
 			```
 
 		
-       - 删除远程分支：
+     - 删除远程分支：
+     	删除远程仓库中的分支再查看会出现如下提示：
 
-     		删除远程仓库中的分支再查看会出现如下提示：
+     	```
+     	zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
+     	* 远程 origin
+        获取地址：https://gitee.com/zhao-jufeng/mytest/
+        推送地址：https://gitee.com/zhao-jufeng/mytest/
+        HEAD 分支：master
+        远程分支：
+        master                  已跟踪
+        refs/remotes/origin/dev 已过期（使用 'git remote prune' 来移除）
+        为 'git pull' 配置的本地分支：
+        master 与远程 master 合并
+        为 'git push' 配置的本地引用：
+        master 推送至 master (本地已过时)
+     	```
 
-			```
-			zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
-			* 远程 origin
-			获取地址：https://gitee.com/zhao-jufeng/mytest/
-			推送地址：https://gitee.com/zhao-jufeng/mytest/
-			HEAD 分支：master
-			远程分支：
-			master                  已跟踪
-			refs/remotes/origin/dev 已过期（使用 'git remote prune' 来移除）
-			为 'git pull' 配置的本地分支：
-			master 与远程 master 合并
-			为 'git push' 配置的本地引用：
-			master 推送至 master (本地已过时)
-			```
+     	提示远程分支已过期，建议删除。执行如下命名删除：
 
-     		提示远程分支已过期，建议删除。执行如下命名删除：
+     	```
+     	zhaoyifeng@MacBook-Air-6 mytest % git remote prune origin
+     	修剪 origin
+     	URL：https://gitee.com/zhao-jufeng/mytest/
+     	* [已删除] origin/dev
+     	```
+     	或者`git fetch --prune`先删远程仓库中没有的本地远程分支，然后再拉取远程仓库中的数据。
 
-			```
-			zhaoyifeng@MacBook-Air-6 mytest % git remote prune origin
-			修剪 origin
-			URL：https://gitee.com/zhao-jufeng/mytest/
-			* [已删除] origin/dev
-			```
-     		或者`git fetch --prune`先删远程仓库中没有的本地远程分支，然后再拉取远程仓库中的数据。
+     - 本地仓库同步到远程仓库
 
-       - 本地仓库同步到远程仓库
+     	- `git push 远程仓库名 本地分支名:远程仓库中的分支名`：用本地仓库中的分支更新远程仓库的分支，这会让远程仓库的分支直接指向本地仓库的分支指向的commit，此外，与远程仓库中对应的远程分支也会指向本地分支指向的commit。注意，这并不要本地仓库中有远程仓库中对应的远程分支。
 
-         - `git push 远程仓库名 本地分支名:远程仓库中的分支名`：用本地仓库中的分支更新远程仓库的分支，这会让远程仓库的分支直接指向本地仓库的分支指向的commit，此外，与远程仓库中对应的远程分支也会指向本地分支指向的commit。注意，这并不要本地仓库中有远程仓库中对应的远程分支。
+     	- 如果本地分支名与远程仓库中的分支名相同，则可以简写为`git push 远程仓库名 分支名`
 
-         - 如果本地分支名与远程仓库中的分支名相同，则可以简写为`git push 远程仓库名 分支名`
-
-       - 跟踪分支：执行git push命令时需要同指定远程仓库名、本地分支名和远程分支名，而跟踪分支则可简化这个操作。
-  
+     	- 跟踪分支：执行git push命令时需要同指定远程仓库名、本地分支名和远程分支名，而跟踪分支则可简化这个操作。
+     	
      		跟踪分支：本地分支和某个远程分支建立联系后那这个本地分支就变成一个跟踪分支。在跟踪分支上执行`git push`和`git pull`命令时无需指定远程仓库名、本地分支名和远程分支名。
 
-       - 跟踪分支的创建
+     	- 跟踪分支的创建
      	
      		- 在远程分支上创建分支时指定其为远程分支（建的本地分支名与远程分支名相同）：`$ git checkout --track 远程仓库名/远程分支名`
 
