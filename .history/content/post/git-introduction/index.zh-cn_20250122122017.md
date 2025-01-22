@@ -184,23 +184,18 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
 ## git中的分支
 ### 分支的本质
-分支的本质：指向commit对象的可变指针（也可理解为执行数据快照的指针）
+	分支的本质：指向commit对象的可变指针（也可理解为执行数据快照的指针）
    1. commit对象：每次提交时都会保存一个commit对象，，包含指向暂存内容快照的指针、本次提交的作者等相关附属信息、零个或多个指向该提交对象的父对象指针：首次提交是没有直接祖先的，普通提交有一个祖先，由两个或多个分支合并产生的提交则有多个祖先。
-   		
-		![](https://gitee.com/progit/figures/18333fig0302-tn.png)
+   		![](https://gitee.com/progit/figures/18333fig0302-tn.png)
 
    2. git分支：指向commit对象的指针。git会默认创建一个master分支，在每次提交时都会自动向前移动。
-   		
-		![](https://gitee.com/progit/figures/18333fig0303-tn.png)
+   		![](https://gitee.com/progit/figures/18333fig0303-tn.png)
    3. 创建分支：本质上就是创建一个指针，`git branch testing`新建一个分支指针指向当前commit对象。也就是HEAD指针指向的分支指向的commit对象。
-   		
-		![](https://gitee.com/progit/figures/18333fig0304-tn.png)
+   		![](https://gitee.com/progit/figures/18333fig0304-tn.png)
    4. HEAD指针：指向当前所在的分支（HEAD不可直接指向commit对象）
-   		
-		![](https://gitee.com/progit/figures/18333fig0305-tn.png)
+   		![](https://gitee.com/progit/figures/18333fig0305-tn.png)
    5. 切换分支：改变HEAD指向的分支。`git checkout testing`切换到testing分支。
 		> 当你切换分支的时候，Git 会重置你的工作目录，使其看起来像回到了你在那个分支上最后一次提交的样子。 Git 会自动添加、删除、修改文件以确保此时你的工作目录和这个分支最后一次提交时的样子一模一样。
-		
 		![](https://gitee.com/progit/figures/18333fig0306-tn.png)
 		每提交一次后，HEAD都会随着当前分支一起移动。（HEAD指向的是分支指针，提交时分支指针不变，改变的只是分支指针指向的对象。）执行：
 		```
@@ -211,7 +206,6 @@ weight: 1       # You can add weight to some posts to override the default sorti
 		![](https://gitee.com/progit/figures/18333fig0307-tn.png)
 		切换到一个分支时会将工作目录中的内容加载为该分支指向的快照中的内容，这会导致原来的工作目录中的内容丢失。
    6. 分支分叉：如果切换到master分支并在修改后进行提交那就会产生分支的分叉。
-   
 		```
 		git checkout master
 		vim test rb
@@ -248,14 +242,10 @@ weight: 1       # You can add weight to some posts to override the default sorti
 			![](https://gitee.com/progit/figures/18333fig0317-tn.png)
 
      	- 三种不同的合并方式
-  
-			![三种不同的合并方式](three_merge_explain.png)
-
-			- git merge --ff(fast-forward): 如果能快进则快进分支即移动指针
-
-			- git merge --no-ff(no-fast-forword): 即使能快进也会创建一个新的commit(内容和被合并分支的commit相同)
-
-			- git merge --squash: 将被合并节点的修改的内容（保存删除操作）加载到工作区和暂存区，等待一次新的提交
+			![/Users/zhaoyifeng/Documents/work_documents/图片](whiteboard_exported_image-1.png)
+			git merge --ff(fast-forward): 如果能快进则快进分支即移动指针
+			git merge --no-ff(no-fast-forword): 即使能快进也会创建一个新的commit(内容和被合并分支的commit相同)
+			git merge --squash: 将被合并节点的修改的内容（保存删除操作）加载到工作区和暂存区，等待一次新的提交
    8. 合并时发生冲突：如果不同分支修改了同一部分，那合并时可能发生冲突。
 		```
 		git merge iss53
@@ -274,7 +264,7 @@ weight: 1       # You can add weight to some posts to override the default sorti
 		>>>>>>> iss53:index.html
 		```
 		=======上面是当前分支文件中的内容，下面是iss53分支的内容。手动解决冲突，然后执行`git add index.html`，一旦进入暂存区就代表冲突已解决。再执行`git commit`。
-   9.  删除分支：`git branch -d 分支名`，删除指定的分支。
+   9. 删除分支：`git branch -d 分支名`，删除指定的分支。
    10. 分支的管理
 		查看当前有哪些分支，其中*表示当前分支即HEAD指向的分支`git branch`
 		```

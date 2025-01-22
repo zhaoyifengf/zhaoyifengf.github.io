@@ -249,7 +249,7 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
      	- 三种不同的合并方式
   
-			![三种不同的合并方式](three_merge_explain.png)
+			![三种不同的合并方式](./img/three_merge_explain.png)
 
 			- git merge --ff(fast-forward): 如果能快进则快进分支即移动指针
 

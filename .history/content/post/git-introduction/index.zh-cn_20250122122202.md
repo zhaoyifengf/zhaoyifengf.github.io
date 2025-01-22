@@ -249,13 +249,11 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
      	- 三种不同的合并方式
   
-			![三种不同的合并方式](three_merge_explain.png)
-
-			- git merge --ff(fast-forward): 如果能快进则快进分支即移动指针
-
-			- git merge --no-ff(no-fast-forword): 即使能快进也会创建一个新的commit(内容和被合并分支的commit相同)
-
-			- git merge --squash: 将被合并节点的修改的内容（保存删除操作）加载到工作区和暂存区，等待一次新的提交
+			![/Users/zhaoyifeng/Documents/work_documents/图片](whiteboard_exported_image-1.png)
+			
+			git merge --ff(fast-forward): 如果能快进则快进分支即移动指针
+			git merge --no-ff(no-fast-forword): 即使能快进也会创建一个新的commit(内容和被合并分支的commit相同)
+			git merge --squash: 将被合并节点的修改的内容（保存删除操作）加载到工作区和暂存区，等待一次新的提交
    8. 合并时发生冲突：如果不同分支修改了同一部分，那合并时可能发生冲突。
 		```
 		git merge iss53
