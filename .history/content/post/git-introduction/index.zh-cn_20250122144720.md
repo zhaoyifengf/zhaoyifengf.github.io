@@ -160,11 +160,10 @@ weight: 1       # You can add weight to some posts to override the default sorti
 			- 修改后输入 control + o 然后输入输入回车进行写入
 
 			- 退出编译器
-   3. 忽略文件
+   1. 忽略文件
 		新建.gitignore文件，在里面添加需要忽略的文件
 
 ## 查看历史提交记录和当前状态
-
    1. 执行`git status`命令查看状态，使用`git status -s`或`git status --short`查看简短的状态。
 
 		```

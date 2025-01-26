@@ -29,15 +29,14 @@ weight: 1       # You can add weight to some posts to override the default sorti
 	```
 	git config --global
 	```
-	
-	- config：表示配置git
-	- --global：表示全局配置
+   - config：表示配置git
+   - ---global：表示全局配置
 
-1. 设置用户名
+2. 设置用户名
 	```
 	git config --global user.name "用户名"
 	```
-2. 设置邮箱
+3. 设置邮箱
 	```
 	git config --global user.email "邮箱"
 	```
@@ -54,9 +53,7 @@ weight: 1       # You can add weight to some posts to override the default sorti
 		```
 		git init
 		```
-
 		执行git init目录后出现如下结果：
-
 		```
 		zhaoyifeng@MacBook-Air-6 test % git init
 		提示：使用 'master' 作为初始分支的名称。这个默认分支名称可能会更改。要在新仓库中
@@ -70,7 +67,6 @@ weight: 1       # You can add weight to some posts to override the default sorti
 		提示：	git branch -m <name>
 		已初始化空的 Git 仓库于 /Users/zhaoyifeng/Documents/LocalRepository/test/.git/
 		```
-
    3. 查看仓库中的文件夹：
 		```
 		zhaoyifeng@MacBook-Air-6 test % ls -ah
@@ -85,8 +81,8 @@ weight: 1       # You can add weight to some posts to override the default sorti
 		.		..		HEAD		config		description	hooks		info		objects		refs
 		```
 
-		| 文件夹 | 作用 |
-		|--|--|
+		| 文件夹  | 作用  |
+		|----------|----------|
 		| hooks | 包含客户端或服务端的勾子脚本 |
 		| info | 保护一个全局性排除文件 |
 		| logs | 保存日志信息 |
@@ -134,7 +130,6 @@ weight: 1       # You can add weight to some posts to override the default sorti
       2. 使用`git add xxx.xx`命令将工作区中的文件添加到暂存区，文件状态由未跟踪变为已跟踪。
 			```
 			zhaoyifeng@MacBook-Air-6 test % vim test.txt
-
 			zhaoyifeng@MacBook-Air-6 test % git add test.txt
 			```
 			版本库只能跟踪和管理文本文件，视频、图片等文件虽然可由git管理，但git只能记录其大小而无法记录具体修改的内容。
@@ -150,30 +145,26 @@ weight: 1       # You can add weight to some posts to override the default sorti
 			使用`git commit -m -a`进行先暂存再提交
       5. 在工作目录中回退到最近一次提交的版本：`git checkout -- <file>`
       6. 修改commit的注释
-			- 执行如下命令
-				```
-				git commit --amend
-				```
+         	- 执行如下命令
+         	```
+         	git commit --amend
+         	```
+         	- 进入编辑器，修改注释信息
 
-			- 进入编辑器，修改注释信息
+         	- 修改后输入 control + o 然后输入输入回车进行写入
 
-			- 修改后输入 control + o 然后输入输入回车进行写入
-
-			- 退出编译器
+         	- 退出编译器
    3. 忽略文件
 		新建.gitignore文件，在里面添加需要忽略的文件
 
 ## 查看历史提交记录和当前状态
-
    1. 执行`git status`命令查看状态，使用`git status -s`或`git status --short`查看简短的状态。
-
-		```
-		zhaoyifeng@MacBook-Air-6 test % git status
-		位于分支 master
-		无文件要提交，干净的工作区
-		zhaoyifeng@MacBook-Air-6 test % 
-		```
-
+   	```
+   	zhaoyifeng@MacBook-Air-6 test % git status
+   	位于分支 master
+   	无文件要提交，干净的工作区
+   	zhaoyifeng@MacBook-Air-6 test % 
+   	```
    2. 执行`git log`查看历史记录
    
 		```

@@ -85,16 +85,16 @@ weight: 1       # You can add weight to some posts to override the default sorti
 		.		..		HEAD		config		description	hooks		info		objects		refs
 		```
 
-		| 文件夹 | 作用 |
-		|--|--|
-		| hooks | 包含客户端或服务端的勾子脚本 |
-		| info | 保护一个全局性排除文件 |
-		| logs | 保存日志信息 |
-		| objects | 存储所有数据内容 |
-		| refs | 存储指向数据的提交对象的指针 |
-		| config | 包含项目特有的配置选项 |
-		| description | 用来显示对仓库的描述 |
-		| HEAD | 指示目前被检出的分支 |
+	| 文件夹  | 作用  |
+	|----------|----------|
+	|hooks| 包含客户端或服务端的勾子脚本|
+	| info | 保护一个全局性排除文件 |
+	| logs | 保存日志信息 |
+	| objects | 存储所有数据内容 |
+	| refs | 存储指向数据的提交对象的指针 |
+	| config | 包含项目特有的配置选项 |
+	| description | 用来显示对仓库的描述 |
+	| HEAD | 指示目前被检出的分支 |
 		| index | 保存暂存区信息 |
    5. git中的工作区、暂存区、版本库和仓库中文件夹的对应关系
    
@@ -150,30 +150,26 @@ weight: 1       # You can add weight to some posts to override the default sorti
 			使用`git commit -m -a`进行先暂存再提交
       5. 在工作目录中回退到最近一次提交的版本：`git checkout -- <file>`
       6. 修改commit的注释
-			- 执行如下命令
-				```
-				git commit --amend
-				```
+         	- 执行如下命令
+         	```
+         	git commit --amend
+         	```
+         	- 进入编辑器，修改注释信息
 
-			- 进入编辑器，修改注释信息
+         	- 修改后输入 control + o 然后输入输入回车进行写入
 
-			- 修改后输入 control + o 然后输入输入回车进行写入
-
-			- 退出编译器
+         	- 退出编译器
    3. 忽略文件
 		新建.gitignore文件，在里面添加需要忽略的文件
 
 ## 查看历史提交记录和当前状态
-
    1. 执行`git status`命令查看状态，使用`git status -s`或`git status --short`查看简短的状态。
-
-		```
-		zhaoyifeng@MacBook-Air-6 test % git status
-		位于分支 master
-		无文件要提交，干净的工作区
-		zhaoyifeng@MacBook-Air-6 test % 
-		```
-
+   	```
+   	zhaoyifeng@MacBook-Air-6 test % git status
+   	位于分支 master
+   	无文件要提交，干净的工作区
+   	zhaoyifeng@MacBook-Air-6 test % 
+   	```
    2. 执行`git log`查看历史记录
    
 		```

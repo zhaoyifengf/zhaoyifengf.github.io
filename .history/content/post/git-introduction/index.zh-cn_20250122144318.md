@@ -151,29 +151,26 @@ weight: 1       # You can add weight to some posts to override the default sorti
       5. 在工作目录中回退到最近一次提交的版本：`git checkout -- <file>`
       6. 修改commit的注释
 			- 执行如下命令
-				```
-				git commit --amend
-				```
+         	```
+         	git commit --amend
+         	```
 
-			- 进入编辑器，修改注释信息
+         	- 进入编辑器，修改注释信息
 
-			- 修改后输入 control + o 然后输入输入回车进行写入
+         	- 修改后输入 control + o 然后输入输入回车进行写入
 
-			- 退出编译器
-   3. 忽略文件
+         	- 退出编译器
+   1. 忽略文件
 		新建.gitignore文件，在里面添加需要忽略的文件
 
 ## 查看历史提交记录和当前状态
-
    1. 执行`git status`命令查看状态，使用`git status -s`或`git status --short`查看简短的状态。
-
-		```
-		zhaoyifeng@MacBook-Air-6 test % git status
-		位于分支 master
-		无文件要提交，干净的工作区
-		zhaoyifeng@MacBook-Air-6 test % 
-		```
-
+   	```
+   	zhaoyifeng@MacBook-Air-6 test % git status
+   	位于分支 master
+   	无文件要提交，干净的工作区
+   	zhaoyifeng@MacBook-Air-6 test % 
+   	```
    2. 执行`git log`查看历史记录
    
 		```
