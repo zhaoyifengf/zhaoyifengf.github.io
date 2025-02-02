@@ -1,0 +1,23 @@
+---
+title: "Kafka Introduction"
+description: 
+slug: kafka-introduction
+date: 2025-01-27T00:28:09+08:00
+image: cover.png
+categories:
+    - Kafka
+tags:
+    - Introduction
+weight: 1       # You can add weight to some posts to override the default sorting (date descending)
+---
+
+## 一步步看Kfka
+
+### 直接调用接口的弊端
+
+![](kafka.drawio.svg)
+
+  1. 系统耦合度提升
+  2. 当生产者的生产速度大于消费者的消费速度时会导致消费者来不及处理导致消息丢失
+
+### 
