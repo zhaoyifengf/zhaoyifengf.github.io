@@ -100,7 +100,7 @@ weight: 1       # You can add weight to some posts to override the default sorti
    5. git中的工作区、暂存区、版本库和仓库中文件夹的对应关系
    
 | git中的区域  | 文件夹  |
-|----|--|
+|:----------|:----------|
 | 工作区    | 项目目录   |
 | 版本库    | .git文件夹，用来存放代码及历史版本   |
 | 暂存区   | .git下的index文件，用来存储临时文件（只是在index文件中添加一条操作记录，并没有将内容存放到index文件中）    |

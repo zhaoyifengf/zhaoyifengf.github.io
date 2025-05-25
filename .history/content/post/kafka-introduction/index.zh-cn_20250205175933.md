@@ -80,6 +80,4 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
   如果数据都存储在内存中，当所有broker都宕机后未消费的消息将丢失，通过持久化并重启服务可实现服务宕机后的数据恢复。数据不断写入磁盘将会导致磁盘空间占满，需要一种过期策略剔除过期数据。
 
-
-## Kafka基本操作
-
+    

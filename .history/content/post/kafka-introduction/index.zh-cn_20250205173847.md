@@ -56,11 +56,11 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
   <img src="consumer-group.svg" width="60%" height="60%">
 
-  在上面提到的优化策略中，多个消费者协作处理一个topic，也就是一个消息只能被一个消费者消费。在实际业务需求中，同一个消息需要被多个业务线处理，这样就引入了消费者组的概念，同一个消费者组中的消费者协作处理同一个消息（一个消息只能被消费者组中的一个消费者处理），不同消费者组互不影响。
+  在上面提到的优化策略中，多给消费者协作处理一个topic，也就是一个消息只能被一个消费者消费。在实际业务需求中，同一个消息需要被多个业务线处理，这样就引入了消费者组的概念，同一个消费者组中的消费者协作处理同一个消息（一个消息只能被消费者组中的一个消费者处理），不同消费者组互不影响。
 
   ### 实现消息队列的高扩展性
 
-  在上面的步骤中，通过对消息队列切分再切分已经大大提高了消息队列的性能，但整个消息队列的性能仍受机器的限制，需要通过扩展机器提高整个消费队列服务的性能。
+  在上面的步骤中，通过对消息队列切分再切分已经大大提高了消息队列的性能，但整个消息队列的性能仍受机器的限制，需要通过通过扩展机器提高整个消费队列服务的性能。
 
   <img src="simple-broker.svg" width="60%" height="60%">
 
@@ -72,7 +72,7 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
   <img src="one-leader-multi-follower.svg" width="60%" height="60%">
 
-  对每个partition，创建一个主节点，多个从节点，主节点负责读写，从节点只负责从主节点拉取数据、作数据备份。当某个broker宕机后，重新选取partition作为主节点。
+  对每个partition，创建一个主节点，多个从节点，主解决负责读写，从节点只负责从主节点拉去数据、作数据备份。当某个broker宕机后，重新选取partition作为主节点。
 
   #### 解决所有broker宕机：数据持久化与过期策略
 
@@ -80,6 +80,4 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
   如果数据都存储在内存中，当所有broker都宕机后未消费的消息将丢失，通过持久化并重启服务可实现服务宕机后的数据恢复。数据不断写入磁盘将会导致磁盘空间占满，需要一种过期策略剔除过期数据。
 
-
-## Kafka基本操作
-
+    

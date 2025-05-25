@@ -85,25 +85,25 @@ weight: 1       # You can add weight to some posts to override the default sorti
 		.		..		HEAD		config		description	hooks		info		objects		refs
 		```
 
-| 文件夹 | 作用 |
-|--|--|
-| hooks | 包含客户端或服务端的勾子脚本 |
-| info | 保护一个全局性排除文件 |
-| logs | 保存日志信息 |
-| objects | 存储所有数据内容 |
-| refs | 存储指向数据的提交对象的指针 |
-| config | 包含项目特有的配置选项 |
-| description | 用来显示对仓库的描述 |
-| HEAD | 指示目前被检出的分支 |
-| index | 保存暂存区信息 |
+				| 文件夹 | 作用 |
+				|--|--|
+				| hooks | 包含客户端或服务端的勾子脚本 |
+				| info | 保护一个全局性排除文件 |
+				| logs | 保存日志信息 |
+				| objects | 存储所有数据内容 |
+				| refs | 存储指向数据的提交对象的指针 |
+				| config | 包含项目特有的配置选项 |
+				| description | 用来显示对仓库的描述 |
+				| HEAD | 指示目前被检出的分支 |
+				| index | 保存暂存区信息 |
 
    5. git中的工作区、暂存区、版本库和仓库中文件夹的对应关系
    
-| git中的区域  | 文件夹  |
-|----|--|
-| 工作区    | 项目目录   |
-| 版本库    | .git文件夹，用来存放代码及历史版本   |
-| 暂存区   | .git下的index文件，用来存储临时文件（只是在index文件中添加一条操作记录，并没有将内容存放到index文件中）    |
+		| git中的区域  | 文件夹  |
+		|:----------|:----------|
+		| 工作区    | 项目目录   |
+		| 版本库    | .git文件夹，用来存放代码及历史版本   |
+		| 暂存区   | .git下的index文件，用来存储临时文件（只是在index文件中添加一条操作记录，并没有将内容存放到index文件中）    |
 
 #### 克隆现有的仓库
 1. git克隆命令：`git clone <url> name`
