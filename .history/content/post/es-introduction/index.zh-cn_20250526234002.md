@@ -38,6 +38,7 @@ weight: 1       # You can add weight to some posts to override the default sorti
 | I | 1、2、3 |
 | orange | 1 |
 
-将排好的词项称为Term  dictionary，文档ID称为Posting list，构成的搜索结构称为inverted index（倒排索引）
+将排好的词项称为Term  dictionary，文档ID称为Posting list，构成的搜索结构称为inverted index（倒排索引）。
 
-
+### 利用目录树进一步加速查询
+将文本进行分词后得到的Term  dictionary数据量巨大，只能通过磁盘检索。检索磁盘耗时较长，基于Term  dictionary构建一颗字典树并将字段树放入内存将极大加速索引销量。
