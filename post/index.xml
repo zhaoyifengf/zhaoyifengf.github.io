@@ -1,0 +1,1208 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 峰峰的博客</title><link>https://zhaoyifengf.github.io/post/</link><description>Recent content in Posts on 峰峰的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>峰峰</copyright><lastBuildDate>Mon, 10 Feb 2025 22:34:00 +0800</lastBuildDate><atom:link href="https://zhaoyifengf.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>Distribution Transaction</title><link>https://zhaoyifengf.github.io/p/distribution-transaction/</link><pubDate>Mon, 10 Feb 2025 22:34:00 +0800</pubDate><guid>https://zhaoyifengf.github.io/p/distribution-transaction/</guid><description>&lt;img src="https://zhaoyifengf.github.io/p/distribution-transaction/cover.png" alt="Featured image of post Distribution Transaction" />&lt;h2 id="分布式事务理论知识">分布式事务理论知识
+&lt;/h2>&lt;h3 id="capconsistencyavailabilitypartition-tolerance理论">CAP（Consistency、Availability、Partition Tolerance）理论
+&lt;/h3>&lt;p>CAP理论：在分布式系统，不会同时具备CAP三个特性，只能同时具备其中两个。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>一致性&lt;/p>
+&lt;p>用户对数据的写操作在所有数据副本要么都成功、要么都失败。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>可用性&lt;/p>
+&lt;p>客户端访问数据时能够快速得到响应。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>分区容忍性&lt;/p>
+&lt;p>分区：分布式系统中不同节点间通信出现了问题。分区容忍：在出现分区时系统仍然能对外提供服务。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="为什么cap只能满足其中两个">为什么CAP只能满足其中两个
+&lt;/h3>&lt;p>首先需要明确的是一个分布式系统必需要满足分区容错，也就是CAP中的P。在分布式系统中分区是一定会出现的，没有人能够保证节点与节点之间的网络总是不出问题，也没有人能够保证单个节点始终运行正常。如果一个分布式系统出现分区整个系统就停止服务，那其与单体服务并无区别（分布式系统的初衷就是通过多节点部署来提高系统的可用性）。&lt;/p>
+&lt;p>在出现分区的情况下，一致性与可用性只能满足其一：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>若要满足一致性，在对数据的多副本进行写入时需要锁定资源，而出现分区导致无法确认所有副本都写入成功，客户端的访问也无法在有效时间内得到响应。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>若要满足可可用性，对任意节点的访问都需要在指定时间得到响应，当被访问节点数据写入成功而存在节点数据未写入成功或者被访问节点数据未写入成功而其余节点数据写入成功则可用性也无法得到满足。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="basebasically-available-soft-state-eventually-consistent理论">BASE（Basically Available, Soft State， Eventually Consistent）理论
+&lt;/h3>&lt;p>当出现分区时，BASE理论允许部分数据不可用，但会保证核心功能可用；允许数据在一定时间内不一致，但经过一段时间数据最终是一致的。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>基本可用&lt;/p>
+&lt;p>基本可用指的是分布式系统出现故障时，允许损失部分可用性（比如响应时间或部分功能）&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>软状态&lt;/p>
+&lt;p>软状态指的是允许系统出现中间状态，但中中间状态不会影响系统的整体可用性。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>最终一致性&lt;/p>
+&lt;p>最终一致性指的是允许允许数据在各个节点存在不一致，只需要数据最终一致。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="分布式事务解决方案">分布式事务解决方案
+&lt;/h2>&lt;h3 id="强一致性分布式事务解决方案">强一致性分布式事务解决方案
+&lt;/h3>&lt;p>强一致性事务要求任意时刻参与全局事务的各个节点的数据都一致。&lt;/p>
+&lt;h3 id="强一致性事务的三种方案">强一致性事务的三种方案
+&lt;/h3>&lt;h4 id="全局事务模型dtp">全局事务模型（DTP）
+&lt;/h4>&lt;ol>
+&lt;li>
+&lt;p>基本概念&lt;/p>
+&lt;ol>
+&lt;li>事务：一个完整的工作单元，具备ACID特性&lt;/li>
+&lt;li>全局事务：事务管理器管理的全局事务，能一次操作多个资源管理器&lt;/li>
+&lt;li>分支事务：全局事务中的每个资源管理器中独立执行的事务&lt;/li>
+&lt;li>控制线程：执行全局事务的线程&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>执行流程
+&lt;img src="https://zhaoyifengf.github.io/p/distribution-transaction/DTP.png"
+width="2062"
+height="1318"
+srcset="https://zhaoyifengf.github.io/p/distribution-transaction/DTP_hu_b3948cca0efa30c7.png 480w, https://zhaoyifengf.github.io/p/distribution-transaction/DTP_hu_5cd6dfc4815f8b3f.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="156"
+data-flex-basis="375px"
+>
+DTP模型中的三个核心组件：&lt;/p>
+&lt;ul>
+&lt;li>AP（应用程序、Application Program）：参与DTP分布式事务模型的应用程序。&lt;/li>
+&lt;li>RM（资源管理器、Resource Manager）：数据库管理系统或者消息服务管理器，用来对响应的资源进行有效的控制，相应的资源需要实现XA定义的接口。&lt;/li>
+&lt;li>TM（事务管理器、Transaction Manager）：负责协调和管理DTP模型中的事务，为应用程序提供编程接口，同时管理资源管理器。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="二阶段提交模型2pc">二阶段提交模型（2PC）
+&lt;/h4>&lt;p>2PC模型即两阶段提交协议模型，该模型将事务流程分为Prepare阶段和Commit阶段。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Prepare阶段&lt;/p>
+&lt;p>&lt;img src="https://zhaoyifengf.github.io/p/distribution-transaction/2PC_step_one.png"
+width="1952"
+height="886"
+srcset="https://zhaoyifengf.github.io/p/distribution-transaction/2PC_step_one_hu_3a288a99385f2588.png 480w, https://zhaoyifengf.github.io/p/distribution-transaction/2PC_step_one_hu_626339282b73c317.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="220"
+data-flex-basis="528px"
+>&lt;/p>
+&lt;p>在Prepare阶段，事务管理器给每个参与全局事务的资源管理器发送Prepare消息，资源管理器要么返回失败，要么在本地执行相应的事务，将事务写入本地的Redo Log文件和Undo Log文件，但此时事务并未提交。&lt;/p>
+&lt;p>如果在Prepare阶段有资源管理器返回了失败消息则在Commit阶段事务管理器会向其他响应正常消息发送回滚消息。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Commit阶段&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://zhaoyifengf.github.io/p/distribution-transaction/2PC_step_two.png"
+width="1960"
+height="938"
+srcset="https://zhaoyifengf.github.io/p/distribution-transaction/2PC_step_two_hu_23b4684c735e7cc2.png 480w, https://zhaoyifengf.github.io/p/distribution-transaction/2PC_step_two_hu_a5a1f7a1a9b0eb90.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="208"
+data-flex-basis="501px"
+>&lt;/p>
+&lt;p>在2PC的commit阶段，事务管理器向参与全局事务的资源管理器发送commit消息，资源管理器收到消息后提交本地事务并将提交成功的消息返回给事务管理器。&lt;/p>
+&lt;h4 id="三阶段提交模型3pc">三阶段提交模型（3PC）
+&lt;/h4>&lt;p>相比与2PC模型，3PC模型将prepare阶段分成了CanCommit阶段与PreCommit阶段。&lt;/p>
+&lt;ol>
+&lt;li>CanCommit阶段&lt;/li>
+&lt;/ol>
+&lt;p>在CanCommit阶段，事务管理器会向资源管理器发送CanCommit消息，资源管理器如果认为可以执行任务则发送确认消息并进入预备状态。&lt;/p>
+&lt;p>&lt;img src="https://zhaoyifengf.github.io/p/distribution-transaction/can_commit.png"
+width="2110"
+height="878"
+srcset="https://zhaoyifengf.github.io/p/distribution-transaction/can_commit_hu_6d123b16b42a5e6e.png 480w, https://zhaoyifengf.github.io/p/distribution-transaction/can_commit_hu_f9edcb5f5bbd5b93.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="240"
+data-flex-basis="576px"
+>&lt;/p>
+&lt;ol start="2">
+&lt;li>PreCommit阶段&lt;/li>
+&lt;/ol>
+&lt;p>在PreCommit阶段，资源管理器接受到消息并写入undo log与redo log。&lt;/p>
+&lt;p>&lt;img src="https://zhaoyifengf.github.io/p/distribution-transaction/prepare_commit.png"
+width="2068"
+height="880"
+srcset="https://zhaoyifengf.github.io/p/distribution-transaction/prepare_commit_hu_395697f6622891d2.png 480w, https://zhaoyifengf.github.io/p/distribution-transaction/prepare_commit_hu_df04e20e4af037a.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="235"
+data-flex-basis="564px"
+>&lt;/p>
+&lt;ol start="3">
+&lt;li>DoCommit阶段&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://zhaoyifengf.github.io/p/distribution-transaction/do_commit.png"
+width="1220"
+height="536"
+srcset="https://zhaoyifengf.github.io/p/distribution-transaction/do_commit_hu_9a6ba7d013a06633.png 480w, https://zhaoyifengf.github.io/p/distribution-transaction/do_commit_hu_159389fed0edac17.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="227"
+data-flex-basis="546px"
+>&lt;/p>
+&lt;p>在DoCommit阶段，资源管理器收到消息并提交事务。&lt;/p></description></item><item><title>ES Introduction</title><link>https://zhaoyifengf.github.io/p/es-introduction/</link><pubDate>Mon, 10 Feb 2025 22:34:00 +0800</pubDate><guid>https://zhaoyifengf.github.io/p/es-introduction/</guid><description>&lt;img src="https://zhaoyifengf.github.io/p/es-introduction/cover.png" alt="Featured image of post ES Introduction" />&lt;h2 id="利用倒排索引加速查询符合条件的文本">利用倒排索引加速查询符合条件的文本
+&lt;/h2>&lt;h3 id="利用倒排索引加速查询">利用倒排索引加速查询
+&lt;/h3>&lt;p>对于若干段文本，例如：1: &amp;ldquo;I hava an orange&amp;rdquo;，2: &amp;ldquo;I hava a banana&amp;rdquo;，3: &amp;ldquo;I hava an apple&amp;rdquo;，想要查询&amp;quot;苹果&amp;quot;在哪条记录里需要便利所有文体，时间复杂度为O(n)。将文本进行切分，以切分后的文本作为键，文本ID作为值构成一个二维表格，这样可以大大降低查询时间。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>term&lt;/th>
+&lt;th>文本id&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>I&lt;/td>
+&lt;td>1、2、3&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>have&lt;/td>
+&lt;td>1、2、3&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>an&lt;/td>
+&lt;td>1、3&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>a&lt;/td>
+&lt;td>2&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>orange&lt;/td>
+&lt;td>1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>banana&lt;/td>
+&lt;td>2&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>apple&lt;/td>
+&lt;td>3&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>但当词项增多，遍历这些词项仍需花费大量时间，对词项进行倒排并进行二分查找可将时间复杂度降低到O(logN)。&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Term dictionary&lt;/th>
+&lt;th>Posting list&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>a&lt;/td>
+&lt;td>2&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>an&lt;/td>
+&lt;td>1、3&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>apple&lt;/td>
+&lt;td>3&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>banana&lt;/td>
+&lt;td>2&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>have&lt;/td>
+&lt;td>1、2、3&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>I&lt;/td>
+&lt;td>1、2、3&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>orange&lt;/td>
+&lt;td>1&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>将排好的词项称为Term dictionary，文档ID称为Posting list，构成的搜索结构称为inverted index（倒排索引）。&lt;/p>
+&lt;h3 id="利用目录树进一步加速查询">利用目录树进一步加速查询
+&lt;/h3>&lt;p>将文本进行分词后得到的Term dictionary数据量巨大，只能通过磁盘检索。检索磁盘耗时较长，基于Term dictionary构建一颗字典树并将字段树放入内存将极大加速索引销量。&lt;/p></description></item><item><title>Kafka Introduction</title><link>https://zhaoyifengf.github.io/p/kafka-introduction/</link><pubDate>Mon, 27 Jan 2025 00:28:09 +0800</pubDate><guid>https://zhaoyifengf.github.io/p/kafka-introduction/</guid><description>&lt;img src="https://zhaoyifengf.github.io/p/kafka-introduction/cover.png" alt="Featured image of post Kafka Introduction" />&lt;h2 id="一步步看kfka">一步步看Kfka
+&lt;/h2>&lt;h3 id="直接调用接口的弊端">直接调用接口的弊端
+&lt;/h3>&lt;p>&lt;img src="https://zhaoyifengf.github.io/p/kafka-introduction/direct-send-msg.svg"
+loading="lazy"
+>&lt;/p>
+&lt;ul>
+&lt;li>系统耦合度提升&lt;/li>
+&lt;li>当生产者的生产速度大于消费者的消费速度时会导致消费者来不及处理导致消息丢失&lt;/li>
+&lt;/ul>
+&lt;h3 id="消费者添加消息队列实现消息缓冲">消费者添加消息队列实现消息缓冲
+&lt;/h3> &lt;img src="add-queue-to-consumer.svg" width="60%" height="60%">
+&lt;p>很容想到在消费者中提供一个消息队列缓冲没有能够及时处理的消息，通过offset记录已经处理的消息。但这样做仍然会存在以下问题：&lt;/p>
+&lt;ul>
+&lt;li>在消费者重启后消息会丢失&lt;/li>
+&lt;li>每个消费者都维护一个消息队列存在着重复造轮子的问题&lt;/li>
+&lt;li>生产者和消费者耦合的问题并没有解决&lt;/li>
+&lt;/ul>
+&lt;h3 id="将消息队列独立成一个服务">将消息队列独立成一个服务
+&lt;/h3> &lt;img src="simple-msg-queue.svg" width="60%" height="60%">
+&lt;p>将消息队列抽成一个单独的服务使其可以服务于各个业务避免了重复造轮子的问题，实现了生产者和消费者之间的解耦，并且消息持久化、防止消息丢失的逻辑都可在一个服务中实现，独立于业务逻辑。在消息队列服务中我们需要实现高性能、高扩展。&lt;/p>
+&lt;h3 id="实现消息队列的高性能展性">实现消息队列的高性能展性
+&lt;/h3>&lt;h4 id="根据topic定义多消息队列">根据topic定义多消息队列
+&lt;/h4> &lt;img src="multi-producer-consumer.svg" width="60%" heigh="60%">
+&lt;p>通过增加生产者和消费者可以增加生产消息和消费消息的速度。单个消息队列将导致生产者和消费者竞争同一个队列，消息队列将成功性能的瓶颈。但不同业务下的消息并没有关联，也自然没有必要将所有的消息都通过一个消息队列处理。将同一个业务定义下的消息归纳到一个消息队列下（topic队列），这样就将消息队列中的一个消息队列拆分为多个topic队列，大大提升了消息的处理速度。&lt;/p>
+&lt;img src="topic-queue.svg" width="60%" height="60%">
+&lt;p>当一个topic消息量大时，当前的设计仍然无法满足高性能需求。&lt;/p>
+&lt;h4 id="使用partition进一步提高并发度">使用partition进一步提高并发度
+&lt;/h4> &lt;img src="simple-partition.svg" width="60%" height="60%">
+&lt;p>对同一个topic再进行切分，每个partition对应着一个队列，不同消费者处理不同的消息队列。&lt;/p>
+&lt;h4 id="consumer-group-实现多消费者的业务隔离">consumer-group: 实现多消费者的业务隔离
+&lt;/h4> &lt;img src="consumer-group.svg" width="60%" height="60%">
+&lt;p>在上面提到的优化策略中，多个消费者协作处理一个topic，也就是一个消息只能被一个消费者消费。在实际业务需求中，同一个消息需要被多个业务线处理，这样就引入了消费者组的概念，同一个消费者组中的消费者协作处理同一个消息（一个消息只能被消费者组中的一个消费者处理），不同消费者组互不影响。&lt;/p>
+&lt;h3 id="实现消息队列的高扩展性">实现消息队列的高扩展性
+&lt;/h3>&lt;p>在上面的步骤中，通过对消息队列切分再切分已经大大提高了消息队列的性能，但整个消息队列的性能仍受机器的限制，需要通过扩展机器提高整个消费队列服务的性能。&lt;/p>
+&lt;img src="simple-broker.svg" width="60%" height="60%">
+&lt;p>通过将同一个topic中的不同partition分布在不同的broker上，再将多个broker构成一个kafka集群，实现硬件能力的扩展，提高kafka的处理速度。&lt;/p>
+&lt;h3 id="实现消息队列的高可用">实现消息队列的高可用
+&lt;/h3>&lt;h4 id="解决单个broker宕机一主多从">解决单个broker宕机：一主多从
+&lt;/h4> &lt;img src="one-leader-multi-follower.svg" width="60%" height="60%">
+&lt;p>对每个partition，创建一个主节点，多个从节点，主节点负责读写，从节点只负责从主节点拉取数据、作数据备份。当某个broker宕机后，重新选取partition作为主节点。&lt;/p>
+&lt;h4 id="解决所有broker宕机数据持久化与过期策略">解决所有broker宕机：数据持久化与过期策略
+&lt;/h4> &lt;img src="persistence.svg" width="60%" height="60%">
+&lt;p>如果数据都存储在内存中，当所有broker都宕机后未消费的消息将丢失，通过持久化并重启服务可实现服务宕机后的数据恢复。数据不断写入磁盘将会导致磁盘空间占满，需要一种过期策略剔除过期数据。&lt;/p>
+&lt;h2 id="kafka基本操作">Kafka基本操作
+&lt;/h2></description></item><item><title>Git Introduction</title><link>https://zhaoyifengf.github.io/p/git-introduction/</link><pubDate>Fri, 03 Jan 2025 22:04:00 +0000</pubDate><guid>https://zhaoyifengf.github.io/p/git-introduction/</guid><description>&lt;img src="https://zhaoyifengf.github.io/p/git-introduction/cover.png" alt="Featured image of post Git Introduction" />&lt;h2 id="git版本控制的方式">git版本控制的方式
+&lt;/h2>&lt;h3 id="两种版本控制方式">两种版本控制方式
+&lt;/h3>&lt;ul>
+&lt;li>
+&lt;p>基于差异的版本控制（delta-based）
+这类版本控制将存储信息看作一组基本文件和每个文件随时间逐步积累的差异&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0104-tn.png"
+loading="lazy"
+alt="图片描述"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>基于快照的版本控制
+这类版本控制将存储信息看作对小型文件系统的一系列快照，在git中，每当提交更新或者保存项目状态时，就会基本上对当时的全部文件创建一个快照保存并保存这个快照的索引。&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0105-tn.png"
+loading="lazy"
+alt="图片描述"
+>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="git环境配置">git环境配置
+&lt;/h2>&lt;h3 id="基本命令">基本命令
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>设置全局配置&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git config --global
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>config：表示配置git&lt;/li>
+&lt;li>&amp;ndash;global：表示全局配置&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>设置用户名&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git config --global user.name &amp;#34;用户名&amp;#34;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>设置邮箱&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git config --global user.email &amp;#34;邮箱&amp;#34;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>用户名和邮箱是这台机器上git的唯一标志&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="获取git仓库">获取git仓库
+&lt;/h2>&lt;h3 id="本地仓库的创建和初始化">本地仓库的创建和初始化
+&lt;/h3>&lt;h4 id="在已存在目录中创建和初始化">在已存在目录中创建和初始化
+&lt;/h4>&lt;ol>
+&lt;li>
+&lt;p>进入目录&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">cd 目录名
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>初始化当前目录&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git init
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行git init目录后出现如下结果：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % git init
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">提示：使用 &amp;#39;master&amp;#39; 作为初始分支的名称。这个默认分支名称可能会更改。要在新仓库中
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">提示：配置使用初始分支名，并消除这条警告，请执行：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">提示：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">提示： git config --global init.defaultBranch &amp;lt;名称&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">提示：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">提示：除了 &amp;#39;master&amp;#39; 之外，通常选定的名字有 &amp;#39;main&amp;#39;、&amp;#39;trunk&amp;#39; 和 &amp;#39;development&amp;#39;。
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">提示：可以通过以下命令重命名刚创建的分支：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">提示：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">提示： git branch -m &amp;lt;name&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">已初始化空的 Git 仓库于 /Users/zhaoyifeng/Documents/LocalRepository/test/.git/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>查看仓库中的文件夹：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % ls -ah
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">. .. .git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>.git文件夹默认处于隐藏状态，需要添加-ah参数才能查看所有文件&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>查看.git文件夹中的内容&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % cd .git
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 .git % ls -ah
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">. .. HEAD config description hooks info objects refs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>文件夹&lt;/th>
+&lt;th>作用&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>hooks&lt;/td>
+&lt;td>包含客户端或服务端的勾子脚本&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>info&lt;/td>
+&lt;td>保护一个全局性排除文件&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>logs&lt;/td>
+&lt;td>保存日志信息&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>objects&lt;/td>
+&lt;td>存储所有数据内容&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>refs&lt;/td>
+&lt;td>存储指向数据的提交对象的指针&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>config&lt;/td>
+&lt;td>包含项目特有的配置选项&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>description&lt;/td>
+&lt;td>用来显示对仓库的描述&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>HEAD&lt;/td>
+&lt;td>指示目前被检出的分支&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>index&lt;/td>
+&lt;td>保存暂存区信息&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ol start="5">
+&lt;li>git中的工作区、暂存区、版本库和仓库中文件夹的对应关系&lt;/li>
+&lt;/ol>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>git中的区域&lt;/th>
+&lt;th>文件夹&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>工作区&lt;/td>
+&lt;td>项目目录&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>版本库&lt;/td>
+&lt;td>.git文件夹，用来存放代码及历史版本&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>暂存区&lt;/td>
+&lt;td>.git下的index文件，用来存储临时文件（只是在index文件中添加一条操作记录，并没有将内容存放到index文件中）&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h4 id="克隆现有的仓库">克隆现有的仓库
+&lt;/h4>&lt;ol>
+&lt;li>git克隆命令：&lt;code>git clone &amp;lt;url&amp;gt; name&lt;/code>
+会将远程仓库中的项目克隆到当前目录，然后初始化该项目，并进行add和commit&lt;/li>
+&lt;/ol>
+&lt;h2 id="git中的文件状态">git中的文件状态
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>未跟踪&lt;/p>
+&lt;p>默认情况下，git仓库（执行&lt;code>git init&lt;/code>命令的文件夹）下的文件处于未跟踪的状态，git无法对区进行跟踪管理。通过&lt;code>add&lt;/code>命令可以将其由未跟踪变为已跟踪状态。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>已跟踪
+添加到git仓库管理中的文件处于已跟踪的状态，git可以对其进行跟踪管理。已跟踪状态可以细分为：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>已暂存（Staged）：通过add命令将文件添加到暂存区后文件将处于Staged状态。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>已修改（Modified）：修改了已跟踪的文件后，将处于Modified状态&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>未暂存（Committed）：将暂存区中的文件使用commit命令提交到git仓库后将处于Modified状态。&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0106-tn.png"
+loading="lazy"
+>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="本地仓库的操作命令">本地仓库的操作命令
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>创建本地仓库&lt;/p>
+&lt;ul>
+&lt;li>创建一个空文件夹&lt;/li>
+&lt;li>进入该文件夹执行&lt;code>git init&lt;/code>命令&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>添加文件到本地仓库&lt;/p>
+&lt;ol>
+&lt;li>在创建的文件夹中新建一个文件&lt;/li>
+&lt;li>使用&lt;code>git add xxx.xx&lt;/code>命令将工作区中的文件添加到暂存区，文件状态由未跟踪变为已跟踪。
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % vim test.txt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % git add test.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>版本库只能跟踪和管理文本文件，视频、图片等文件虽然可由git管理，但git只能记录其大小而无法记录具体修改的内容。
+&lt;code>git add .&lt;/code>将所有文件添加到暂存区。&lt;/li>
+&lt;li>取消暂存：&lt;code>git reset HEAD 文件名&lt;/code>：取消暂存某一文件&lt;/li>
+&lt;li>使&lt;code>git commit -m &amp;quot;xxxx&amp;quot;&lt;/code>将暂存区中的内容提交到本地仓库，&lt;code>-m&lt;/code>后面的参数是本次提交的描述
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % git commit -m &amp;#34;第一次提交&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">[master（根提交） f9de3df] 第一次提交
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 1 file changed, 1 insertion(+)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> create mode 100644 test.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>使用&lt;code>git commit -m -a&lt;/code>进行先暂存再提交&lt;/li>
+&lt;li>在工作目录中回退到最近一次提交的版本：&lt;code>git checkout -- &amp;lt;file&amp;gt;&lt;/code>&lt;/li>
+&lt;li>修改commit的注释
+&lt;ul>
+&lt;li>
+&lt;p>执行如下命令&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git commit --amend
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>进入编辑器，修改注释信息&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>修改后输入 control + o 然后输入输入回车进行写入&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>退出编译器&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>忽略文件
+新建.gitignore文件，在里面添加需要忽略的文件&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="查看历史提交记录和当前状态">查看历史提交记录和当前状态
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>执行&lt;code>git status&lt;/code>命令查看状态，使用&lt;code>git status -s&lt;/code>或&lt;code>git status --short&lt;/code>查看简短的状态。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % git status
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">位于分支 master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">无文件要提交，干净的工作区
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test %
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>执行&lt;code>git log&lt;/code>查看历史记录&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % git log
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">commit bbf9be55393f4aaeb85909b9b4071973d21a2d50 (HEAD -&amp;gt; master)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Author: zhaoyifeng &amp;lt;zhaoyifeng@lixiang.com&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Date: Wed Jul 5 17:14:36 2023 +0800
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> The first time submit
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>
+&lt;p>commit后面的字符串是这次提交的ID，（HEAD -&amp;gt; master)表示当前提交到了主分支，HEAD是一个指针&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Author后面提交用户的信息&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Date是提交时间&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>最后一行是提交的描述信息&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>查看差异&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>git diff&lt;/code>：查看尚未暂存的文件进行了那些修改&lt;/li>
+&lt;li>&lt;code>git diff -- staged&lt;/code>：对比已暂存文件和最后一次提交文件的差异&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="git中的分支">git中的分支
+&lt;/h2>&lt;h3 id="分支的本质">分支的本质
+&lt;/h3>&lt;p>分支的本质：指向commit对象的可变指针（也可理解为执行数据快照的指针）&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>commit对象：每次提交时都会保存一个commit对象，，包含指向暂存内容快照的指针、本次提交的作者等相关附属信息、零个或多个指向该提交对象的父对象指针：首次提交是没有直接祖先的，普通提交有一个祖先，由两个或多个分支合并产生的提交则有多个祖先。&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0302-tn.png"
+loading="lazy"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>git分支：指向commit对象的指针。git会默认创建一个master分支，在每次提交时都会自动向前移动。&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0303-tn.png"
+loading="lazy"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>创建分支：本质上就是创建一个指针，&lt;code>git branch testing&lt;/code>新建一个分支指针指向当前commit对象。也就是HEAD指针指向的分支指向的commit对象。&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0304-tn.png"
+loading="lazy"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>HEAD指针：指向当前所在的分支（HEAD不可直接指向commit对象）&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0305-tn.png"
+loading="lazy"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>切换分支：改变HEAD指向的分支。&lt;code>git checkout testing&lt;/code>切换到testing分支。&lt;/p>
+&lt;blockquote>
+&lt;p>当你切换分支的时候，Git 会重置你的工作目录，使其看起来像回到了你在那个分支上最后一次提交的样子。 Git 会自动添加、删除、修改文件以确保此时你的工作目录和这个分支最后一次提交时的样子一模一样。&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0306-tn.png"
+loading="lazy"
+>
+每提交一次后，HEAD都会随着当前分支一起移动。（HEAD指向的是分支指针，提交时分支指针不变，改变的只是分支指针指向的对象。）执行：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">vim test rb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git commit -a -m &amp;#39;made a change&amp;#39;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>得到如下结果：
+&lt;img src="https://gitee.com/progit/figures/18333fig0307-tn.png"
+loading="lazy"
+>
+切换到一个分支时会将工作目录中的内容加载为该分支指向的快照中的内容，这会导致原来的工作目录中的内容丢失。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>分支分叉：如果切换到master分支并在修改后进行提交那就会产生分支的分叉。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git checkout master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">vim test rb
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git commit -a -m &amp;#39;made other change&amp;#39;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0309-tn.png"
+loading="lazy"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>分支的合并：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>未分叉分支的合并&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0313-tn.png"
+loading="lazy"
+>
+执行如下命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ git checkout master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ git merge hotfix
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Updating f42c576..3a0874c
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Fast forward
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">README | 1 -
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1 files changed, 0 insertions(+), 1 deletions(-)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以发现出现了Fast forward也就是快进，这是因为要合并的分支在master的上游，只需要把master指向hotfix指向的commit对象即可。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>分叉分支的合并
+&lt;img src="https://gitee.com/progit/figures/18333fig0315-tn.png"
+loading="lazy"
+>
+合并如图所示的分支，将iss53合并回master，执行如下命令&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git checkout master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git merge iss53
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>由于master指向的commit节点（C4）不是iss53指向的commit节点（C5）的直接祖先，因此会进行C4、C5和二者最近的共同祖先（C2）三个节点的简单三方合并的到一个新的简单快照，然后创建一个行的commit对象（C6）指向这个简单快照，然后master指向C6。&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0316-tn.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/progit/figures/18333fig0317-tn.png"
+loading="lazy"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>三种不同的合并方式&lt;/p>
+&lt;p>&lt;img src="https://zhaoyifengf.github.io/p/git-introduction/three_merge_explain.png"
+width="1438"
+height="624"
+srcset="https://zhaoyifengf.github.io/p/git-introduction/three_merge_explain_hu_f8255808a26af856.png 480w, https://zhaoyifengf.github.io/p/git-introduction/three_merge_explain_hu_c92abe800529efd.png 1024w"
+loading="lazy"
+alt="三种不同的合并方式"
+class="gallery-image"
+data-flex-grow="230"
+data-flex-basis="553px"
+>&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>git merge &amp;ndash;ff(fast-forward): 如果能快进则快进分支即移动指针&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>git merge &amp;ndash;no-ff(no-fast-forword): 即使能快进也会创建一个新的commit(内容和被合并分支的commit相同)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>git merge &amp;ndash;squash: 将被合并节点的修改的内容（保存删除操作）加载到工作区和暂存区，等待一次新的提交&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>合并时发生冲突：如果不同分支修改了同一部分，那合并时可能发生冲突。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git merge iss53
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Auto-merging index.html
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CONFLICT (content): Merge conflict in index.html
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Automatic merge failed; fix conflicts and then commit the result.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>git作了合并但未提交，它会停下来等待解决冲突。打开发生冲突的文件index.html：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD:index.html
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;div id=&amp;#34;footer&amp;#34;&amp;gt;contact : email.support@github.com&amp;lt;/div&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">=======
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;div id=&amp;#34;footer&amp;#34;&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">please contact us at support@github.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;/div&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; iss53:index.html
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>=======上面是当前分支文件中的内容，下面是iss53分支的内容。手动解决冲突，然后执行&lt;code>git add index.html&lt;/code>，一旦进入暂存区就代表冲突已解决。再执行&lt;code>git commit&lt;/code>。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>删除分支：&lt;code>git branch -d 分支名&lt;/code>，删除指定的分支。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>分支的管理
+查看当前有哪些分支，其中*表示当前分支即HEAD指向的分支&lt;code>git branch&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % git branch
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">testing
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>查看分支最后一次提交的信息&lt;code>git branch -v&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 test % git branch -v
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* master e13db42 Merge branch &amp;#39;testing&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">testing ad69ccd testing第四次提交
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>查看已合并到当前分支的分支：&lt;code>git branch --merged&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>查看未合并到当前分支的分支：&lt;code>git branch --no-merged&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>远程分支&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>远程仓库的添加与查看&lt;/p>
+&lt;p>添加远程仓库，url是远程仓库的地址，shorname是给url对应的远程仓库的命名。执行&lt;code>git clone url&lt;/code>后会自动添加一个远程仓库并将其命名为origin，并且克隆这个远程仓库到本地。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git remote add &amp;lt;shortname&amp;gt; &amp;lt;url&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>查看远程仓库&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 mytest % git remote
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">origin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>查看远程仓库和对应的URL，fetch表示拉取的链接，push表示推送的链接。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 mytest % git remote -v
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">origin https://gitee.com/zhao-jufeng/mytest/ (fetch)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">origin https://gitee.com/zhao-jufeng/mytest/ (push)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>查看某个远程仓库的具体信息&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* 远程 origin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">获取地址：https://gitee.com/zhao-jufeng/mytest/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">推送地址：https://gitee.com/zhao-jufeng/mytest/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">HEAD 分支：master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">远程分支：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dev 已跟踪
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">master 已跟踪
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">为 &amp;#39;git pull&amp;#39; 配置的本地分支：ƒ
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">master 与远程 master 合并
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">为 &amp;#39;git push&amp;#39; 配置的本地引用：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">master 推送至 master (最新)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>远程分支的查看：远程分支是存储在本地对应着远程数据库中分支的分支。&lt;/p>
+&lt;p>&lt;code>git branch&lt;/code>：只能查看本地分支&lt;/p>
+&lt;p>&lt;code>git branch -r&lt;/code>：查看远程分支&lt;/p>
+&lt;p>远程仓库含有master和dev分支，执行&lt;code>git clone https://gitee.com/zhao-jufeng/mytest/&lt;/code>命令后执行&lt;code>git branch -r&lt;/code>可以得到：
+&lt;code>zhaoyifeng@MacBook-Air-6 mytest % git branch -r origin/HEAD -&amp;gt; origin/master origin/dev origin/master&lt;/code>
+可以看到有两个远程分支，origin是远程仓库的名字，执行clone命令时默命名为origin。需要注意的是，这些分支也存储在本地，与远程仓库作一一映射。&lt;/p>
+&lt;p>执行&lt;code>tree .git&lt;/code>查看.git的目录结构：&lt;/p>
+&lt;pre>&lt;code> ```
+zhaoyifeng@MacBook-Air-6 mytest % tree .git
+.git
+├── HEAD
+├── config
+├── description
+├── hooks
+│   ├── applypatch-msg.sample
+│   ├── commit-msg.sample
+│   ├── fsmonitor-watchman.sample
+│   ├── post-update.sample
+│   ├── pre-applypatch.sample
+│   ├── pre-commit.sample
+│   ├── pre-merge-commit.sample
+│   ├── pre-push.sample
+│   ├── pre-rebase.sample
+│   ├── pre-receive.sample
+│   ├── prepare-commit-msg.sample
+│   ├── push-to-checkout.sample
+│   ├── sendemail-validate.sample
+│   └── update.sample
+├── index
+├── info
+│   └── exclude
+├── logs
+│   ├── HEAD
+│   └── refs
+│   ├── heads
+│   │   └── master
+│   └── remotes
+│   └── origin
+│   └── HEAD
+├── objects
+│   ├── info
+│   └── pack
+│   ├── pack-d93bb5ea2faba296524bc440149ae8b102f490cf.idx
+│   ├── pack-d93bb5ea2faba296524bc440149ae8b102f490cf.pack
+│   └── pack-d93bb5ea2faba296524bc440149ae8b102f490cf.rev
+├── packed-refs
+└── refs
+├── heads
+│   └── master
+├── remotes
+│   └── origin
+│   └── HEAD
+└── tags
+```
+&lt;/code>&lt;/pre>
+&lt;p>远程的refs中的内容被压缩到了packed-refs中，查看其内容可以看到两个远程分支。
+&lt;code>cat .git/packed-refs # pack-refs with: peeled fully-peeled sorted 7eb1322ce1fa2104ac76d996c08eb1a861860cc1 refs/remotes/origin/dev 7eb1322ce1fa2104ac76d996c08eb1a861860cc1 refs/remotes/origin/master&lt;/code>
+如果refs中含有远程分支，则该分支是最新的，packed-refs对远程分支的压缩有延迟。
+执行&lt;code>git log&lt;/code>可以查看历史，master, origin/master, origin/dev, origin/HEAD都指向了一个commit对象。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 mytest % git log
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">commit 7eb1322ce1fa2104ac76d996c08eb1a861860cc1 (HEAD -&amp;gt; master, origin/master, origin/dev, origin/HEAD)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Author: 赵已峰 &amp;lt;zhaoyifeng@lixiang.com&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Date: Fri Jul 7 01:25:14 2023 +0000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> add test.txt.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Signed-off-by: 赵已峰 &amp;lt;zhaoyifeng@lixiang.com&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">commit d6ce159ed51c87cd4e7531dfbbeb6015e5c22f1f
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Author: 赵已峰 &amp;lt;zhaoyifeng@lixiang.com&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Date: Fri Jul 7 01:24:38 2023 +0000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Initial commit
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>同步远程仓库中的分支到本地：在远程分支（本地存储的远程仓库的分支并不是远程仓库中的分支）上修改后提交或者执行merge命令不会移动远程分支，只有通过&lt;code>git fetch&lt;/code>或者&lt;code>git pull&lt;/code>才会改变远程分支。这是为了保持远程分支和远程仓库中的分支的对应关系，避免在本地对远程分支进行修改。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>git fetch [remote-name]&lt;/code>：从远程仓库中拉取本地仓库没有的数据，这个操作会移动远程分支。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 mytest % git fetch
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">remote: Enumerating objects: 4, done.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">remote: Counting objects: 100% (4/4), done.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">remote: Compressing objects: 100% (2/2), done.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">remote: Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">展开对象中: 100% (3/3), 967 字节 | 193.00 KiB/s, 完成.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">来自 https://gitee.com/zhao-jufeng/mytest
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">7eb1322..f20bd41 master -&amp;gt; origin/master
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;code>git pull &lt;/code>：&lt;code>git fetch&lt;/code>和&lt;code>git merge&lt;/code>命名的组合&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git pull 远程仓库名 远程仓库分支名:本地分支名
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>拉取远程仓库中的分支在与本地分支merge（需要注意的是这会拉取远程仓库中的所有分支）
+如何入当前分支合并则可以省略本地分支名，简写为：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git pull 远程仓库名 远程仓库分支名
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>删除远程分支：&lt;/p>
+&lt;p>删除远程仓库中的分支再查看会出现如下提示：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 mytest % git remote show origin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* 远程 origin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">获取地址：https://gitee.com/zhao-jufeng/mytest/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">推送地址：https://gitee.com/zhao-jufeng/mytest/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">HEAD 分支：master
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">远程分支：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">master 已跟踪
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">refs/remotes/origin/dev 已过期（使用 &amp;#39;git remote prune&amp;#39; 来移除）
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">为 &amp;#39;git pull&amp;#39; 配置的本地分支：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">master 与远程 master 合并
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">为 &amp;#39;git push&amp;#39; 配置的本地引用：
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">master 推送至 master (本地已过时)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>提示远程分支已过期，建议删除。执行如下命名删除：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">zhaoyifeng@MacBook-Air-6 mytest % git remote prune origin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">修剪 origin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">URL：https://gitee.com/zhao-jufeng/mytest/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* [已删除] origin/dev
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>或者&lt;code>git fetch --prune&lt;/code>先删远程仓库中没有的本地远程分支，然后再拉取远程仓库中的数据。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>本地仓库同步到远程仓库&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>git push 远程仓库名 本地分支名:远程仓库中的分支名&lt;/code>：用本地仓库中的分支更新远程仓库的分支，这会让远程仓库的分支直接指向本地仓库的分支指向的commit，此外，与远程仓库中对应的远程分支也会指向本地分支指向的commit。注意，这并不要本地仓库中有远程仓库中对应的远程分支。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>如果本地分支名与远程仓库中的分支名相同，则可以简写为&lt;code>git push 远程仓库名 分支名&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>跟踪分支：执行git push命令时需要同指定远程仓库名、本地分支名和远程分支名，而跟踪分支则可简化这个操作。&lt;/p>
+&lt;p>跟踪分支：本地分支和某个远程分支建立联系后那这个本地分支就变成一个跟踪分支。在跟踪分支上执行&lt;code>git push&lt;/code>和&lt;code>git pull&lt;/code>命令时无需指定远程仓库名、本地分支名和远程分支名。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>跟踪分支的创建&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>在远程分支上创建分支时指定其为远程分支（建的本地分支名与远程分支名相同）：&lt;code>$ git checkout --track 远程仓库名/远程分支名&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在远程分支上创建分支时指定其为远程分支（指定本地分支名）：&lt;code>git checkout -b 本地分支名 远程仓库名/远程分支名&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>指定已有的本地分支为莫哥远程分支的跟踪分支：&lt;code>git branch -u 远程仓库名/远程分支名&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="git中的标签">git中的标签
+&lt;/h2>&lt;h3 id="什么是标签">什么是标签
+&lt;/h3>&lt;ol>
+&lt;li>标签的本质：一个指向commit对象的指针，类似于分支，但标签是一个静态指针，不会移动。&lt;/li>
+&lt;li>标签的作用：标记一个重要的commit。&lt;/li>
+&lt;/ol>
+&lt;h3 id="打标签">打标签
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>给当前分支指向的commit打标签&lt;/p>
+&lt;ul>
+&lt;li>轻量标签：&lt;code>git tag 标签名&lt;/code>&lt;/li>
+&lt;li>附注标签：&lt;code>git tag -a 标签名 -m &amp;quot;描述信息&amp;quot;&lt;/code>，相比轻量标签，附注标签可以添加描述信息&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>给某一次commit打标签：只需要在上面两种打标签的方式最后面添加要打标签的commit的Hash值即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>查看标签&lt;/p>
+&lt;ul>
+&lt;li>查看有哪些标签&lt;code>git tag&lt;/code>&lt;/li>
+&lt;li>查看某一条标签的信息&lt;code>git show 标签名&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>
