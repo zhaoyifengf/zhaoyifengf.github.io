@@ -98,22 +98,3 @@ CAP理论：在分布式系统，不会同时具备CAP三个特性，只能同�
 
 #### 三阶段提交模型（3PC）
 
-相比与2PC模型，3PC模型将prepare阶段分成了CanCommit阶段与PreCommit阶段。
-
-1. CanCommit阶段
-
-在CanCommit阶段，事务管理器会向资源管理器发送CanCommit消息，资源管理器如果认为可以执行任务则发送确认消息并进入预备状态。
-
-![](can_commit.png)
-
-2. PreCommit阶段
-
-在PreCommit阶段，资源管理器接受到消息并写入undo log与redo log。
-
-![](prepare_commit.png)
-
-3. DoCommit阶段
-
-![](do_commit.png)
-
-在DoCommit阶段，资源管理器收到消息并提交事务。

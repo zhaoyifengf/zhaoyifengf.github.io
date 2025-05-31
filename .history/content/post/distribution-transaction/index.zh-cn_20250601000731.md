@@ -112,8 +112,6 @@ CAP理论：在分布式系统，不会同时具备CAP三个特性，只能同�
 
 ![](prepare_commit.png)
 
-3. DoCommit阶段
-
-![](do_commit.png)
+1. ![](do_commit.png)
 
 在DoCommit阶段，资源管理器收到消息并提交事务。
