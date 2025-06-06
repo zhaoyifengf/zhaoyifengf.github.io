@@ -66,11 +66,6 @@ weight: 1       # You can add weight to some posts to override the default sorti
 
 ![](soa.png)
 
-SOA架构引入了注册中心解决了服务依赖与调用关系的自动注册与发现。但这种架构有如下缺点：
-
-  - 各服务间存在依赖关系，如果某个服务出现故障可能会造成服务器崩溃。
-  - 服务间的依赖与调用关系复杂增加了测试和运维成本。
-
 
 ## 分布式事务理论知识
 ### CAP（Consistency、Availability、Partition Tolerance）理论
