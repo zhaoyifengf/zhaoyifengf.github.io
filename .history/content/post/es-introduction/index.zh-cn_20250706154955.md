@@ -14,7 +14,7 @@ weight: 1       # You can add weight to some posts to override the default sorti
 ## 利用倒排索引加速查询符合条件的文本
 
 ### 利用倒排索引加速查询
-对于若干段文本，例如：1: "I hava an orange"，2: "I hava a banana"，3:  "I hava an apple"，想要查询"苹果"在哪条记录里需要便利所有文体，时间复杂度为O(n)。将文本进行切分，以切分后的文本作为键，文本ID作为值构成一个二维表格，这样可以大大降低查询时间。
+对于若干段文本，例如：1: "I hava an orange"，2: "I hava a banana"，3:  "I hava an apple"，想要查询"apple"在哪条记录里需要便利所有文体，时间复杂度为O(n)。将文本进行切分，以切分后的文本作为键，文本ID作为值构成一个二维表格，这样可以大大降低查询时间。
 
 | term | 文本id |
 |--|--|

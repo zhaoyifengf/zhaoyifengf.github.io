@@ -57,39 +57,16 @@ ES采用行式存储数据，对应存储结构被称为Store Fileds。
 
   ![](doc_values.png)
 
+
+
+## ES实现高性能、高并发、高扩展性
+
 ### segment
 
 segment是一个具备搜索功能的最小单元，包含了Inverted Index，Term Index，Stored Fileds，Doc Values四个模块。
 
   ![](segment.png)
 
-### Lucene
+### 利用读写分离提高读写销量
 
-新增数据时不会立刻写入segment而是先写入内存缓冲区，等到执行refresh动作时将数据写入新的segment，在segment激活后才能参与搜索，已经写入的segment不可再进行写入。频繁的生成新的segment会导致数量过多，通过不定期将多个小segment合并为一个大segment可以减小segment数量。上面提到的就是大名鼎鼎的搜索引擎lucene的工作过程。
-
-  ![](lucene.png)
-
-## ES实现高性能、高并发、高扩展性
-
-### 高性能
-
-- 单个lucene读写性能过低，将数据按照业务划分，不同的数据写入不同的lucene可以提到读写并发度
-
-- 单个index name的数量扔热可能过多，对单个index name的数据进行分片，每个分片对应着一个lucene库，可进一步提高并发度。
-
-### 高扩展性
-
-申请多个node，将不同的分片部署到不同的node上
-
-### 高可用
-
-对每个分片部署多个副本，不同的副本部署到不同的节点上。
-
-
-### node请求分化
-
-若同一个node同时负责集群管理、存储数据、处理请求，在进行扩展时将同时扩展这几个能力，在实际使用时可能只需要扩展其中一两个能力，通过将功能进行分化，不同的node部署不同的功能，可实现能力的按需扩展。
-
-### 去中心化
-
-由于同时保护了多个node，需要对多个node进行管理选取其中主节点，使用zookeeper会导致系统过重，使用raft可实现去中心化选主。
+新增数据时不会立刻写入segment而是先写入内存缓冲区，等到执行refresh动作时将数据写入新的segment，在segment激活后才能参与搜索，已经写入的segment不可再进行写入。
