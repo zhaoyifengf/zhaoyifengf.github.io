@@ -1,0 +1,73 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.7 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="26.0.7">
+  <diagram name="第 1 页" id="bpbdhQeY7GZ1E1aAatHd">
+    <mxGraphModel dx="681" dy="526" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="NL5jDlkEoojwt230uDJT-22" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="230" width="510" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-9" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="375" y="260" width="145" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-2" value="Coordinate Node" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-3" value="Master Node" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-4" value="Shard 1" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="387.5" y="280" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-5" value="Shard 2副本" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="387.5" y="330" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-16" value="Data Node" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="375" y="390" width="145" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-17" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="260" width="145" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-18" value="Shard 1副本" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="562.5" y="280" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-19" value="Shard 2" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="562.5" y="330" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-20" value="Data Node" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="390" width="145" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-23" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="NL5jDlkEoojwt230uDJT-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110" y="240" as="sourcePoint" />
+            <mxPoint x="420" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-24" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;curved=1;" edge="1" parent="1" target="NL5jDlkEoojwt230uDJT-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="340" y="290" as="sourcePoint" />
+            <mxPoint x="450" y="340" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="340" y="291" />
+              <mxPoint x="364" y="291" />
+              <mxPoint x="364" y="240" />
+              <mxPoint x="448" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-27" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;curved=1;" edge="1" parent="1" source="NL5jDlkEoojwt230uDJT-4" target="NL5jDlkEoojwt230uDJT-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="330" as="sourcePoint" />
+            <mxPoint x="420" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-28" value="Text" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="370" y="290" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NL5jDlkEoojwt230uDJT-29" value="Elastic Search" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="366.25" y="190" width="162.5" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
