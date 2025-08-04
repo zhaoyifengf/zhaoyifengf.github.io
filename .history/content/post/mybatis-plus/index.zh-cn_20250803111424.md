@@ -1,0 +1,152 @@
+---
+title: "Mybatisplus"
+description: 
+date: 2025-06-23T23:26:52+08:00
+image: cover.png
+math: 
+license: 
+hidden: false
+comments: true
+draft: true
+categories:
+    - Mybatisplus
+tags:
+    - Mybatisplus
+---
+
+## mybatisplus SQL执行流程
+
+### 服务启动时通过自动配置类创建MybatisSqlSessionFactoryBean
+  
+
+`mybatis-plus-boot-starter`包提供了`MybatisPlusAutoConfiguration`自动配置类，该自动配置类创建了MybatisSqlSessionFactoryBean对象并交由Spring管理，在创建MybatisSqlSessionFactoryBean时，sqlSessionFactory方法设置了DataScoure对象。自动配置类需要满足以下几个条件才会创建MybatisSqlSessionFactoryBean：
+
+-  MybatisPlusAutoConfiguration上的@ConditionalOnSingleCandidate指定了：被Spring管理的只有一个DataSource对象或者多个DataSource对指定了优先级（如通过@Primary注解指定）
+- sqlSessionFactory方法上@ConditionalOnMissingBean指定了：只有在不存在SqlSessionFactory时才会创建MybatisSqlSessionFactoryBean对象
+
+```
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnClass({SqlSessionFactory.class, SqlSessionFactoryBean.class})
+@ConditionalOnSingleCandidate(DataSource.class)
+@EnableConfigurationProperties(MybatisPlusProperties.class)
+@AutoConfigureAfter({DataSourceAutoConfiguration.class, MybatisPlusLanguageDriverAutoConfiguration.class})
+public class MybatisPlusAutoConfiguration implements InitializingBean {
+	@Bean
+    @ConditionalOnMissingBean
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+        // TODO 使用 MybatisSqlSessionFactoryBean 而不是 SqlSessionFactoryBean
+        MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
+        factory.setDataSource(dataSource);
+		.....
+	}
+}
+```
+
+###  Spring对事务进行代理
+执行Mybatisplus DML语句前，Spring对要执行的方法（加了@Transactiontional注解）进行代理，代理执行的逻辑在TransactionAspectSupport中的invokeWithinTransaction方法中。整体调用流程如下
+
+TransactionInterceptor#invoke调用TransactionAspectSupport#invokeWithinTransaction执行开启事务、执行业务逻辑、提交事务三个步骤。
+- 开启事务
+   - TransactionAspectSupport#invokeWithinTransaction内部调用determineTransactionManager
+   - TransactionAspectSupport#determineTransactionManager内部调用createTransactionIfNecessary
+   - TransactionAspectSupport#createTransactionIfNecessary调用AbstractPlatformTransactionManager#getTransaction
+   - AbstractPlatformTransactionManager#getTransactio内部调用
+
+```
+@SuppressWarnings("serial")
+public class TransactionInterceptor extends TransactionAspectSupport implements MethodInterceptor, Serializable {
+
+	@Override
+	@Nullable
+	public Object invoke(MethodInvocation invocation) throws Throwable {
+		// Work out the target class: may be {@code null}.
+		// The TransactionAttributeSource should be passed the target class
+		// as well as the method, which may be from an interface.
+		Class<?> targetClass = (invocation.getThis() != null ? AopUtils.getTargetClass(invocation.getThis()) : null);
+
+		// Adapt to TransactionAspectSupport's invokeWithinTransaction...
+		return invokeWithinTransaction(invocation.getMethod(), targetClass, invocation::proceed);
+	}
+}
+
+public abstract class TransactionAspectSupport implements BeanFactoryAware, InitializingBean {
+	@Nullable
+	protected Object invokeWithinTransaction(Method method, @Nullable Class<?> targetClass,
+			final InvocationCallback invocation) throws Throwable {
+
+		// If the transaction attribute is null, the method is non-transactional.
+		TransactionAttributeSource tas = getTransactionAttributeSource();
+		final TransactionAttribute txAttr = (tas != null ? tas.getTransactionAttribute(method, targetClass) : null);
+		final TransactionManager tm = determineTransactionManager(txAttr);
+
+		........ // 响应式事务处理逻辑
+
+		PlatformTransactionManager ptm = asPlatformTransactionManager(tm);
+		final String joinpointIdentification = methodIdentification(method, targetClass, txAttr);
+
+		if (txAttr == null || !(ptm instanceof CallbackPreferringPlatformTransactionManager)) {
+			// Standard transaction demarcation with getTransaction and commit/rollback calls.
+			TransactionInfo txInfo = createTransactionIfNecessary(ptm, txAttr, joinpointIdentification);
+
+			Object retVal;
+			try {
+				// This is an around advice: Invoke the next interceptor in the chain.
+				// This will normally result in a target object being invoked.
+				retVal = invocation.proceedWithInvocation();
+			}
+			catch (Throwable ex) {
+				// target invocation exception
+				completeTransactionAfterThrowing(txInfo, ex);
+				throw ex;
+			}
+			finally {
+				cleanupTransactionInfo(txInfo);
+			}
+
+			if (retVal != null && vavrPresent && VavrDelegate.isVavrTry(retVal)) {
+				// Set rollback-only in case of Vavr failure matching our rollback rules...
+				TransactionStatus status = txInfo.getTransactionStatus();
+				if (status != null && txAttr != null) {
+					retVal = VavrDelegate.evaluateTryFailure(retVal, txAttr, status);
+				}
+			}
+
+			commitTransactionAfterReturning(txInfo);
+			return retVal;
+		}else {
+			...... // 非回调事务处理逻辑
+	}
+
+	protected TransactionInfo createTransactionIfNecessary(@Nullable PlatformTransactionManager tm,
+			@Nullable TransactionAttribute txAttr, final String joinpointIdentification) {
+
+		// If no name specified, apply method identification as transaction name.
+		if (txAttr != null && txAttr.getName() == null) {
+			txAttr = new DelegatingTransactionAttribute(txAttr) {
+				@Override
+				public String getName() {
+					return joinpointIdentification;
+				}
+			};
+		}
+
+		TransactionStatus status = null;
+		if (txAttr != null) {
+			if (tm != null) {
+				status = tm.getTransaction(txAttr);
+			}
+			else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Skipping transactional joinpoint [" + joinpointIdentification +
+							"] because no transaction manager has been configured");
+				}
+			}
+		}
+		return prepareTransactionInfo(tm, txAttr, joinpointIdentification, status);
+	}
+}
+```
+
+
+
+

@@ -1,0 +1,1071 @@
+{
+    "code": 0,
+    "msg": "SUCCESS",
+    "data": [
+        {
+            "employeeId": "ALL",
+            "employeeName": "全部",
+            "data": [
+                {
+                    "employeeId": "ALL",
+                    "employeeName": "全部",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 26,
+                    "netSmallOrderCount": 24,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 2,
+                    "waitConversionSmallOrderCount": 23
+                },
+                {
+                    "employeeId": "ALL",
+                    "employeeName": "全部",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 5,
+                    "netSmallOrderCount": 3,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 2,
+                    "waitConversionSmallOrderCount": 2
+                }
+            ]
+        },
+        {
+            "employeeId": "7032",
+            "employeeName": "梁吉星",
+            "data": [
+                {
+                    "employeeId": "7032",
+                    "employeeName": "梁吉星",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 88,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "7032",
+                    "employeeName": "梁吉星",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "137589",
+            "employeeName": "张方雪",
+            "data": [
+                {
+                    "employeeId": "137589",
+                    "employeeName": "张方雪",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 88,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "137589",
+                    "employeeName": "张方雪",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "133640",
+            "employeeName": "张学",
+            "data": [
+                {
+                    "employeeId": "133640",
+                    "employeeName": "张学",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "133640",
+                    "employeeName": "张学",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "8667",
+            "employeeName": "马广禄",
+            "data": [
+                {
+                    "employeeId": "8667",
+                    "employeeName": "马广禄",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 16,
+                    "netSmallOrderCount": 16,
+                    "netSmallOrderTargetCount": 55,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 16
+                },
+                {
+                    "employeeId": "8667",
+                    "employeeName": "马广禄",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "9387",
+            "employeeName": "朴成成",
+            "data": [
+                {
+                    "employeeId": "9387",
+                    "employeeName": "朴成成",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "9387",
+                    "employeeName": "朴成成",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "29619",
+            "employeeName": "张嘉芮",
+            "data": [
+                {
+                    "employeeId": "29619",
+                    "employeeName": "张嘉芮",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "29619",
+                    "employeeName": "张嘉芮",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "158009",
+            "employeeName": "李海兵",
+            "data": [
+                {
+                    "employeeId": "158009",
+                    "employeeName": "李海兵",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 55,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "158009",
+                    "employeeName": "李海兵",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1617342",
+            "employeeName": "安鹏",
+            "data": [
+                {
+                    "employeeId": "1617342",
+                    "employeeName": "安鹏",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 55,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1617342",
+                    "employeeName": "安鹏",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "3721096101310803970",
+            "employeeName": "周腾",
+            "data": [
+                {
+                    "employeeId": "3721096101310803970",
+                    "employeeName": "周腾",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 55,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "3721096101310803970",
+                    "employeeName": "周腾",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "134647",
+            "employeeName": "徐涛",
+            "data": [
+                {
+                    "employeeId": "134647",
+                    "employeeName": "徐涛",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 55,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "134647",
+                    "employeeName": "徐涛",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1626579",
+            "employeeName": "曹彦飞",
+            "data": [
+                {
+                    "employeeId": "1626579",
+                    "employeeName": "曹彦飞",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1626579",
+                    "employeeName": "曹彦飞",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "138327",
+            "employeeName": "徐海翔",
+            "data": [
+                {
+                    "employeeId": "138327",
+                    "employeeName": "徐海翔",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 55,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "138327",
+                    "employeeName": "徐海翔",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "135994",
+            "employeeName": "刘欣然",
+            "data": [
+                {
+                    "employeeId": "135994",
+                    "employeeName": "刘欣然",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 3,
+                    "netSmallOrderCount": 3,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 3
+                },
+                {
+                    "employeeId": "135994",
+                    "employeeName": "刘欣然",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "154514",
+            "employeeName": "巴哈迪尔·海力力",
+            "data": [
+                {
+                    "employeeId": "154514",
+                    "employeeName": "巴哈迪尔·海力力",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "154514",
+                    "employeeName": "巴哈迪尔·海力力",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "160262",
+            "employeeName": "汤玉佩",
+            "data": [
+                {
+                    "employeeId": "160262",
+                    "employeeName": "汤玉佩",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "160262",
+                    "employeeName": "汤玉佩",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "149808",
+            "employeeName": "吕子豪",
+            "data": [
+                {
+                    "employeeId": "149808",
+                    "employeeName": "吕子豪",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "149808",
+                    "employeeName": "吕子豪",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "10055",
+            "employeeName": "高乐",
+            "data": [
+                {
+                    "employeeId": "10055",
+                    "employeeName": "高乐",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "10055",
+                    "employeeName": "高乐",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1605717",
+            "employeeName": "章鹏",
+            "data": [
+                {
+                    "employeeId": "1605717",
+                    "employeeName": "章鹏",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1605717",
+                    "employeeName": "章鹏",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1633459",
+            "employeeName": "林月茗",
+            "data": [
+                {
+                    "employeeId": "1633459",
+                    "employeeName": "林月茗",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1633459",
+                    "employeeName": "林月茗",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "3637797611533971457",
+            "employeeName": "任丽丽",
+            "data": [
+                {
+                    "employeeId": "3637797611533971457",
+                    "employeeName": "任丽丽",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 1,
+                    "netSmallOrderCount": 1,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 1
+                },
+                {
+                    "employeeId": "3637797611533971457",
+                    "employeeName": "任丽丽",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "116947",
+            "employeeName": "李瑞卿",
+            "data": [
+                {
+                    "employeeId": "116947",
+                    "employeeName": "李瑞卿",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "116947",
+                    "employeeName": "李瑞卿",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1644551",
+            "employeeName": "甄嘉杰",
+            "data": [
+                {
+                    "employeeId": "1644551",
+                    "employeeName": "甄嘉杰",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1644551",
+                    "employeeName": "甄嘉杰",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1649134",
+            "employeeName": "连祉豪",
+            "data": [
+                {
+                    "employeeId": "1649134",
+                    "employeeName": "连祉豪",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1649134",
+                    "employeeName": "连祉豪",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1650679",
+            "employeeName": "张惠娴",
+            "data": [
+                {
+                    "employeeId": "1650679",
+                    "employeeName": "张惠娴",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1650679",
+                    "employeeName": "张惠娴",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "144169",
+            "employeeName": "芮伟",
+            "data": [
+                {
+                    "employeeId": "144169",
+                    "employeeName": "芮伟",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "144169",
+                    "employeeName": "芮伟",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1625948",
+            "employeeName": "汪静",
+            "data": [
+                {
+                    "employeeId": "1625948",
+                    "employeeName": "汪静",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1625948",
+                    "employeeName": "汪静",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1605214",
+            "employeeName": "黄徐铭",
+            "data": [
+                {
+                    "employeeId": "1605214",
+                    "employeeName": "黄徐铭",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1605214",
+                    "employeeName": "黄徐铭",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "6395",
+            "employeeName": "崔云鹏",
+            "data": [
+                {
+                    "employeeId": "6395",
+                    "employeeName": "崔云鹏",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "6395",
+                    "employeeName": "崔云鹏",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1634575",
+            "employeeName": "汪子越",
+            "data": [
+                {
+                    "employeeId": "1634575",
+                    "employeeName": "汪子越",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1634575",
+                    "employeeName": "汪子越",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1609375",
+            "employeeName": "张琪",
+            "data": [
+                {
+                    "employeeId": "1609375",
+                    "employeeName": "张琪",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1609375",
+                    "employeeName": "张琪",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "3852992314050592770",
+            "employeeName": "邓宝磊",
+            "data": [
+                {
+                    "employeeId": "3852992314050592770",
+                    "employeeName": "邓宝磊",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "3852992314050592770",
+                    "employeeName": "邓宝磊",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "66280",
+            "employeeName": "汪子越",
+            "data": [
+                {
+                    "employeeId": "66280",
+                    "employeeName": "汪子越",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 77,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "66280",
+                    "employeeName": "汪子越",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1652136",
+            "employeeName": "夏永钦",
+            "data": [
+                {
+                    "employeeId": "1652136",
+                    "employeeName": "夏永钦",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1652136",
+                    "employeeName": "夏永钦",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1652265",
+            "employeeName": "王麒宇",
+            "data": [
+                {
+                    "employeeId": "1652265",
+                    "employeeName": "王麒宇",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1652265",
+                    "employeeName": "王麒宇",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "1656275",
+            "employeeName": "赵悦希",
+            "data": [
+                {
+                    "employeeId": "1656275",
+                    "employeeName": "赵悦希",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "1656275",
+                    "employeeName": "赵悦希",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "3900832798912339969",
+            "employeeName": "刘一手",
+            "data": [
+                {
+                    "employeeId": "3900832798912339969",
+                    "employeeName": "刘一手",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                },
+                {
+                    "employeeId": "3900832798912339969",
+                    "employeeName": "刘一手",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 0,
+                    "netSmallOrderCount": 0,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 0,
+                    "waitConversionSmallOrderCount": 0
+                }
+            ]
+        },
+        {
+            "employeeId": "small_order_test_2_employee",
+            "employeeName": "small_order_test_2_employee",
+            "data": [
+                {
+                    "employeeId": "small_order_test_2_employee",
+                    "employeeName": "small_order_test_2_employee",
+                    "seriesCodeName": "总车系",
+                    "seriesCode": "ALL",
+                    "smallOrderCount": 6,
+                    "netSmallOrderCount": 4,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 2,
+                    "waitConversionSmallOrderCount": 3
+                },
+                {
+                    "employeeId": "small_order_test_2_employee",
+                    "employeeName": "small_order_test_2_employee",
+                    "seriesCodeName": "理想L6",
+                    "seriesCode": "X4",
+                    "smallOrderCount": 5,
+                    "netSmallOrderCount": 3,
+                    "netSmallOrderTargetCount": 0,
+                    "smallOrderCancelCount": 2,
+                    "waitConversionSmallOrderCount": 2
+                }
+            ]
+        }
+    ],
+    "success": true
+}
