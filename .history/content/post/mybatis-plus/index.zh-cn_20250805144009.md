@@ -51,7 +51,7 @@ TransactionInterceptor#invoke -> TransactionAspectSupport#invokeWithinTransactio
    - TransactionAspectSupport#determineTransactionManager -> createTransactionIfNecessary
    - TransactionAspectSupport#createTransactionIfNecessary -> AbstractPlatformTransactionManager#getTransaction，getTransaction方法先尝试获取事务再开启事务：
      - 获取事务
-       - AbstractPlatformTransactionManager#getTransactio -> DataSourceTransactionManager#doGetTransaction（doGetTransaction是个抽象方法，具体逻辑由实现类提供，我们在这里只讨论DataSourceTransactionManager的实现逻辑）
+       - AbstractPlatformTransactionManager#getTransaction -> DataSourceTransactionManager#doGetTransaction（doGetTransaction是个抽象方法，具体逻辑由实现类提供，我们在这里只讨论DataSourceTransactionManager的实现逻辑）
        - DataSourceTransactionManager#doGetTransaction，该方法做下如下操作：
          - 创建DataSourceTransactionObject对象
          - TransactionSynchronizationManager.getResource方法获取DataSourceTransactionManager中dataScoure对象绑定的ConnectionHolder对象（用来存储connection对象）。TransactionSynchronizationManager中维护了一个ThreadLocal属性resources，这是一个以dataScoure对象为key、ConnectionHolder对象为值的Map。TransactionSynchronizationManager用来管理每个线程中和dataScoure对象绑定的connection对象。
@@ -62,7 +62,8 @@ TransactionInterceptor#invoke -> TransactionAspectSupport#invokeWithinTransactio
          - 通过DataSourceTransactionManager中dataScoure对象获取connection
          - 将connection包装为ConnectionHolder对象
          - 通过TransactionSynchronizationManager.bindResource将ConnectionHolder对象和connection对象绑定并设置上面提到的TransactionSynchronizationManager中的ThreadLocal属性resources中
- - 执行业务逻辑 TransactionAspectSupport#invokeWithinTransaction执行被代理方法，mybatisplus中的方法也会在在此被执行，具体流程我们方法下一个部分讨论。
+ - 执行业务逻辑 
+   - TransactionAspectSupport#invokeWithinTransaction执行被代理方法，mybatisplus中的方法也会在在此被执行，具体流程我们方法下一个部分讨论。
  - 提交事务
 
 ```
@@ -326,8 +327,83 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
     - 准备Statement，设置Connection为上一步获取的Connection
     - 执行SQL语句
   
-## mybatisplus与连接池
+## DataScoure：数据库链接的管理者
 
+不论是在Spring事务还是mybatisplus执行SQL语句前获取connection，都会调用DataScoure#getConnection方法。如下，DataScoure只提供了两个获取connection方法，由此可知DataScoure最主要的功能就是进行Connection的管理。对DataSource的getConnection方法提供不同的实现可以提供不同的功能，最典型的莫过于连接池和动态数据源。
+
+```
+public interface DataSource  extends CommonDataSource, Wrapper {
+
+  Connection getConnection() throws SQLException;
+
+  Connection getConnection(String username, String password) throws SQLException;
+}
+```
+### 连接池
+
+### 动态数据源
+
+我们以HikariCP为例，先介绍其在SpringBoot项目中如何使用，再介绍如何通过其获取Connection
+
+- SpringBoot集成HikariCP
+
+	- yaml配置
+	```
+	spring:
+		datasource:
+		type: com.zaxxer.hikari.HikariDataSource
+		url: jdbc:mysql://localhost:3306/test?useSSL=false
+		username: root
+		password: 123456
+		driver-class-name: com.mysql.cj.jdbc.Driver
+		hikari:
+			pool-name: MyHikariCP
+			minimum-idle: 5
+			maximum-pool-size: 20
+			idle-timeout: 600000
+			max-lifetime: 1800000
+			connection-timeout: 30000
+			connection-test-query: SELECT 1
+	```
+
+	- 数据源属性类
+	```
+	@ConfigurationProperties(prefix = "spring.datasource")
+	public class DataSourceProperties implements BeanClassLoaderAware, InitializingBean {
+		private ClassLoader classLoader;
+		private String name;
+		private boolean generateUniqueName = true;
+		private Class<? extends DataSource> type;
+		private String driverClassName;
+		private String url;
+		private String username;
+		private String password;
+	}
+	```
+	- Springboot自动配置
+
+		当我们在yaml文件中指定了
+	```
+	stract class DataSourceConfiguration {
+		@Configuration(proxyBeanMethods = false)
+		@ConditionalOnClass(HikariDataSource.class)
+		@ConditionalOnMissingBean(DataSource.class)
+		@ConditionalOnProperty(name = "spring.datasource.type", havingValue = "com.zaxxer.hikari.HikariDataSource",
+				matchIfMissing = true)
+		static class Hikari {
+
+			@Bean
+			@ConfigurationProperties(prefix = "spring.datasource.hikari")
+			HikariDataSource dataSource(DataSourceProperties properties) {
+				HikariDataSource dataSource = createDataSource(properties, HikariDataSource.class);
+				if (StringUtils.hasText(properties.getName())) {
+					dataSource.setPoolName(properties.getName());
+				}
+				return dataSource;
+			}
+		}
+	}
+	```
 
 ## mybatisplus 执行 SQL时数据源问题总结
 
