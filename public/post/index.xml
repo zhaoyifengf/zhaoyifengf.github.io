@@ -7,7 +7,7 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>峰峰</copyright>
-        <lastBuildDate>Mon, 23 Jun 2025 23:26:52 +0800</lastBuildDate><atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 06 Aug 2025 19:45:42 +0800</lastBuildDate><atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Distribution Transaction</title>
         <link>http://localhost:1313/p/distribution-transaction/</link>
         <pubDate>Mon, 10 Feb 2025 22:34:00 +0800</pubDate>
@@ -1727,6 +1727,14 @@ DTP模型中的三个核心组件：&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 </description>
+        </item>
+        <item>
+        <title>Mybatis Plus</title>
+        <link>http://localhost:1313/p/mybatis-plus/</link>
+        <pubDate>Wed, 06 Aug 2025 19:45:42 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/mybatis-plus/</guid>
+        <description></description>
         </item>
         <item>
         <title>Data Migrate</title>
