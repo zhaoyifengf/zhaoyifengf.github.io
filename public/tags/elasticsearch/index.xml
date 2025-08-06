@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Elasticsearch on 峰峰的博客</title>
+        <link>http://localhost:1313/tags/elasticsearch/</link>
+        <description>Recent content in Elasticsearch on 峰峰的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>峰峰</copyright>
+        <lastBuildDate>Mon, 10 Feb 2025 22:34:00 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>ES Introduction</title>
+        <link>http://localhost:1313/p/es-introduction/</link>
+        <pubDate>Mon, 10 Feb 2025 22:34:00 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/es-introduction/</guid>
+        <description>&lt;img src="http://localhost:1313/p/es-introduction/cover.png" alt="Featured image of post ES Introduction" /&gt;&lt;h2 id=&#34;利用倒排索引加速查询符合条件的文本&#34;&gt;利用倒排索引加速查询符合条件的文本
+&lt;/h2&gt;&lt;h3 id=&#34;利用倒排索引加速查询&#34;&gt;利用倒排索引加速查询
+&lt;/h3&gt;&lt;p&gt;对于若干段文本，例如：1: &amp;ldquo;I hava an orange&amp;rdquo;，2: &amp;ldquo;I hava a banana&amp;rdquo;，3:  &amp;ldquo;I hava an apple&amp;rdquo;，想要查询&amp;quot;apple&amp;quot;在哪条记录里需要遍历所有文体，时间复杂度为O(n)。将文本进行切分，以切分后的文本作为键，文本ID作为值构成一个二维表格，这样可以大大降低查询时间。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;term&lt;/th&gt;
+&lt;th&gt;文本id&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;I&lt;/td&gt;
+&lt;td&gt;1、2、3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;have&lt;/td&gt;
+&lt;td&gt;1、2、3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;an&lt;/td&gt;
+&lt;td&gt;1、3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;a&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;orange&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;banana&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;apple&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;但当词项增多，遍历这些词项仍需花费大量时间，对词项进行倒排并进行二分查找可将时间复杂度降低到O(logN)。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Term  dictionary&lt;/th&gt;
+&lt;th&gt;Posting list&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;a&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;an&lt;/td&gt;
+&lt;td&gt;1、3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;apple&lt;/td&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;banana&lt;/td&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;have&lt;/td&gt;
+&lt;td&gt;1、2、3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;I&lt;/td&gt;
+&lt;td&gt;1、2、3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;orange&lt;/td&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;将排好的词项称为Term  dictionary，文档ID称为Posting list，构成的搜索结构称为inverted index（倒排索引）。&lt;/p&gt;
+&lt;h3 id=&#34;利用term-index进一步加速查询&#34;&gt;利用Term index进一步加速查询
+&lt;/h3&gt;&lt;p&gt;将文本进行分词后得到的Term  dictionary数据量巨大，只能通过磁盘检索。检索磁盘耗时较长，基于Term  dictionary构建一颗字典树（Term index）并将字段树放入内存将极大加速索引效率。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/es-introduction/term_index.png&#34;
+	width=&#34;431&#34;
+	height=&#34;221&#34;
+	srcset=&#34;http://localhost:1313/p/es-introduction/term_index_hu706023011730954019.png 480w, http://localhost:1313/p/es-introduction/term_index_hu3465561227996940478.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;195&#34;
+		data-flex-basis=&#34;468px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;利用store-fileds存储文档&#34;&gt;利用Store Fileds存储文档
+&lt;/h3&gt;&lt;p&gt;ES采用行式存储数据，对应存储结构被称为Store Fileds。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/es-introduction/store_fileds.png&#34;
+	width=&#34;221&#34;
+	height=&#34;171&#34;
+	srcset=&#34;http://localhost:1313/p/es-introduction/store_fileds_hu10593093459646777648.png 480w, http://localhost:1313/p/es-introduction/store_fileds_hu15135619549454069665.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;129&#34;
+		data-flex-basis=&#34;310px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;利用doc-values实现快速聚合操作排序脚本计算&#34;&gt;利用Doc Values实现快速聚合操作、排序、脚本计算
+&lt;/h3&gt;&lt;p&gt;行式存储数据在进行大规模数据的聚合、排序以及脚本计算操作时效率低下，因此ES提供了列式存储结构Doc Values，针对单个字段进行集中存储，每行记录了字段值及其所在文档的文档ID。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/es-introduction/doc_values.png&#34;
+	width=&#34;421&#34;
+	height=&#34;121&#34;
+	srcset=&#34;http://localhost:1313/p/es-introduction/doc_values_hu17217672444350874758.png 480w, http://localhost:1313/p/es-introduction/doc_values_hu5051812254090472569.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;347&#34;
+		data-flex-basis=&#34;835px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;segment&#34;&gt;segment
+&lt;/h3&gt;&lt;p&gt;segment是一个具备搜索功能的最小单元，包含了Inverted Index，Term Index，Stored Fileds，Doc Values四个模块。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/es-introduction/segment.png&#34;
+	width=&#34;161&#34;
+	height=&#34;251&#34;
+	srcset=&#34;http://localhost:1313/p/es-introduction/segment_hu12321416375288718295.png 480w, http://localhost:1313/p/es-introduction/segment_hu9125367266452915399.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;64&#34;
+		data-flex-basis=&#34;153px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;lucene&#34;&gt;Lucene
+&lt;/h3&gt;&lt;p&gt;新增数据时不会立刻写入segment而是先写入内存缓冲区，等到执行refresh动作时将数据写入新的segment，在segment激活后才能参与搜索，已经写入的segment不可再进行写入。频繁的生成新的segment会导致数量过多，通过不定期将多个小segment合并为一个大segment可以减小segment数量。上面提到的就是大名鼎鼎的搜索引擎lucene的工作过程。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/es-introduction/lucene.png&#34;
+	width=&#34;131&#34;
+	height=&#34;161&#34;
+	srcset=&#34;http://localhost:1313/p/es-introduction/lucene_hu11664736397719589028.png 480w, http://localhost:1313/p/es-introduction/lucene_hu9916616277094254037.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;81&#34;
+		data-flex-basis=&#34;195px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;es实现高性能高并发高扩展性&#34;&gt;ES实现高性能、高并发、高扩展性
+&lt;/h2&gt;&lt;h3 id=&#34;高性能&#34;&gt;高性能
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;单个lucene读写性能过低，将数据按照业务划分，不同的数据写入不同的lucene可以提到读写并发度&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;单个index name的数量扔热可能过多，对单个index name的数据进行分片，每个分片对应着一个lucene库，可进一步提高并发度。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;高扩展性&#34;&gt;高扩展性
+&lt;/h3&gt;&lt;p&gt;申请多个node，将不同的分片部署到不同的node上&lt;/p&gt;
+&lt;h3 id=&#34;高可用&#34;&gt;高可用
+&lt;/h3&gt;&lt;p&gt;对每个分片部署多个副本，不同的副本部署到不同的节点上。&lt;/p&gt;
+&lt;h3 id=&#34;node请求分化&#34;&gt;node请求分化
+&lt;/h3&gt;&lt;p&gt;若同一个node同时负责集群管理、存储数据、处理请求，在进行扩展时将同时扩展这几个能力，在实际使用时可能只需要扩展其中一两个能力，通过将功能进行分化，不同的node部署不同的功能，可实现能力的按需扩展。&lt;/p&gt;
+&lt;h3 id=&#34;去中心化&#34;&gt;去中心化
+&lt;/h3&gt;&lt;p&gt;由于同时保护了多个node，需要对多个node进行管理选取其中主节点，使用zookeeper会导致系统过重，使用raft可实现去中心化选主。&lt;/p&gt;
+&lt;h3 id=&#34;es-整体架构&#34;&gt;ES 整体架构
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/es-introduction/es.png&#34;
+	width=&#34;608&#34;
+	height=&#34;251&#34;
+	srcset=&#34;http://localhost:1313/p/es-introduction/es_hu4970037939326555202.png 480w, http://localhost:1313/p/es-introduction/es_hu8807643472496026523.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;242&#34;
+		data-flex-basis=&#34;581px&#34;
+	
+&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

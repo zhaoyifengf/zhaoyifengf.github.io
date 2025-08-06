@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="利用倒排索引加速查询符合条件的文本 利用倒排索引加速查询 对于若干段文本，例如：1: &ldquo;I hava an orange&rdquo;，2: &ldquo;I hava a banana&rdquo;，3: &ldquo;I hava an apple&rdquo;，想要查询&quot;apple&quot;在哪条记录里需要遍历所有文体，时间复杂度为O(n)。将文本进行切分，以切分后的文本作为键，文本ID作为值构成一个二维表格，这样可以大大降低查询时间。 term 文本id I 1、2、3 have 1、2、3 an 1、3 a 2 orange 1 banana 2 apple 3 但当词项增多，遍历这些词项仍需花费大量时间，对词项进行倒排并进行二分查找可将时间复杂度降低到O(logN)。 Term dictionary Posting list a 2 an 1、3 apple 3 banana 2 have 1、2、3 I 1、2、3 orange 1 将排好的词项称为Term dictionary，文档ID称为Posting list，构成的搜索结构称为inverted index（倒排索引）。 利用Term index进一步加速查询 将文本进行分词后得到的Term dictionary数据量巨大，只能通过磁盘检索。检索磁盘耗时较长，基于Term dictionary构建一颗字典树（Term index）并将字段树放入内存将极大加速索引效率。 利用Store Fileds存储文档 ES采用行式存储数据，对应存储结构被称为Store Fileds。 利用Doc Values实现快速聚合操作、排序、脚本计算 行式存储数据在进行大规模数据的聚合、排序以及脚本计算操作时效率低下，因此ES提供了列式存储结构Doc Values，针对单个字段进行集中存储，每行记录了字段值及其所在文档的文档ID。 segment segment是一个具备搜索功能的最小单元，包含了Inverted Index，Term Index，Stored Fileds，Doc Values四个模块。">
+<title>ES Introduction</title>
+
+<link rel='canonical' href='http://localhost:1313/p/es-introduction/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="ES Introduction">
+<meta property='og:description' content="利用倒排索引加速查询符合条件的文本 利用倒排索引加速查询 对于若干段文本，例如：1: &ldquo;I hava an orange&rdquo;，2: &ldquo;I hava a banana&rdquo;，3: &ldquo;I hava an apple&rdquo;，想要查询&quot;apple&quot;在哪条记录里需要遍历所有文体，时间复杂度为O(n)。将文本进行切分，以切分后的文本作为键，文本ID作为值构成一个二维表格，这样可以大大降低查询时间。 term 文本id I 1、2、3 have 1、2、3 an 1、3 a 2 orange 1 banana 2 apple 3 但当词项增多，遍历这些词项仍需花费大量时间，对词项进行倒排并进行二分查找可将时间复杂度降低到O(logN)。 Term dictionary Posting list a 2 an 1、3 apple 3 banana 2 have 1、2、3 I 1、2、3 orange 1 将排好的词项称为Term dictionary，文档ID称为Posting list，构成的搜索结构称为inverted index（倒排索引）。 利用Term index进一步加速查询 将文本进行分词后得到的Term dictionary数据量巨大，只能通过磁盘检索。检索磁盘耗时较长，基于Term dictionary构建一颗字典树（Term index）并将字段树放入内存将极大加速索引效率。 利用Store Fileds存储文档 ES采用行式存储数据，对应存储结构被称为Store Fileds。 利用Doc Values实现快速聚合操作、排序、脚本计算 行式存储数据在进行大规模数据的聚合、排序以及脚本计算操作时效率低下，因此ES提供了列式存储结构Doc Values，针对单个字段进行集中存储，每行记录了字段值及其所在文档的文档ID。 segment segment是一个具备搜索功能的最小单元，包含了Inverted Index，Term Index，Stored Fileds，Doc Values四个模块。">
+<meta property='og:url' content='http://localhost:1313/p/es-introduction/'>
+<meta property='og:site_name' content='峰峰的博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Elasticsearch' /><meta property='article:published_time' content='2025-02-10T22:34:00&#43;08:00'/><meta property='article:modified_time' content='2025-02-10T22:34:00&#43;08:00'/><meta property='og:image' content='http://localhost:1313/p/es-introduction/cover.png' />
+<meta name="twitter:title" content="ES Introduction">
+<meta name="twitter:description" content="利用倒排索引加速查询符合条件的文本 利用倒排索引加速查询 对于若干段文本，例如：1: &ldquo;I hava an orange&rdquo;，2: &ldquo;I hava a banana&rdquo;，3: &ldquo;I hava an apple&rdquo;，想要查询&quot;apple&quot;在哪条记录里需要遍历所有文体，时间复杂度为O(n)。将文本进行切分，以切分后的文本作为键，文本ID作为值构成一个二维表格，这样可以大大降低查询时间。 term 文本id I 1、2、3 have 1、2、3 an 1、3 a 2 orange 1 banana 2 apple 3 但当词项增多，遍历这些词项仍需花费大量时间，对词项进行倒排并进行二分查找可将时间复杂度降低到O(logN)。 Term dictionary Posting list a 2 an 1、3 apple 3 banana 2 have 1、2、3 I 1、2、3 orange 1 将排好的词项称为Term dictionary，文档ID称为Posting list，构成的搜索结构称为inverted index（倒排索引）。 利用Term index进一步加速查询 将文本进行分词后得到的Term dictionary数据量巨大，只能通过磁盘检索。检索磁盘耗时较长，基于Term dictionary构建一颗字典树（Term index）并将字段树放入内存将极大加速索引效率。 利用Store Fileds存储文档 ES采用行式存储数据，对应存储结构被称为Store Fileds。 利用Doc Values实现快速聚合操作、排序、脚本计算 行式存储数据在进行大规模数据的聚合、排序以及脚本计算操作时效率低下，因此ES提供了列式存储结构Doc Values，针对单个字段进行集中存储，每行记录了字段值及其所在文档的文档ID。 segment segment是一个具备搜索功能的最小单元，包含了Inverted Index，Term Index，Stored Fileds，Doc Values四个模块。"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='http://localhost:1313/p/es-introduction/cover.png' />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu1972000685367345417.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🐮</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">峰峰的博客</a></h1>
+            <h2 class="site-description">你好呀，朋友。</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/zhaoyifengf'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#利用倒排索引加速查询符合条件的文本">利用倒排索引加速查询符合条件的文本</a>
+      <ol>
+        <li><a href="#利用倒排索引加速查询">利用倒排索引加速查询</a></li>
+        <li><a href="#利用term-index进一步加速查询">利用Term index进一步加速查询</a></li>
+        <li><a href="#利用store-fileds存储文档">利用Store Fileds存储文档</a></li>
+        <li><a href="#利用doc-values实现快速聚合操作排序脚本计算">利用Doc Values实现快速聚合操作、排序、脚本计算</a></li>
+        <li><a href="#segment">segment</a></li>
+        <li><a href="#lucene">Lucene</a></li>
+      </ol>
+    </li>
+    <li><a href="#es实现高性能高并发高扩展性">ES实现高性能、高并发、高扩展性</a>
+      <ol>
+        <li><a href="#高性能">高性能</a></li>
+        <li><a href="#高扩展性">高扩展性</a></li>
+        <li><a href="#高可用">高可用</a></li>
+        <li><a href="#node请求分化">node请求分化</a></li>
+        <li><a href="#去中心化">去中心化</a></li>
+        <li><a href="#es-整体架构">ES 整体架构</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/es-introduction/">
+                <img src="/p/es-introduction/cover_hu15274133632948505640.png"
+                        srcset="/p/es-introduction/cover_hu15274133632948505640.png 800w, /p/es-introduction/cover_hu14515421673755101758.png 1600w"
+                        width="800" 
+                        height="176" 
+                        loading="lazy"
+                        alt="Featured image of post ES Introduction" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/kafka/" >
+                Kafka
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/es-introduction/">ES Introduction</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Feb 10, 2025</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 1 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="利用倒排索引加速查询符合条件的文本">利用倒排索引加速查询符合条件的文本
+</h2><h3 id="利用倒排索引加速查询">利用倒排索引加速查询
+</h3><p>对于若干段文本，例如：1: &ldquo;I hava an orange&rdquo;，2: &ldquo;I hava a banana&rdquo;，3:  &ldquo;I hava an apple&rdquo;，想要查询&quot;apple&quot;在哪条记录里需要遍历所有文体，时间复杂度为O(n)。将文本进行切分，以切分后的文本作为键，文本ID作为值构成一个二维表格，这样可以大大降低查询时间。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>term</th>
+<th>文本id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I</td>
+<td>1、2、3</td>
+</tr>
+<tr>
+<td>have</td>
+<td>1、2、3</td>
+</tr>
+<tr>
+<td>an</td>
+<td>1、3</td>
+</tr>
+<tr>
+<td>a</td>
+<td>2</td>
+</tr>
+<tr>
+<td>orange</td>
+<td>1</td>
+</tr>
+<tr>
+<td>banana</td>
+<td>2</td>
+</tr>
+<tr>
+<td>apple</td>
+<td>3</td>
+</tr>
+</tbody>
+</table></div>
+<p>但当词项增多，遍历这些词项仍需花费大量时间，对词项进行倒排并进行二分查找可将时间复杂度降低到O(logN)。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>Term  dictionary</th>
+<th>Posting list</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>2</td>
+</tr>
+<tr>
+<td>an</td>
+<td>1、3</td>
+</tr>
+<tr>
+<td>apple</td>
+<td>3</td>
+</tr>
+<tr>
+<td>banana</td>
+<td>2</td>
+</tr>
+<tr>
+<td>have</td>
+<td>1、2、3</td>
+</tr>
+<tr>
+<td>I</td>
+<td>1、2、3</td>
+</tr>
+<tr>
+<td>orange</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<p>将排好的词项称为Term  dictionary，文档ID称为Posting list，构成的搜索结构称为inverted index（倒排索引）。</p>
+<h3 id="利用term-index进一步加速查询">利用Term index进一步加速查询
+</h3><p>将文本进行分词后得到的Term  dictionary数据量巨大，只能通过磁盘检索。检索磁盘耗时较长，基于Term  dictionary构建一颗字典树（Term index）并将字段树放入内存将极大加速索引效率。</p>
+<p><img src="/p/es-introduction/term_index.png"
+	width="431"
+	height="221"
+	srcset="/p/es-introduction/term_index_hu706023011730954019.png 480w, /p/es-introduction/term_index_hu3465561227996940478.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="195"
+		data-flex-basis="468px"
+	
+></p>
+<h3 id="利用store-fileds存储文档">利用Store Fileds存储文档
+</h3><p>ES采用行式存储数据，对应存储结构被称为Store Fileds。</p>
+<p><img src="/p/es-introduction/store_fileds.png"
+	width="221"
+	height="171"
+	srcset="/p/es-introduction/store_fileds_hu10593093459646777648.png 480w, /p/es-introduction/store_fileds_hu15135619549454069665.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="129"
+		data-flex-basis="310px"
+	
+></p>
+<h3 id="利用doc-values实现快速聚合操作排序脚本计算">利用Doc Values实现快速聚合操作、排序、脚本计算
+</h3><p>行式存储数据在进行大规模数据的聚合、排序以及脚本计算操作时效率低下，因此ES提供了列式存储结构Doc Values，针对单个字段进行集中存储，每行记录了字段值及其所在文档的文档ID。</p>
+<p><img src="/p/es-introduction/doc_values.png"
+	width="421"
+	height="121"
+	srcset="/p/es-introduction/doc_values_hu17217672444350874758.png 480w, /p/es-introduction/doc_values_hu5051812254090472569.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="347"
+		data-flex-basis="835px"
+	
+></p>
+<h3 id="segment">segment
+</h3><p>segment是一个具备搜索功能的最小单元，包含了Inverted Index，Term Index，Stored Fileds，Doc Values四个模块。</p>
+<p><img src="/p/es-introduction/segment.png"
+	width="161"
+	height="251"
+	srcset="/p/es-introduction/segment_hu12321416375288718295.png 480w, /p/es-introduction/segment_hu9125367266452915399.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="64"
+		data-flex-basis="153px"
+	
+></p>
+<h3 id="lucene">Lucene
+</h3><p>新增数据时不会立刻写入segment而是先写入内存缓冲区，等到执行refresh动作时将数据写入新的segment，在segment激活后才能参与搜索，已经写入的segment不可再进行写入。频繁的生成新的segment会导致数量过多，通过不定期将多个小segment合并为一个大segment可以减小segment数量。上面提到的就是大名鼎鼎的搜索引擎lucene的工作过程。</p>
+<p><img src="/p/es-introduction/lucene.png"
+	width="131"
+	height="161"
+	srcset="/p/es-introduction/lucene_hu11664736397719589028.png 480w, /p/es-introduction/lucene_hu9916616277094254037.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="81"
+		data-flex-basis="195px"
+	
+></p>
+<h2 id="es实现高性能高并发高扩展性">ES实现高性能、高并发、高扩展性
+</h2><h3 id="高性能">高性能
+</h3><ul>
+<li>
+<p>单个lucene读写性能过低，将数据按照业务划分，不同的数据写入不同的lucene可以提到读写并发度</p>
+</li>
+<li>
+<p>单个index name的数量扔热可能过多，对单个index name的数据进行分片，每个分片对应着一个lucene库，可进一步提高并发度。</p>
+</li>
+</ul>
+<h3 id="高扩展性">高扩展性
+</h3><p>申请多个node，将不同的分片部署到不同的node上</p>
+<h3 id="高可用">高可用
+</h3><p>对每个分片部署多个副本，不同的副本部署到不同的节点上。</p>
+<h3 id="node请求分化">node请求分化
+</h3><p>若同一个node同时负责集群管理、存储数据、处理请求，在进行扩展时将同时扩展这几个能力，在实际使用时可能只需要扩展其中一两个能力，通过将功能进行分化，不同的node部署不同的功能，可实现能力的按需扩展。</p>
+<h3 id="去中心化">去中心化
+</h3><p>由于同时保护了多个node，需要对多个node进行管理选取其中主节点，使用zookeeper会导致系统过重，使用raft可实现去中心化选主。</p>
+<h3 id="es-整体架构">ES 整体架构
+</h3><p><img src="/p/es-introduction/es.png"
+	width="608"
+	height="251"
+	srcset="/p/es-introduction/es_hu4970037939326555202.png 480w, /p/es-introduction/es_hu8807643472496026523.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="242"
+		data-flex-basis="581px"
+	
+></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/elasticsearch/">Elasticsearch</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/kafka-introduction/">
+        
+        
+            <div class="article-image">
+                <img src="/p/kafka-introduction/cover.97f15a61f769f82c5ee9b29cdc8c40cc_hu8461552441731006077.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Kafka Introduction"
+                        data-key="kafka-introduction" 
+                        data-hash="md5-l/FaYfdp&#43;Cxe6bKc3IxAzA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kafka Introduction</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2025 峰峰
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.9d7e745e7328f514e8816f0ce0e0fab5a1ec07a0d2247a02c1ca370666ad2b38.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
