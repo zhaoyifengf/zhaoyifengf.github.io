@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Data Base on 峰峰的博客</title>
+        <link>http://localhost:1313/categories/data-base/</link>
+        <description>Recent content in Data Base on 峰峰的博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>峰峰</copyright>
+        <lastBuildDate>Mon, 23 Jun 2025 23:26:52 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/data-base/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Data Migrate</title>
+        <link>http://localhost:1313/p/data-migrate/</link>
+        <pubDate>Mon, 23 Jun 2025 23:26:52 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/data-migrate/</guid>
+        <description>&lt;img src="http://localhost:1313/p/data-migrate/cover.png" alt="Featured image of post Data Migrate" /&gt;&lt;h2 id=&#34;待迁移数据的读写类型&#34;&gt;待迁移数据的读写类型
+&lt;/h2&gt;&lt;h3 id=&#34;写入类型&#34;&gt;写入类型
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;外部数据源写入
+数据库中的多张表的数据源只取自外部，库内表数据写入不依赖其余表结构。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/data-migrate/out_write.png&#34;
+	width=&#34;661&#34;
+	height=&#34;137&#34;
+	srcset=&#34;http://localhost:1313/p/data-migrate/out_write_hu6950204462110058043.png 480w, http://localhost:1313/p/data-migrate/out_write_hu6306938794377017859.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;482&#34;
+		data-flex-basis=&#34;1157px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;内部数据源写入
+数据库中的多张表的数据源除取自外部，内部表与表之间也存在数据写入依赖。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/data-migrate/inner_write.png&#34;
+	width=&#34;461&#34;
+	height=&#34;296&#34;
+	srcset=&#34;http://localhost:1313/p/data-migrate/inner_write_hu7887815463495973064.png 480w, http://localhost:1313/p/data-migrate/inner_write_hu3051287467301608639.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;155&#34;
+		data-flex-basis=&#34;373px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;读取类型&#34;&gt;读取类型
+&lt;/h3&gt;&lt;h4 id=&#34;只读&#34;&gt;只读
+&lt;/h4&gt;&lt;h4 id=&#34;读写&#34;&gt;读写
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;内部读写&lt;/li&gt;
+&lt;li&gt;外部读写&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;数据迁移方案&#34;&gt;数据迁移方案
+&lt;/h2&gt;&lt;h3 id=&#34;停机迁移&#34;&gt;停机迁移
+&lt;/h3&gt;&lt;h3 id=&#34;不停机迁移&#34;&gt;不停机迁移
+&lt;/h3&gt;&lt;h2 id=&#34;数据迁移方案的利与弊&#34;&gt;数据迁移方案的利与弊
+&lt;/h2&gt;</description>
+        </item>
+        
+    </channel>
+</rss>
