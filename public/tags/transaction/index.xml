@@ -461,7 +461,99 @@ DTP模型中的三个核心组件：&lt;/p&gt;
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;业务方在完成业务处理后，会向业务参与方发送消息，发送消息时通知时运行消息丢失。业务方需要体统查询接口供业务接收方按需查询，用于恢复丢失的消息。&lt;/p&gt;
-</description>
+&lt;h2 id=&#34;分布式事务原理&#34;&gt;分布式事务原理
+&lt;/h2&gt;&lt;h3 id=&#34;可靠消息分布式事务&#34;&gt;可靠消息分布式事务
+&lt;/h3&gt;&lt;h4 id=&#34;可靠消息需要解决的核心问题&#34;&gt;可靠消息需要解决的核心问题
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/distribution-transaction/basic_schematic_diagram.png&#34;
+	width=&#34;1906&#34;
+	height=&#34;270&#34;
+	srcset=&#34;http://localhost:1313/p/distribution-transaction/basic_schematic_diagram_hu13271390383359503967.png 480w, http://localhost:1313/p/distribution-transaction/basic_schematic_diagram_hu4619714833415161341.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;工作方式&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;705&#34;
+		data-flex-basis=&#34;1694px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可靠消息分布式事务一共包含了四步操作：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事务发起方执行事务&lt;/li&gt;
+&lt;li&gt;事务发起方投递消息&lt;/li&gt;
+&lt;li&gt;事务参与方消费消息&lt;/li&gt;
+&lt;li&gt;事务参与方处理消息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面的四步操作要么全做要么全不做，可能出现四中场景：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事务发起方执行事务失败&lt;/li&gt;
+&lt;li&gt;事务发起方投递消息失败&lt;/li&gt;
+&lt;li&gt;事务参与方消息消费失败&lt;/li&gt;
+&lt;li&gt;事务参与方处理消息失败&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当出现上面四中场景中的任意一种之后，需要保证&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事务发起方一定能回滚至事务提交前的状态&lt;/li&gt;
+&lt;li&gt;事务参与方一定能回滚至消息处理前的状态&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在可靠消息分布式事务中一共包含了三个角色：事务发起方、消息中间件、事务参与方，各个角色实现如下任务：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事务参与方：消息提交成功和执行事务成功要么全做要么全不做&lt;/li&gt;
+&lt;li&gt;消息中间件：能够正确返回消息提交及消息消费的状态给事务参与方&lt;/li&gt;
+&lt;li&gt;消息消费者：处理消息失败能正确返回消息执行状态&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;各个角色实现任务的难点&#34;&gt;各个角色实现任务的难点
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;事务参与方如何保证事务提交与消息投递是原子操作&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;先发消息&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;执行事务前发消息：消息发送成功但事务执行失败，只回滚了事务并没有实现消息发送和写库都执行失败或者都执行成功。如果消息接收方通过接口回调来确认消息状态，在读已提交和可重复读的隔离级别下设置回调时间过短可能导致没有正确获取到事务的执行状态。&lt;/li&gt;
+&lt;li&gt;执行事务时发送消息：在写库完成前发送消息可能会出现消息发送成功，但写库失败的场景。在网络波动是，发送消息等待响应时间长，会阻塞事务执行，影响系统安全。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;先写库&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;执行事务后发送消息：在提交事务后设置回调发送消息，单事务已提交，消息可能发送失败。&lt;/li&gt;
+&lt;li&gt;事务执行时发送消息：在写库完成后发送消息，发送消息失败则回滚。在网络波动时，发送消息等待响应时间长，会阻塞事务执行，影响系统安全。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面的两种方式还可按照 在事务内发消息还是在事务外发消息划分，二者各有如下缺点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;在事务内发消息&lt;/p&gt;
+&lt;p&gt;在事务内发消息，在网络超时，生产者重试，可能阻塞事务导致死锁等问题。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在事务外发消息&lt;/p&gt;
+&lt;p&gt;难以保证事务执行成功消息提交成功是原子操作。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;消息中间件平台如何保证返回给事务发起方消息投递及消息消费的正确状态&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如何返回消息投递正确状态
+&lt;ul&gt;
+&lt;li&gt;如何确保返回给事务发起方的投递失败的状态真实可靠
+在网络超时时，事务参与方任务消息发送失败，但消息可能投递成功，导致事务参与方与事务发起方状态不一致。&lt;/li&gt;
+&lt;li&gt;如何确保返回给事务发起方投递成功的状态真实可靠
+在消息中间件宕机这种极端情况下，如何保证消息能够正确投递&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;如何返回消息消费正确状态
+在网络波动时，消费者没有在指定时间返回消息处理状态，消息中间件错误地返回回滚消息给事务发起方，导致事务发起方回滚消息，导致事务参与方与事务发起方状态不一致。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;本地消息表&#34;&gt;本地消息表
+&lt;/h4&gt;&lt;h4 id=&#34;可靠消息&#34;&gt;可靠消息
+&lt;/h4&gt;</description>
         </item>
         
     </channel>
