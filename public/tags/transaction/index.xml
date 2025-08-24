@@ -551,9 +551,129 @@ DTP模型中的三个核心组件：&lt;/p&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;在事务内发送消息会影响数据安全是必须要避免的，现在需要解决的问题是如何在事务外发送消息的情况下保证： 发送消息成功、提交事务、投递消息成功、消费消息成功要么全做要么全不做。&lt;/p&gt;
 &lt;h4 id=&#34;本地消息表&#34;&gt;本地消息表
-&lt;/h4&gt;&lt;h4 id=&#34;可靠消息&#34;&gt;可靠消息
-&lt;/h4&gt;</description>
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;工作过程&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;事务发起方提交事务&lt;/p&gt;
+&lt;p&gt;事务发起方在写业务数据时向本地消息表也写一份数据用于记录需要发送消息，并且将两个写操作放在一个事务中保证业务数据写操作与本地消息表的记录要么全做要么全不做。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;事务发起方发送消息&lt;/p&gt;
+&lt;p&gt;使用定时任务不断扫描本地消息表，发送消息至消息中间件，如果消息没有发送成功则会不断重试，在重试一定次数仍然失败之后则会把消息放入实信对列，之后进行人工干预。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;事务参与方接收消息并消费&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/distribution-transaction/local_message_table.png&#34;
+	width=&#34;2576&#34;
+	height=&#34;1146&#34;
+	srcset=&#34;http://localhost:1313/p/distribution-transaction/local_message_table_hu9268957868111472126.png 480w, http://localhost:1313/p/distribution-transaction/local_message_table_hu4146904263908635254.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;alt text&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;224&#34;
+		data-flex-basis=&#34;539px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;各角设如何保证完成自己的任务&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;事务发起方如何保证提交事务和发送消息是一个原子操作&lt;/p&gt;
+&lt;p&gt;本地消息表将写业务数据与写本地消息表放在一个事务里，保证这两个操作能同时执行，此外通过不断重试消息并引入人工处理来保证消息一定能够发送并被消费者消费。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;消息中间件如何保证成功返回消息消费状态&lt;/p&gt;
+&lt;p&gt;事务参与方提交事务失败时发送一个消息给事务发起方通知其回滚消息。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;优点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;本地消息表是业界内比较成熟的方案，可靠性高。&lt;/li&gt;
+&lt;li&gt;本地消息表实现了数据的最终一致性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;缺点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可靠消息保证与业务代码耦合，需要额外开发定时任务等逻辑。&lt;/li&gt;
+&lt;li&gt;可靠消息保证的相关逻辑无法复用，需要重复开发。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;注意点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事务提交后需要保证消息一定投递成功，可能会频繁重试，事务参与方需要保证消息的幂等。&lt;/li&gt;
+&lt;li&gt;事务参与方通过消息投递通知事务发起方回滚，如果事务参与方也需要保证消息可靠投递。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;独立消息服务&#34;&gt;独立消息服务
+&lt;/h4&gt;&lt;p&gt;独立消息服务将本地消息表中可靠消息保证的逻辑抽离成独立服务并进行了增强，其工作步骤如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事务发起方发送消息至可靠消息服务，发送成功后执行本地事务。&lt;/li&gt;
+&lt;li&gt;可靠消息服务接收到消息后存储到消息库中并将消息状态标记为“待发送”但不会立即发送消息至消息中间件。&lt;/li&gt;
+&lt;li&gt;事务执行成功或失败后事务发起方向可靠消息服务发送确认消息。&lt;/li&gt;
+&lt;li&gt;可靠消息服务接收到事务发起方投递消息，若收到确认消息则将消息发送至中间件并将消息状态标记为已发送；若收到取消消息则将消息库中保存的消息标记为已删除。&lt;/li&gt;
+&lt;li&gt;消息中间件投递消息至事务参与方，事务参与方接收消息并将处理结果返回给消息中间件。&lt;/li&gt;
+&lt;li&gt;消息中间件将消费结果投递至可靠消息服务，可靠消息服务接收到确认消息将消息状态标记为已完成。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/distribution-transaction/reliable_message.png&#34;
+	width=&#34;1192&#34;
+	height=&#34;1546&#34;
+	srcset=&#34;http://localhost:1313/p/distribution-transaction/reliable_message_hu4817126836196279806.png 480w, http://localhost:1313/p/distribution-transaction/reliable_message_hu16277340091279731233.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;可靠消息&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;77&#34;
+		data-flex-basis=&#34;185px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;各个角色如何保证完成自己的任务&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;事务发起方如何保证提交事务和发送消息是一个原子操作&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;执行事务前发送消息失败：发送消息失败事务发起方不会提交事务，如果因网络超时事务发起方发送事务成功但没有收到正确响应，可靠消息服务没有接收到确认消息也不会向事务产生方投递消息。&lt;/li&gt;
+&lt;li&gt;执行事务成功如何确保发送确认消息成功：执行事务成功，消息发送失败事务发起方与事务参与方状态不一致，消息确认服务会不断校对事务发起方和消息库中消息的状态，发现不一致时会进行校对。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;消息中间件如何确保正确返回消息投递及消费状态给事务发起方：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;正确返回消息投递至可靠消息服务的状态：消息确认服务会不断地对事务发起方事务的执行状态和消息库中消息的状态进行校准。&lt;/li&gt;
+&lt;li&gt;正确返回消息投递至消息中间件的状态：可靠消息服务会重试消息投递，重试失败后会由消息恢复服务定时重试。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;一点讨论&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;独立消息服务中引入了可靠消息服务，整个消息投递链路又多了一个节点，会引入更多的中间状态，独立消息服务内含一个建设经过一定次数的投递消息一定能投递成功。&lt;/li&gt;
+&lt;li&gt;独立消息服务并没有对返回正确消费状态给事务发起方作保证，但同样基于一定次数的投递消息一定能投递成功这个假设，经过一定次数的投递独立消息也能正确返回状态给事务发起方。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</description>
         </item>
         
     </channel>

@@ -289,10 +289,18 @@
       <ol>
         <li><a href="#可靠消息分布式事务">可靠消息分布式事务</a>
           <ol>
-            <li><a href="#可靠消息需要解决的核心问题">可靠消息需要解决的核心问题</a></li>
+            <li><a href="#可靠消息的三个角色">可靠消息的三个角色</a></li>
             <li><a href="#各个角色实现任务的难点">各个角色实现任务的难点</a></li>
             <li><a href="#本地消息表">本地消息表</a></li>
             <li><a href="#独立消息服务">独立消息服务</a></li>
+            <li><a href="#rocketmq事务消息">RocketMQ事务消息</a></li>
+          </ol>
+        </li>
+        <li><a href="#最大努力通知型分布式事务">最大努力通知型分布式事务</a>
+          <ol>
+            <li><a href="#适用场景">适用场景</a></li>
+            <li><a href="#工作过程">工作过程</a></li>
+            <li><a href="#业务场景">业务场景</a></li>
           </ol>
         </li>
       </ol>
@@ -373,7 +381,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟
+                    阅读时长: 4 分钟
                 </time>
             </div>
         
@@ -838,7 +846,7 @@ DTP模型中的三个核心组件：</p>
 <p>业务方在完成业务处理后，会向业务参与方发送消息，发送消息时通知时运行消息丢失。业务方需要体统查询接口供业务接收方按需查询，用于恢复丢失的消息。</p>
 <h2 id="分布式事务原理">分布式事务原理
 </h2><h3 id="可靠消息分布式事务">可靠消息分布式事务
-</h3><h4 id="可靠消息需要解决的核心问题">可靠消息需要解决的核心问题
+</h3><h4 id="可靠消息的三个角色">可靠消息的三个角色
 </h4><p><img src="/p/distribution-transaction/basic_schematic_diagram.png"
 	width="1906"
 	height="270"
@@ -853,31 +861,18 @@ DTP模型中的三个核心组件：</p>
 		data-flex-basis="1694px"
 	
 ></p>
-<p>可靠消息分布式事务一共包含了四步操作：</p>
+<p>三个角色与对应职责：</p>
 <ul>
-<li>事务发起方执行事务</li>
-<li>事务发起方投递消息</li>
-<li>事务参与方消费消息</li>
-<li>事务参与方处理消息</li>
+<li>事务参与方：执行事务并发送消息（在诸如RocketMQ等独立消息服务不需要事务参与方保证消息投递与事务提交满足原子性）</li>
+<li>独立消息服务：在出现分区的情况下保证 1. 若事务发起方事务执行状态与可靠消息中间事务消息提交状态一致 2. 独立消息服务消息消费状态与消费者消费状态一致</li>
+<li>消息消费者：事务执行失败能正确通知事务参与方回滚事务</li>
 </ul>
-<p>上面的四步操作要么全做要么全不做，可能出现四中场景：</p>
+<p>两条链路：</p>
 <ul>
-<li>事务发起方执行事务失败</li>
-<li>事务发起方投递消息失败</li>
-<li>事务参与方消息消费失败</li>
-<li>事务参与方处理消息失败</li>
+<li>事务提交链路：事务发起方 -&gt; 独立消息服务 -&gt; 事务参与方</li>
+<li>事务回滚链路：事务参与方 -&gt; 独立消息服务 -&gt; 事务发起方</li>
 </ul>
-<p>当出现上面四中场景中的任意一种之后，需要保证</p>
-<ul>
-<li>事务发起方一定能回滚至事务提交前的状态</li>
-<li>事务参与方一定能回滚至消息处理前的状态</li>
-</ul>
-<p>在可靠消息分布式事务中一共包含了三个角色：事务发起方、消息中间件、事务参与方，各个角色实现如下任务：</p>
-<ul>
-<li>事务参与方：消息提交成功和执行事务成功要么全做要么全不做</li>
-<li>消息中间件：能够正确返回消息提交及消息消费的状态给事务参与方</li>
-<li>消息消费者：处理消息失败能正确返回消息执行状态</li>
-</ul>
+<p>在诸如RocketMQ等独立消息服务中只保证事务发起方事务执行与事务参与方消息消费一致但并保证事务参与方事务执行结果与事务参与方消息消费结果一致，即其只提供了事务提交链路的一致，事务回滚链路的一致需要手动保证。</p>
 <h4 id="各个角色实现任务的难点">各个角色实现任务的难点
 </h4><ul>
 <li>
@@ -911,18 +906,12 @@ DTP模型中的三个核心组件：</p>
 </ul>
 </li>
 <li>
-<p>消息中间件平台如何保证返回给事务发起方消息投递及消息消费的正确状态</p>
+<p>独立消息服务平台如何保 消息状态正确</p>
 <ul>
-<li>如何返回消息投递正确状态
-<ul>
-<li>如何确保返回给事务发起方的投递失败的状态真实可靠
-在网络超时时，事务参与方任务消息发送失败，但消息可能投递成功，导致事务参与方与事务发起方状态不一致。</li>
-<li>如何确保返回给事务发起方投递成功的状态真实可靠
-在消息中间件宕机这种极端情况下，如何保证消息能够正确投递</li>
-</ul>
-</li>
-<li>如何返回消息消费正确状态
-在网络波动时，消费者没有在指定时间返回消息处理状态，消息中间件错误地返回回滚消息给事务发起方，导致事务发起方回滚消息，导致事务参与方与事务发起方状态不一致。</li>
+<li>如何保证事务发起方事务执行状态与消息状态一致
+在网络超时时，事务发起方认为消息发送失败，但消息可能投递成功，导致事务参与方与事务发起方状态不一致。</li>
+<li>如何事务参与方消息消费状态与消息状态一致
+在网络波动时，消费者没有在指定时间返回消息处理状态，独立消息服务错误地将消息消费状态标记为失败。</li>
 </ul>
 </li>
 </ul>
@@ -934,7 +923,7 @@ DTP模型中的三个核心组件：</p>
 <ul>
 <li>
 <p>事务发起方提交事务</p>
-<p>事务发起方在写业务数据时向本地消息表也写一份数据用于记录需要发送消息，并且将两个写操作放在一个事务中保证业务数据写操作与本地消息表的记录要么全做要么全不做。</p>
+<p>事务发起方在写业务数据时向本地消息表也写一份数据用于记录需要发送的消息，并且将两个写操作放在一个事务中保证业务数据写操作与本地消息表的记录要么全做要么全不做。</p>
 </li>
 <li>
 <p>事务发起方发送消息</p>
@@ -992,14 +981,20 @@ DTP模型中的三个核心组件：</p>
 <p>注意点</p>
 <ul>
 <li>事务提交后需要保证消息一定投递成功，可能会频繁重试，事务参与方需要保证消息的幂等。</li>
-<li>事务参与方通过消息投递通知事务发起方回滚，如果事务参与方也需要保证消息可靠投递。</li>
+<li>事务参与方通过消息投递通知事务发起方回滚，事务参与方也需要保证消息可靠投递。</li>
 </ul>
 </li>
 </ul>
 <h4 id="独立消息服务">独立消息服务
-</h4><p>独立消息服务将本地消息表中可靠消息保证的逻辑抽离成独立服务并进行了增强，其工作步骤如下：</p>
+</h4><p>独立消息服务的三个角色：</p>
 <ul>
-<li>事务发起方发送消息至可靠消息服务，发送成功后执行本地事务。</li>
+<li>可靠消息服务：负责消息状态维护、消息接收与投递</li>
+<li>消息确认服务：负责保障消息投递方与可靠消息服务中的消息状态一致</li>
+<li>消息恢复服务：用于保障事务参与方消费状态与可靠消息服务中的消息状态一致</li>
+</ul>
+<p>独立消息服务将本地消息表中可靠消息保证的逻辑抽离成独立服务并进行了增强，其工作步骤如下：</p>
+<ul>
+<li>事务发起方发送Half消息至可靠消息服务，发送成功后执行本地事务。</li>
 <li>可靠消息服务接收到消息后存储到消息库中并将消息状态标记为“待发送”但不会立即发送消息至消息中间件。</li>
 <li>事务执行成功或失败后事务发起方向可靠消息服务发送确认消息。</li>
 <li>可靠消息服务接收到事务发起方投递消息，若收到确认消息则将消息发送至中间件并将消息状态标记为已发送；若收到取消消息则将消息库中保存的消息标记为已删除。</li>
@@ -1032,10 +1027,10 @@ DTP模型中的三个核心组件：</p>
 </ul>
 </li>
 <li>
-<p>消息中间件如何确保正确返回消息投递及消费状态给事务发起方：</p>
+<p>独立消息服务如何确保证消息状态与事务发起方事务执行状态与事务消费方消费状态一致</p>
 <ul>
-<li>正确返回消息投递至可靠消息服务的状态：消息确认服务会不断地对事务发起方事务的执行状态和消息库中消息的状态进行校准。</li>
-<li>正确返回消息投递至消息中间件的状态：可靠消息服务会重试消息投递，重试失败后会由消息恢复服务定时重试。</li>
+<li>消息与事务发起方状态一致：消息确认服务会不断地对事务发起方事务的执行状态和消息库中消息的状态进行校准。</li>
+<li>消息与事务参与方状态一致：可靠消息服务会重试消息投递，重试失败后会由消息恢复服务定时重试。</li>
 </ul>
 </li>
 </ul>
@@ -1043,11 +1038,455 @@ DTP模型中的三个核心组件：</p>
 <li>
 <p>一点讨论</p>
 <ul>
-<li>独立消息服务中引入了可靠消息服务，整个消息投递链路又多了一个节点，会引入更多的中间状态，独立消息服务内含一个建设经过一定次数的投递消息一定能投递成功。</li>
-<li>独立消息服务并没有对返回正确消费状态给事务发起方作保证，但同样基于一定次数的投递消息一定能投递成功这个假设，经过一定次数的投递独立消息也能正确返回状态给事务发起方。</li>
+<li>独立消息服务一般只保证事务提交链路的一致性，因此可靠消息服务需要确保 若事务发起方提交事务则事务参与方一定能消费消息，可靠消息服务是通过一定次数的重试来实现的。</li>
+<li>独立消息服务包含了一个假设：按照指定规则经过一定次数重试事务参与方一定能消费消息成功。这个假设一般都是成了的，网络波动或者消息者自身问题消费消息失败都是偶然的，通过一定规则重试是能保证消息消费成功的。</li>
+<li>可靠消息能保证最终一致性：在事务参与方提交事务后即时独立消息服务或消息消费服务宕机，重启服务后独立消息服务通过消息确认服务与消息回复服务也能保证消息的最终一致性。</li>
 </ul>
 </li>
 </ul>
+<h4 id="rocketmq事务消息">RocketMQ事务消息
+</h4><p>RocketMQ工提供了事务消息，工作过程与独立消息服务基本一致，下面我们通过代码来学习RocketMQ事务消息。</p>
+<p><img src="/p/distribution-transaction/rocketMQ.png"
+	width="2190"
+	height="1562"
+	srcset="/p/distribution-transaction/rocketMQ_hu8697784828484313726.png 480w, /p/distribution-transaction/rocketMQ_hu2168233866865908091.png 1024w"
+	loading="lazy"
+	
+		alt="Rocket MQ"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="140"
+		data-flex-basis="336px"
+	
+></p>
+<p>假设我们有一个商场业务下单扣减库存的场景，订单微服务和库存微服务分别部署，订单微服务在生成订单后需要通知库存微服务扣减库存。</p>
+<p><img src="/p/distribution-transaction/image.png"
+	width="1580"
+	height="230"
+	srcset="/p/distribution-transaction/image_hu16397668104234901400.png 480w, /p/distribution-transaction/image_hu10572044527694788386.png 1024w"
+	loading="lazy"
+	
+		alt="alt text"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="686"
+		data-flex-basis="1648px"
+	
+></p>
+<p>总共涉及到三张表，order表用来存储订单数据，stock表用来存储库存数据，tx_log表用来记录事务。
+<img src="/p/distribution-transaction/order.png"
+	width="2572"
+	height="646"
+	srcset="/p/distribution-transaction/order_hu11182633833237205680.png 480w, /p/distribution-transaction/order_hu7635794244815994156.png 1024w"
+	loading="lazy"
+	
+		alt="order表"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="398"
+		data-flex-basis="955px"
+	
+>
+<img src="/p/distribution-transaction/stock.png"
+	width="2584"
+	height="424"
+	srcset="/p/distribution-transaction/stock_hu7401023507534694822.png 480w, /p/distribution-transaction/stock_hu2672609508556507295.png 1024w"
+	loading="lazy"
+	
+		alt="stock表"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="609"
+		data-flex-basis="1462px"
+	
+>
+<img src="/p/distribution-transaction/tx_log.png"
+	width="2576"
+	height="330"
+	srcset="/p/distribution-transaction/tx_log_hu4803590504349716040.png 480w, /p/distribution-transaction/tx_log_hu9096689751777689422.png 1024w"
+	loading="lazy"
+	
+		alt="tx_log表"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="780"
+		data-flex-basis="1873px"
+	
+></p>
+<p>工作过程如下</p>
+<ul>
+<li>订单服务需要在执行事务前发送Half消息至RocketMQ并在RocketMQ成功接收到消息后提交事务并发送确认消息到RocketMQ</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="err">@</span><span class="n">Service</span>
+</span></span><span class="line"><span class="cl"><span class="n">public</span> <span class="k">class</span> <span class="n">OrderService</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Autowired</span>
+</span></span><span class="line"><span class="cl">    <span class="n">private</span> <span class="n">OrderMapper</span> <span class="n">orderMapper</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Autowired</span>
+</span></span><span class="line"><span class="cl">    <span class="n">RocketMQTemplate</span> <span class="n">rocketMQTemplate</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Override</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Transactional</span><span class="p">(</span><span class="n">rollbackFor</span> <span class="o">=</span> <span class="n">Exception</span><span class="o">.</span><span class="k">class</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">public</span> <span class="n">void</span> <span class="n">submitOrderAndSaveTxNo</span><span class="p">(</span><span class="n">TxMessage</span> <span class="n">txMessage</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Integer</span> <span class="n">existsTx</span> <span class="o">=</span> <span class="n">orderMapper</span><span class="o">.</span><span class="n">isExistsTx</span><span class="p">(</span><span class="n">txMessage</span><span class="o">.</span><span class="n">getTxNo</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">existsTx</span> <span class="o">!=</span> <span class="n">null</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;订单微服务已经执行过事务,商品id为:{}，事务编号为:{}&#34;</span><span class="p">,</span><span class="n">txMessage</span><span class="o">.</span><span class="n">get</span>
+</span></span><span class="line"><span class="cl"><span class="n">ProductId</span><span class="p">(),</span> <span class="n">txMessage</span><span class="o">.</span><span class="n">getTxNo</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">//</span><span class="err">生成订单</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Order</span> <span class="n">order</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Order</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">order</span><span class="o">.</span><span class="n">setId</span><span class="p">(</span><span class="n">System</span><span class="o">.</span><span class="n">currentTimeMillis</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="n">order</span><span class="o">.</span><span class="n">setCreateTime</span><span class="p">(</span><span class="n">new</span> <span class="n">Date</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="n">order</span><span class="o">.</span><span class="n">setOrderNo</span><span class="p">(</span><span class="ne">String</span><span class="o">.</span><span class="n">valueOf</span><span class="p">(</span><span class="n">System</span><span class="o">.</span><span class="n">currentTimeMillis</span><span class="p">()));</span>
+</span></span><span class="line"><span class="cl">        <span class="n">order</span><span class="o">.</span><span class="n">setPayCount</span><span class="p">(</span><span class="n">txMessage</span><span class="o">.</span><span class="n">getPayCount</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="n">order</span><span class="o">.</span><span class="n">setProductId</span><span class="p">(</span><span class="n">txMessage</span><span class="o">.</span><span class="n">getProductId</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="n">orderMapper</span><span class="o">.</span><span class="n">saveOrder</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="o">//</span><span class="err">添加事务日志</span>
+</span></span><span class="line"><span class="cl">        <span class="n">orderMapper</span><span class="o">.</span><span class="n">saveTxLog</span><span class="p">(</span><span class="n">txMessage</span><span class="o">.</span><span class="n">getTxNo</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Override</span>
+</span></span><span class="line"><span class="cl">    <span class="n">public</span> <span class="n">void</span> <span class="n">submitOrder</span><span class="p">(</span><span class="n">Long</span> <span class="n">productId</span><span class="p">,</span> <span class="n">Integer</span> <span class="n">payCount</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="o">//</span><span class="err">生成全局分布式序列号</span>
+</span></span><span class="line"><span class="cl">        <span class="ne">String</span> <span class="n">txNo</span> <span class="o">=</span> <span class="n">UUID</span><span class="o">.</span><span class="n">randomUUID</span><span class="p">()</span><span class="o">.</span><span class="n">toString</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">TxMessage</span> <span class="n">txMessage</span> <span class="o">=</span> <span class="n">new</span> <span class="n">TxMessage</span><span class="p">(</span><span class="n">productId</span><span class="p">,</span> <span class="n">payCount</span><span class="p">,</span> <span class="n">txNo</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">JSONObject</span> <span class="n">jsonObject</span> <span class="o">=</span> <span class="n">new</span> <span class="n">JSONObject</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">jsonObject</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&#34;txMessage&#34;</span><span class="p">,</span> <span class="n">txMessage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Message</span><span class="o">&lt;</span><span class="ne">String</span><span class="o">&gt;</span> <span class="n">message</span> <span class="o">=</span> <span class="n">MessageBuilder</span><span class="o">.</span><span class="n">withPayload</span><span class="p">(</span><span class="n">jsonObject</span><span class="o">.</span><span class="n">to</span>
+</span></span><span class="line"><span class="cl"><span class="n">JSONString</span><span class="p">())</span><span class="o">.</span><span class="n">build</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="o">//</span><span class="err">发送一条事务消息</span>
+</span></span><span class="line"><span class="cl">        <span class="n">rocketMQTemplate</span><span class="o">.</span><span class="n">sendMessageInTransaction</span><span class="p">(</span><span class="s2">&#34;tx_order_group&#34;</span><span class="p">,</span> <span class="s2">&#34;topic_txmsg&#34;</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">null</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>RocketMQ在接收到订单服务的半消息后需要通知订单服务，此外在订单服务发送事务提交消息至RocketMQ失败后RocketMQ需要不断校验事务发起方状态.</li>
+</ul>
+<p>RocketMQ提供了RocketMQLocalTransactionListener类，executeLocalTransaction方法会在事务发送方法发送消息成功后被回调，在该方法内执行时服务发送方的提交事务逻辑并提交事务提交消息至RocketMQ。这里需要注意，事务提交的逻辑和发送事务提交消息的逻辑并不再一个方法里。</p>
+<p>ROcketMQ还提供了checkLocalTransaction方法用于检查事务提交方的状态，避免事务消息发送失败导致的事务发起方和参与方状态不一致。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="err">@</span><span class="n">Component</span>
+</span></span><span class="line"><span class="cl"><span class="err">@</span><span class="n">RocketMQTransactionListener</span><span class="p">(</span><span class="n">txProducerGroup</span> <span class="o">=</span> <span class="s2">&#34;tx_order_group&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">public</span> <span class="k">class</span> <span class="n">OrderTxMessageListener</span> <span class="n">implements</span> <span class="n">RocketMQLocalTransactionListener</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Autowired</span>
+</span></span><span class="line"><span class="cl">    <span class="n">private</span> <span class="n">OrderService</span> <span class="n">orderService</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Autowired</span>
+</span></span><span class="line"><span class="cl">    <span class="n">private</span> <span class="n">OrderMapper</span> <span class="n">orderMapper</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Override</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Transactional</span><span class="p">(</span><span class="n">rollbackFor</span> <span class="o">=</span> <span class="n">Exception</span><span class="o">.</span><span class="k">class</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">public</span> <span class="n">RocketMQLocalTransactionState</span> <span class="n">executeLocalTransaction</span><span class="p">(</span><span class="n">Message</span> <span class="n">msg</span><span class="p">,</span> <span class="ne">Object</span> <span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">log</span><span class="o">.</span><span class="n">info</span><span class="err">（</span><span class="s2">&#34;订单微服务执行本地事务&#34;</span><span class="err">）</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">TxMessage</span> <span class="n">txMessage</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">getTxMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="o">//</span><span class="err">执行本地事务</span>
+</span></span><span class="line"><span class="cl">            <span class="n">orderService</span><span class="o">.</span><span class="n">submitOrderAndSaveTxNo</span><span class="p">(</span><span class="n">txMessage</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="o">//</span><span class="err">提交事务</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">log</span><span class="o">.</span><span class="n">info</span><span class="err">（</span><span class="s2">&#34;订单微服务提交事务&#34;</span><span class="err">）</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">RocketMQLocalTransactionState</span><span class="o">.</span><span class="n">COMMIT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span><span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="n">e</span><span class="o">.</span><span class="n">printStackTrace</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="o">//</span><span class="err">异常回滚事务</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">log</span><span class="o">.</span><span class="n">info</span><span class="err">（</span><span class="s2">&#34;订单微服务回滚事务&#34;</span><span class="err">）</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">RocketMQLocalTransactionState</span><span class="o">.</span><span class="n">ROLLBACK</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="err">@</span><span class="n">Override</span>
+</span></span><span class="line"><span class="cl">    <span class="n">public</span> <span class="n">RocketMQLocalTransactionState</span> <span class="n">checkLocalTransaction</span><span class="p">(</span><span class="n">Message</span> <span class="n">msg</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">log</span><span class="o">.</span><span class="n">info</span><span class="err">（</span><span class="s2">&#34;订单微服务查询本地事务&#34;</span><span class="err">）</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">TxMessage</span> <span class="n">txMessage</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">getTxMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Integer</span> <span class="n">exists</span> <span class="o">=</span> <span class="n">orderMapper</span><span class="o">.</span><span class="n">isExistsTx</span><span class="p">(</span><span class="n">txMessage</span><span class="o">.</span><span class="n">getTxNo</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">exists</span> <span class="o">!=</span> <span class="n">null</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">RocketMQLocalTransactionState</span><span class="o">.</span><span class="n">COMMIT</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">RocketMQLocalTransactionState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">private</span> <span class="n">TxMessage</span> <span class="n">getTxMessage</span><span class="p">(</span><span class="n">Message</span> <span class="n">msg</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="ne">String</span> <span class="n">messageString</span> <span class="o">=</span> <span class="n">new</span> <span class="ne">String</span><span class="p">((</span><span class="n">byte</span><span class="p">[])</span> <span class="n">msg</span><span class="o">.</span><span class="n">getPayload</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="n">JSONObject</span> <span class="n">jsonObject</span> <span class="o">=</span> <span class="n">JSONObject</span><span class="o">.</span><span class="n">parseObject</span><span class="p">(</span><span class="n">messageString</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="ne">String</span> <span class="n">txStr</span> <span class="o">=</span> <span class="n">jsonObject</span><span class="o">.</span><span class="n">getString</span><span class="p">(</span><span class="s2">&#34;txMessage&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">JSONObject</span><span class="o">.</span><span class="n">parseObject</span><span class="p">(</span><span class="n">txStr</span><span class="p">,</span> <span class="n">TxMessage</span><span class="o">.</span><span class="k">class</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>库存微服务逻辑相对简单，只需消息消息即可</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">@Component
+</span></span><span class="line"><span class="cl">@RocketMQMessageListener(consumerGroup = &#34;tx_stock_group&#34;, topic = &#34;topic_txmsg&#34;)
+</span></span><span class="line"><span class="cl">public class StockTxMessageConsumer implements RocketMQListener&lt;String&gt; {
+</span></span><span class="line"><span class="cl">    @Autowired
+</span></span><span class="line"><span class="cl">    private StockService stockService;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    @Override
+</span></span><span class="line"><span class="cl">    public void onMessage(String message) {
+</span></span><span class="line"><span class="cl">        log.info（&#34;库存微服务开始消费事务消息:{}&#34;, message）;
+</span></span><span class="line"><span class="cl">        TxMessage txMessage = this.getTxMessage(message);
+</span></span><span class="line"><span class="cl">        stockService.decreaseStock(txMessage);
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    private TxMessage getTxMessage(String msg){
+</span></span><span class="line"><span class="cl">        JSONObject jsonObject = JSONObject.parseObject(msg);
+</span></span><span class="line"><span class="cl">        String txStr = jsonObject.getString(&#34;txMessage&#34;);
+</span></span><span class="line"><span class="cl">        return JSONObject.parseObject(txStr, TxMessage.class);
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">@Service
+</span></span><span class="line"><span class="cl">public class StockService {
+</span></span><span class="line"><span class="cl">    @Autowired
+</span></span><span class="line"><span class="cl">    private StockMapper stockMapper;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    @Override
+</span></span><span class="line"><span class="cl">    public void decreaseStock(TxMessage txMessage) {
+</span></span><span class="line"><span class="cl">        log.info(&#34;库存微服务执行本地事务,商品id:{}, 购买数量:{}&#34;, txMessage.getProductId(), txMessage.getPayCount());
+</span></span><span class="line"><span class="cl">        //检查是否执行过事务
+</span></span><span class="line"><span class="cl">        Integer exists = stockMapper.isExistsTx(txMessage.getTxNo());
+</span></span><span class="line"><span class="cl">        if(exists != null){
+</span></span><span class="line"><span class="cl">            log.info(&#34;库存微服务已经执行过事务,事务编号为:{}&#34;, txMessage.getTxNo());
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        Stock stock = stockMapper.getStockByProductId(txMessage.getProductId());
+</span></span><span class="line"><span class="cl">        if(stock.getTotalCount() &lt; txMessage.getPayCount()){
+</span></span><span class="line"><span class="cl">            throw  new RuntimeException（&#34;库存不足&#34;）;
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        stockMapper.updateTotalCountById(txMessage.getPayCount(), stock.getId());
+</span></span><span class="line"><span class="cl">        //记录事务日志
+</span></span><span class="line"><span class="cl">        stockMapper.saveTxLog(txMessage.getTxNo());
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="最大努力通知型分布式事务">最大努力通知型分布式事务
+</h3><h4 id="适用场景">适用场景
+</h4><ul>
+<li>允许丢失消息</li>
+<li>事务发起方需要提供接口让事务参与回查进行数据校准</li>
+<li>事务参与方的结果不影响事务发起方的结果</li>
+<li>对消息实时性要求不高</li>
+</ul>
+<h4 id="工作过程">工作过程
+</h4><p><img src="/p/distribution-transaction/try_best_yuanli.png"
+	width="1966"
+	height="1668"
+	srcset="/p/distribution-transaction/try_best_yuanli_hu16514235034260603677.png 480w, /p/distribution-transaction/try_best_yuanli_hu17649503749621564154.png 1024w"
+	loading="lazy"
+	
+		alt="最大努力通知型分布式事务"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="117"
+		data-flex-basis="282px"
+	
+></p>
+<ol>
+<li>事务参与方执行事务后发送消息</li>
+<li>消息中间件接收消息后将消息标记为待发送</li>
+<li>消息中间件向事务参与方投递消息</li>
+</ol>
+<h4 id="业务场景">业务场景
+</h4><div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>业务场景</th>
+<th>场景描述</th>
+<th>特点与适用条件</th>
+<th>示例说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>支付成功通知商户</td>
+<td>用户支付成功后，支付平台需通知商户系统发货或履约</td>
+<td>支付成功事件已在支付系统本地提交，通知为异步重试多次，允许因网络或系统原因有延迟，但要求最终送达或人工处理</td>
+<td>微信支付/支付宝在支付回调失败时，会间隔多次重试通知商户接口</td>
+</tr>
+<tr>
+<td>订单状态变更通知</td>
+<td>电商平台订单状态变化（已发货/已收货）需要通知物流、会员积分等系统</td>
+<td>状态变化事件已写入订单库，不阻塞交易主流程，通过消息或HTTP回调多次发送</td>
+<td>物流同步接口失败会隔一段时间重试，多数场景允许几分钟内延迟同步</td>
+</tr>
+<tr>
+<td>异步库存同步</td>
+<td>核心交易系统与库存系统解耦，交易成功后通知库存系统扣减</td>
+<td>交易已完成且不可逆，通知可延迟执行，通过补偿或定时任务保证一致性</td>
+<td>生鲜电商交易完成后，库存系统可能因网络抖动导致同步延迟</td>
+</tr>
+<tr>
+<td>用户行为上报</td>
+<td>APP端关键行为（观看、点击、分享）发送到埋点分析系统</td>
+<td>埋点数据允许丢失少量信息，但希望尽量多送达，提高数据准确度</td>
+<td>行为日志先入本地队列，后台重试发送到数据平台</td>
+</tr>
+<tr>
+<td>发票开具通知</td>
+<td>用户付款后通知财税系统开具电子发票</td>
+<td>可以异步通知，避免交易阻塞，财税接口短时不可用时可多次重试</td>
+<td>第三方发票平台偶尔超时，异步通知能显著提升整体体验</td>
+</tr>
+</tbody>
+</table></div>
 
 </section>
 
