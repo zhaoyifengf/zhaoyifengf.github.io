@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mybatisplus DataSource on 峰峰的博客</title><link>https://zhaoyifengf.github.io/categories/mybatisplus-datasource/</link><description>Recent content in Mybatisplus DataSource on 峰峰的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>峰峰</copyright><lastBuildDate>Mon, 23 Jun 2025 23:26:52 +0800</lastBuildDate><atom:link href="https://zhaoyifengf.github.io/categories/mybatisplus-datasource/index.xml" rel="self" type="application/rss+xml"/><item><title>Mybatisplus与DataSource</title><link>https://zhaoyifengf.github.io/p/mybatisplus%E4%B8%8Edatasource/</link><pubDate>Mon, 23 Jun 2025 23:26:52 +0800</pubDate><guid>https://zhaoyifengf.github.io/p/mybatisplus%E4%B8%8Edatasource/</guid><description>&lt;h2 id="mybatisplus-sql执行流程">mybatisplus SQL执行流程
+&lt;/h2>&lt;h3 id="服务启动时通过自动配置类创建mybatissqlsessionfactorybean">服务启动时通过自动配置类创建MybatisSqlSessionFactoryBean
+&lt;/h3>&lt;p>&lt;code>mybatis-plus-boot-starter&lt;/code>包提供了&lt;code>MybatisPlusAutoConfiguration&lt;/code>自动配置类，该自动配置类创建了MybatisSqlSessionFactoryBean对象并交由Spring管理，在创建MybatisSqlSessionFactoryBean时，sqlSessionFactory方法设置了DataScoure对象。自动配置类需要满足以下几个条件才会创建MybatisSqlSessionFactoryBean：&lt;/p>
+&lt;ul>
+&lt;li>MybatisPlusAutoConfiguration上的@ConditionalOnSingleCandidate指定了：被Spring管理的只有一个DataSource对象或者多个DataSource对指定了优先级（如通过@Primary注解指定）&lt;/li>
+&lt;li>sqlSessionFactory方法上@ConditionalOnMissingBean指定了：只有在不存在SqlSessionFactory时才会创建MybatisSqlSessionFactoryBean对象&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">@Configuration(proxyBeanMethods = false)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">@ConditionalOnClass({SqlSessionFactory.class, SqlSessionFactoryBean.class})
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">@ConditionalOnSingleCandidate(DataSource.class)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">@EnableConfigurationProperties(MybatisPlusProperties.class)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">@AutoConfigureAfter({DataSourceAutoConfiguration.class, MybatisPlusLanguageDriverAutoConfiguration.class})
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">public class MybatisPlusAutoConfiguration implements InitializingBean {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @Bean
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @ConditionalOnMissingBean
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> // TODO 使用 MybatisSqlSessionFactoryBean 而不是 SqlSessionFactoryBean
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> factory.setDataSource(dataSource);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> .....
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="spring对事务进行代理">Spring对事务进行代理
+&lt;/h3>&lt;p>执行Mybatisplus DML语句前，Spring对要执行的方法（加了@Transactiontional注解）进行代理，代理执行的逻辑在TransactionAspectSupport中的invokeWithinTransaction方法中。整体调用流程如下&lt;/p>
+&lt;p>TransactionInterceptor#invoke -&amp;gt; TransactionAspectSupport#invokeWithinTransaction执行开启事务、执行业务逻辑、提交事务三个步骤。&lt;/p>
+&lt;ul>
+&lt;li>开启事务
+&lt;ul>
+&lt;li>TransactionAspectSupport#invokeWithinTransaction -&amp;gt; determineTransactionManager&lt;/li>
+&lt;li>TransactionAspectSupport#determineTransactionManager -&amp;gt; createTransactionIfNecessary&lt;/li>
+&lt;li>TransactionAspectSupport#createTransactionIfNecessary -&amp;gt; AbstractPlatformTransactionManager#getTransaction，getTransaction方法先尝试获取事务再开启事务：
+&lt;ul>
+&lt;li>获取事务
+&lt;ul>
+&lt;li>AbstractPlatformTransactionManager#getTransaction -&amp;gt; DataSourceTransactionManager#doGetTransaction（doGetTransaction是个抽象方法，具体逻辑由实现类提供，我们在这里只讨论DataSourceTransactionManager的实现逻辑）&lt;/li>
+&lt;li>DataSourceTransactionManager#doGetTransaction，该方法做下如下操作：
+&lt;ul>
+&lt;li>创建DataSourceTransactionObject对象&lt;/li>
+&lt;li>TransactionSynchronizationManager.getResource方法获取DataSourceTransactionManager中dataScoure对象绑定的ConnectionHolder对象（用来存储connection对象）。TransactionSynchronizationManager中维护了一个ThreadLocal属性resources，这是一个以dataScoure对象为key、ConnectionHolder对象为值的Map。TransactionSynchronizationManager用来管理每个线程中和dataScoure对象绑定的connection对象。&lt;/li>
+&lt;li>将上一步获取的ConnectionHolder设置到DataSourceTransactionObject中&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>开启事务
+&lt;ul>
+&lt;li>AbstractPlatformTransactionManager#getTransactio -&amp;gt; DataSourceTransactionManager#startTransaction&lt;/li>
+&lt;li>DataSourceTransactionManager#startTransactionn -&amp;gt; doBegin方法，实现如下操作（DataSourceTransactionManager#doGetTransaction对象返回的DataSourceTransactionObject中的ConnectionHolder为空时执行该步骤）：&lt;/li>
+&lt;li>通过DataSourceTransactionManager中dataScoure对象获取connection&lt;/li>
+&lt;li>将connection包装为ConnectionHolder对象&lt;/li>
+&lt;li>通过TransactionSynchronizationManager.bindResource将ConnectionHolder对象和connection对象绑定并设置上面提到的TransactionSynchronizationManager中的ThreadLocal属性resources中&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>执行业务逻辑
+&lt;ul>
+&lt;li>TransactionAspectSupport#invokeWithinTransaction执行被代理方法，mybatisplus中的方法也会在在此被执行，具体流程我们方法下一个部分讨论。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>提交事务&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt"> 10
+&lt;/span>&lt;span class="lnt"> 11
+&lt;/span>&lt;span class="lnt"> 12
+&lt;/span>&lt;span class="lnt"> 13
+&lt;/span>&lt;span class="lnt"> 14
+&lt;/span>&lt;span class="lnt"> 15
+&lt;/span>&lt;span class="lnt"> 16
+&lt;/span>&lt;span class="lnt"> 17
+&lt;/span>&lt;span class="lnt"> 18
+&lt;/span>&lt;span class="lnt"> 19
+&lt;/span>&lt;span class="lnt"> 20
+&lt;/span>&lt;span class="lnt"> 21
+&lt;/span>&lt;span class="lnt"> 22
+&lt;/span>&lt;span class="lnt"> 23
+&lt;/span>&lt;span class="lnt"> 24
+&lt;/span>&lt;span class="lnt"> 25
+&lt;/span>&lt;span class="lnt"> 26
+&lt;/span>&lt;span class="lnt"> 27
+&lt;/span>&lt;span class="lnt"> 28
+&lt;/span>&lt;span class="lnt"> 29
+&lt;/span>&lt;span class="lnt"> 30
+&lt;/span>&lt;span class="lnt"> 31
+&lt;/span>&lt;span class="lnt"> 32
+&lt;/span>&lt;span class="lnt"> 33
+&lt;/span>&lt;span class="lnt"> 34
+&lt;/span>&lt;span class="lnt"> 35
+&lt;/span>&lt;span class="lnt"> 36
+&lt;/span>&lt;span class="lnt"> 37
+&lt;/span>&lt;span class="lnt"> 38
+&lt;/span>&lt;span class="lnt"> 39
+&lt;/span>&lt;span class="lnt"> 40
+&lt;/span>&lt;span class="lnt"> 41
+&lt;/span>&lt;span class="lnt"> 42
+&lt;/span>&lt;span class="lnt"> 43
+&lt;/span>&lt;span class="lnt"> 44
+&lt;/span>&lt;span class="lnt"> 45
+&lt;/span>&lt;span class="lnt"> 46
+&lt;/span>&lt;span class="lnt"> 47
+&lt;/span>&lt;span class="lnt"> 48
+&lt;/span>&lt;span class="lnt"> 49
+&lt;/span>&lt;span class="lnt"> 50
+&lt;/span>&lt;span class="lnt"> 51
+&lt;/span>&lt;span class="lnt"> 52
+&lt;/span>&lt;span class="lnt"> 53
+&lt;/span>&lt;span class="lnt"> 54
+&lt;/span>&lt;span class="lnt"> 55
+&lt;/span>&lt;span class="lnt"> 56
+&lt;/span>&lt;span class="lnt"> 57
+&lt;/span>&lt;span class="lnt"> 58
+&lt;/span>&lt;span class="lnt"> 59
+&lt;/span>&lt;span class="lnt"> 60
+&lt;/span>&lt;span class="lnt"> 61
+&lt;/span>&lt;span class="lnt"> 62
+&lt;/span>&lt;span class="lnt"> 63
+&lt;/span>&lt;span class="lnt"> 64
+&lt;/span>&lt;span class="lnt"> 65
+&lt;/span>&lt;span class="lnt"> 66
+&lt;/span>&lt;span class="lnt"> 67
+&lt;/span>&lt;span class="lnt"> 68
+&lt;/span>&lt;span class="lnt"> 69
+&lt;/span>&lt;span class="lnt"> 70
+&lt;/span>&lt;span class="lnt"> 71
+&lt;/span>&lt;span class="lnt"> 72
+&lt;/span>&lt;span class="lnt"> 73
+&lt;/span>&lt;span class="lnt"> 74
+&lt;/span>&lt;span class="lnt"> 75
+&lt;/span>&lt;span class="lnt"> 76
+&lt;/span>&lt;span class="lnt"> 77
+&lt;/span>&lt;span class="lnt"> 78
+&lt;/span>&lt;span class="lnt"> 79
+&lt;/span>&lt;span class="lnt"> 80
+&lt;/span>&lt;span class="lnt"> 81
+&lt;/span>&lt;span class="lnt"> 82
+&lt;/span>&lt;span class="lnt"> 83
+&lt;/span>&lt;span class="lnt"> 84
+&lt;/span>&lt;span class="lnt"> 85
+&lt;/span>&lt;span class="lnt"> 86
+&lt;/span>&lt;span class="lnt"> 87
+&lt;/span>&lt;span class="lnt"> 88
+&lt;/span>&lt;span class="lnt"> 89
+&lt;/span>&lt;span class="lnt"> 90
+&lt;/span>&lt;span class="lnt"> 91
+&lt;/span>&lt;span class="lnt"> 92
+&lt;/span>&lt;span class="lnt"> 93
+&lt;/span>&lt;span class="lnt"> 94
+&lt;/span>&lt;span class="lnt"> 95
+&lt;/span>&lt;span class="lnt"> 96
+&lt;/span>&lt;span class="lnt"> 97
+&lt;/span>&lt;span class="lnt"> 98
+&lt;/span>&lt;span class="lnt"> 99
+&lt;/span>&lt;span class="lnt">100
+&lt;/span>&lt;span class="lnt">101
+&lt;/span>&lt;span class="lnt">102
+&lt;/span>&lt;span class="lnt">103
+&lt;/span>&lt;span class="lnt">104
+&lt;/span>&lt;span class="lnt">105
+&lt;/span>&lt;span class="lnt">106
+&lt;/span>&lt;span class="lnt">107
+&lt;/span>&lt;span class="lnt">108
+&lt;/span>&lt;span class="lnt">109
+&lt;/span>&lt;span class="lnt">110
+&lt;/span>&lt;span class="lnt">111
+&lt;/span>&lt;span class="lnt">112
+&lt;/span>&lt;span class="lnt">113
+&lt;/span>&lt;span class="lnt">114
+&lt;/span>&lt;span class="lnt">115
+&lt;/span>&lt;span class="lnt">116
+&lt;/span>&lt;span class="lnt">117
+&lt;/span>&lt;span class="lnt">118
+&lt;/span>&lt;span class="lnt">119
+&lt;/span>&lt;span class="lnt">120
+&lt;/span>&lt;span class="lnt">121
+&lt;/span>&lt;span class="lnt">122
+&lt;/span>&lt;span class="lnt">123
+&lt;/span>&lt;span class="lnt">124
+&lt;/span>&lt;span class="lnt">125
+&lt;/span>&lt;span class="lnt">126
+&lt;/span>&lt;span class="lnt">127
+&lt;/span>&lt;span class="lnt">128
+&lt;/span>&lt;span class="lnt">129
+&lt;/span>&lt;span class="lnt">130
+&lt;/span>&lt;span class="lnt">131
+&lt;/span>&lt;span class="lnt">132
+&lt;/span>&lt;span class="lnt">133
+&lt;/span>&lt;span class="lnt">134
+&lt;/span>&lt;span class="lnt">135
+&lt;/span>&lt;span class="lnt">136
+&lt;/span>&lt;span class="lnt">137
+&lt;/span>&lt;span class="lnt">138
+&lt;/span>&lt;span class="lnt">139
+&lt;/span>&lt;span class="lnt">140
+&lt;/span>&lt;span class="lnt">141
+&lt;/span>&lt;span class="lnt">142
+&lt;/span>&lt;span class="lnt">143
+&lt;/span>&lt;span class="lnt">144
+&lt;/span>&lt;span class="lnt">145
+&lt;/span>&lt;span class="lnt">146
+&lt;/span>&lt;span class="lnt">147
+&lt;/span>&lt;span class="lnt">148
+&lt;/span>&lt;span class="lnt">149
+&lt;/span>&lt;span class="lnt">150
+&lt;/span>&lt;span class="lnt">151
+&lt;/span>&lt;span class="lnt">152
+&lt;/span>&lt;span class="lnt">153
+&lt;/span>&lt;span class="lnt">154
+&lt;/span>&lt;span class="lnt">155
+&lt;/span>&lt;span class="lnt">156
+&lt;/span>&lt;span class="lnt">157
+&lt;/span>&lt;span class="lnt">158
+&lt;/span>&lt;span class="lnt">159
+&lt;/span>&lt;span class="lnt">160
+&lt;/span>&lt;span class="lnt">161
+&lt;/span>&lt;span class="lnt">162
+&lt;/span>&lt;span class="lnt">163
+&lt;/span>&lt;span class="lnt">164
+&lt;/span>&lt;span class="lnt">165
+&lt;/span>&lt;span class="lnt">166
+&lt;/span>&lt;span class="lnt">167
+&lt;/span>&lt;span class="lnt">168
+&lt;/span>&lt;span class="lnt">169
+&lt;/span>&lt;span class="lnt">170
+&lt;/span>&lt;span class="lnt">171
+&lt;/span>&lt;span class="lnt">172
+&lt;/span>&lt;span class="lnt">173
+&lt;/span>&lt;span class="lnt">174
+&lt;/span>&lt;span class="lnt">175
+&lt;/span>&lt;span class="lnt">176
+&lt;/span>&lt;span class="lnt">177
+&lt;/span>&lt;span class="lnt">178
+&lt;/span>&lt;span class="lnt">179
+&lt;/span>&lt;span class="lnt">180
+&lt;/span>&lt;span class="lnt">181
+&lt;/span>&lt;span class="lnt">182
+&lt;/span>&lt;span class="lnt">183
+&lt;/span>&lt;span class="lnt">184
+&lt;/span>&lt;span class="lnt">185
+&lt;/span>&lt;span class="lnt">186
+&lt;/span>&lt;span class="lnt">187
+&lt;/span>&lt;span class="lnt">188
+&lt;/span>&lt;span class="lnt">189
+&lt;/span>&lt;span class="lnt">190
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="err">@&lt;/span>&lt;span class="n">SuppressWarnings&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;serial&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="n">TransactionInterceptor&lt;/span> &lt;span class="k">extends&lt;/span> &lt;span class="n">TransactionAspectSupport&lt;/span> &lt;span class="n">implements&lt;/span> &lt;span class="n">MethodInterceptor&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Serializable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">@&lt;/span>&lt;span class="n">Override&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">@&lt;/span>&lt;span class="n">Nullable&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">public&lt;/span> &lt;span class="ne">Object&lt;/span> &lt;span class="n">invoke&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">MethodInvocation&lt;/span> &lt;span class="n">invocation&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">throws&lt;/span> &lt;span class="n">Throwable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">Work&lt;/span> &lt;span class="n">out&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">target&lt;/span> &lt;span class="k">class&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">may&lt;/span> &lt;span class="n">be&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">code&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">The&lt;/span> &lt;span class="n">TransactionAttributeSource&lt;/span> &lt;span class="n">should&lt;/span> &lt;span class="n">be&lt;/span> &lt;span class="n">passed&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">target&lt;/span> &lt;span class="k">class&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">as&lt;/span> &lt;span class="n">well&lt;/span> &lt;span class="n">as&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">method&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">which&lt;/span> &lt;span class="n">may&lt;/span> &lt;span class="n">be&lt;/span> &lt;span class="n">from&lt;/span> &lt;span class="n">an&lt;/span> &lt;span class="n">interface&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Class&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">targetClass&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">invocation&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getThis&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">null&lt;/span> &lt;span class="err">?&lt;/span> &lt;span class="n">AopUtils&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getTargetClass&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">invocation&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getThis&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">Adapt&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">TransactionAspectSupport&lt;/span>&lt;span class="s1">&amp;#39;s invokeWithinTransaction...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">invokeWithinTransaction&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">invocation&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getMethod&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">targetClass&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">invocation&lt;/span>&lt;span class="p">::&lt;/span>&lt;span class="n">proceed&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">public&lt;/span> &lt;span class="n">abstract&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="n">TransactionAspectSupport&lt;/span> &lt;span class="n">implements&lt;/span> &lt;span class="n">BeanFactoryAware&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">InitializingBean&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">@&lt;/span>&lt;span class="n">Nullable&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">protected&lt;/span> &lt;span class="ne">Object&lt;/span> &lt;span class="n">invokeWithinTransaction&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Method&lt;/span> &lt;span class="n">method&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="err">@&lt;/span>&lt;span class="n">Nullable&lt;/span> &lt;span class="n">Class&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">targetClass&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">final&lt;/span> &lt;span class="n">InvocationCallback&lt;/span> &lt;span class="n">invocation&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">throws&lt;/span> &lt;span class="n">Throwable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">If&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">transaction&lt;/span> &lt;span class="n">attribute&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">method&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">non&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">transactional&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TransactionAttributeSource&lt;/span> &lt;span class="n">tas&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">getTransactionAttributeSource&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">final&lt;/span> &lt;span class="n">TransactionAttribute&lt;/span> &lt;span class="n">txAttr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">tas&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">null&lt;/span> &lt;span class="err">?&lt;/span> &lt;span class="n">tas&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getTransactionAttribute&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">method&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">targetClass&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">final&lt;/span> &lt;span class="n">TransactionManager&lt;/span> &lt;span class="n">tm&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">determineTransactionManager&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">txAttr&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">........&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">响应式事务处理逻辑&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">PlatformTransactionManager&lt;/span> &lt;span class="n">ptm&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">asPlatformTransactionManager&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">tm&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">final&lt;/span> &lt;span class="ne">String&lt;/span> &lt;span class="n">joinpointIdentification&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">methodIdentification&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">method&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">targetClass&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">txAttr&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txAttr&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">null&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ptm&lt;/span> &lt;span class="n">instanceof&lt;/span> &lt;span class="n">CallbackPreferringPlatformTransactionManager&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">Standard&lt;/span> &lt;span class="n">transaction&lt;/span> &lt;span class="n">demarcation&lt;/span> &lt;span class="n">with&lt;/span> &lt;span class="n">getTransaction&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">commit&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">rollback&lt;/span> &lt;span class="n">calls&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TransactionInfo&lt;/span> &lt;span class="n">txInfo&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createTransactionIfNecessary&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ptm&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">txAttr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">joinpointIdentification&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="ne">Object&lt;/span> &lt;span class="n">retVal&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">try&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">This&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">an&lt;/span> &lt;span class="n">around&lt;/span> &lt;span class="n">advice&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Invoke&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">next&lt;/span> &lt;span class="n">interceptor&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">chain&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">This&lt;/span> &lt;span class="n">will&lt;/span> &lt;span class="n">normally&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="n">target&lt;/span> &lt;span class="n">object&lt;/span> &lt;span class="n">being&lt;/span> &lt;span class="n">invoked&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">retVal&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">invocation&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">proceedWithInvocation&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">Throwable&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">target&lt;/span> &lt;span class="n">invocation&lt;/span> &lt;span class="n">exception&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">completeTransactionAfterThrowing&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">txInfo&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">throw&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">finally&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cleanupTransactionInfo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">txInfo&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">retVal&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">null&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">vavrPresent&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">VavrDelegate&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">isVavrTry&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">retVal&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">Set&lt;/span> &lt;span class="n">rollback&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">only&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="k">case&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">Vavr&lt;/span> &lt;span class="n">failure&lt;/span> &lt;span class="n">matching&lt;/span> &lt;span class="n">our&lt;/span> &lt;span class="n">rollback&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TransactionStatus&lt;/span> &lt;span class="n">status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">txInfo&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getTransactionStatus&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">status&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">null&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">txAttr&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">retVal&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">VavrDelegate&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">evaluateTryFailure&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">retVal&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">txAttr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">status&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">commitTransactionAfterReturning&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">txInfo&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">retVal&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>&lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">......&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="err">非回调事务处理逻辑&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">protected&lt;/span> &lt;span class="n">TransactionInfo&lt;/span> &lt;span class="n">createTransactionIfNecessary&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">Nullable&lt;/span> &lt;span class="n">PlatformTransactionManager&lt;/span> &lt;span class="n">tm&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">@&lt;/span>&lt;span class="n">Nullable&lt;/span> &lt;span class="n">TransactionAttribute&lt;/span> &lt;span class="n">txAttr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">final&lt;/span> &lt;span class="ne">String&lt;/span> &lt;span class="n">joinpointIdentification&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">...........&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TransactionStatus&lt;/span> &lt;span class="n">status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txAttr&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">tm&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">tm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getTransaction&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">txAttr&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.......&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">...........&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">public&lt;/span> &lt;span class="n">abstract&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="n">AbstractPlatformTransactionManager&lt;/span> &lt;span class="n">implements&lt;/span> &lt;span class="n">PlatformTransactionManager&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Serializable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">@&lt;/span>&lt;span class="n">Override&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">public&lt;/span> &lt;span class="n">final&lt;/span> &lt;span class="n">TransactionStatus&lt;/span> &lt;span class="n">getTransaction&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">Nullable&lt;/span> &lt;span class="n">TransactionDefinition&lt;/span> &lt;span class="n">definition&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">throws&lt;/span> &lt;span class="n">TransactionException&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">...........................&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="ne">Object&lt;/span> &lt;span class="n">transaction&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">doGetTransaction&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">boolean&lt;/span> &lt;span class="n">debugEnabled&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">isDebugEnabled&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">No&lt;/span> &lt;span class="n">existing&lt;/span> &lt;span class="n">transaction&lt;/span> &lt;span class="n">found&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">check&lt;/span> &lt;span class="n">propagation&lt;/span> &lt;span class="n">behavior&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">find&lt;/span> &lt;span class="n">out&lt;/span> &lt;span class="n">how&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">proceed&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">def&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getPropagationBehavior&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">TransactionDefinition&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">PROPAGATION_MANDATORY&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.............&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">def&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getPropagationBehavior&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">TransactionDefinition&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">PROPAGATION_REQUIRED&lt;/span> &lt;span class="o">||&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">def&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getPropagationBehavior&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">TransactionDefinition&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">PROPAGATION_REQUIRES_NEW&lt;/span> &lt;span class="o">||&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">def&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getPropagationBehavior&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">TransactionDefinition&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">PROPAGATION_NESTED&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">SuspendedResourcesHolder&lt;/span> &lt;span class="n">suspendedResources&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">suspend&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">null&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">...............&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">try&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">startTransaction&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">def&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">transaction&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">debugEnabled&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">suspendedResources&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">RuntimeException&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">Error&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.........&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">/**&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">*&lt;/span> &lt;span class="n">Start&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">transaction&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">*/&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="n">TransactionStatus&lt;/span> &lt;span class="n">startTransaction&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">TransactionDefinition&lt;/span> &lt;span class="n">definition&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ne">Object&lt;/span> &lt;span class="n">transaction&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">boolean&lt;/span> &lt;span class="n">debugEnabled&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="err">@&lt;/span>&lt;span class="n">Nullable&lt;/span> &lt;span class="n">SuspendedResourcesHolder&lt;/span> &lt;span class="n">suspendedResources&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">boolean&lt;/span> &lt;span class="n">newSynchronization&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">getTransactionSynchronization&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">SYNCHRONIZATION_NEVER&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">DefaultTransactionStatus&lt;/span> &lt;span class="n">status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">newTransactionStatus&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">definition&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">transaction&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">newSynchronization&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">debugEnabled&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">suspendedResources&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">doBegin&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">transaction&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">definition&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">prepareSynchronization&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">status&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">definition&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">status&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="n">DataSourceTransactionManager&lt;/span> &lt;span class="k">extends&lt;/span> &lt;span class="n">AbstractPlatformTransactionManager&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">implements&lt;/span> &lt;span class="n">ResourceTransactionManager&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">InitializingBean&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">protected&lt;/span> &lt;span class="ne">Object&lt;/span> &lt;span class="n">doGetTransaction&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">DataSourceTransactionObject&lt;/span> &lt;span class="n">txObject&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">DataSourceTransactionObject&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setSavepointAllowed&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">isNestedTransactionAllowed&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ConnectionHolder&lt;/span> &lt;span class="n">conHolder&lt;/span> &lt;span class="o">=&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">ConnectionHolder&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">TransactionSynchronizationManager&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getResource&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">obtainDataSource&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setConnectionHolder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">conHolder&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">txObject&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">protected&lt;/span> &lt;span class="n">void&lt;/span> &lt;span class="n">doBegin&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ne">Object&lt;/span> &lt;span class="n">transaction&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">TransactionDefinition&lt;/span> &lt;span class="n">definition&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">DataSourceTransactionObject&lt;/span> &lt;span class="n">txObject&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">DataSourceTransactionObject&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">transaction&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Connection&lt;/span> &lt;span class="n">con&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">try&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hasConnectionHolder&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">||&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnectionHolder&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">isSynchronizedWithTransaction&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Connection&lt;/span> &lt;span class="n">newCon&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">obtainDataSource&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnection&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">isDebugEnabled&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">debug&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Acquired Connection [&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">newCon&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;] for JDBC transaction&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setConnectionHolder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">new&lt;/span> &lt;span class="n">ConnectionHolder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">newCon&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnectionHolder&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setSynchronizedWithTransaction&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">true&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">con&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnectionHolder&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnection&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Integer&lt;/span> &lt;span class="n">previousIsolationLevel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">DataSourceUtils&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">prepareConnectionForTransaction&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">con&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">definition&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setPreviousIsolationLevel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">previousIsolationLevel&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setReadOnly&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">definition&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">isReadOnly&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">Switch&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">manual&lt;/span> &lt;span class="n">commit&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="n">necessary&lt;/span>&lt;span class="o">.&lt;/span> &lt;span class="n">This&lt;/span> &lt;span class="n">is&lt;/span> &lt;span class="n">very&lt;/span> &lt;span class="n">expensive&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">some&lt;/span> &lt;span class="n">JDBC&lt;/span> &lt;span class="n">drivers&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">so&lt;/span> &lt;span class="n">we&lt;/span> &lt;span class="n">don&lt;/span>&lt;span class="s1">&amp;#39;t want to do it unnecessarily (for example if we&amp;#39;&lt;/span>&lt;span class="n">ve&lt;/span> &lt;span class="n">explicitly&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">configured&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">connection&lt;/span> &lt;span class="n">pool&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">set&lt;/span> &lt;span class="n">it&lt;/span> &lt;span class="n">already&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">con&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getAutoCommit&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setMustRestoreAutoCommit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">true&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">isDebugEnabled&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">logger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">debug&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Switching JDBC Connection [&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">con&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34;] to manual commit&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">con&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setAutoCommit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">false&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">prepareTransactionalConnection&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">con&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">definition&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnectionHolder&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setTransactionActive&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">true&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="ne">int&lt;/span> &lt;span class="n">timeout&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">determineTimeout&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">definition&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">timeout&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">TransactionDefinition&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">TIMEOUT_DEFAULT&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnectionHolder&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setTimeoutInSeconds&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">timeout&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">Bind&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">connection&lt;/span> &lt;span class="n">holder&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">the&lt;/span> &lt;span class="n">thread&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">isNewConnectionHolder&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">TransactionSynchronizationManager&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bindResource&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">obtainDataSource&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnectionHolder&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">Throwable&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">isNewConnectionHolder&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">DataSourceUtils&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">releaseConnection&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">con&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">obtainDataSource&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txObject&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">setConnectionHolder&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">null&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">false&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">throw&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">CannotCreateTransactionException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Could not open JDBC Connection for transaction&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">ex&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="执行mybatisplus-dml与select语句">执行mybatisplus DML与Select语句
+&lt;/h2>&lt;p>以调用IService的saveBatch方法为例，其最初调用链路如下ServiceImpl#saveBatch -&amp;gt; ServiceImpl#executeBatch -&amp;gt; SqlHelper#executeBatch，
+执行步骤如下：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>获取SqlSessionFactory&lt;/p>
+&lt;p>SqlHelper#executeBatch调用sqlSessionFactory方法，sqlSessionFactory对象中持有DataSource对象的引用。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>调用上面一步获取的SqlSessionFactory的openSession方法（这里以DefaultSqlSessionFactory加以说明），需要注意的事这里的Transaction对象并不参与事务的执行，只是用来管理数据源，该方法执行了如下步骤：&lt;/p>
+&lt;ul>
+&lt;li>创建TransactionFactory对象&lt;/li>
+&lt;li>通过TransactionFactory对象创建Transaction对象，并传入从configure（SqlSessionFactory持有）对象中获取的dataScoure对象&lt;/li>
+&lt;li>创建Executor对象并传入Transaction对象&lt;/li>
+&lt;li>创建DefaultSqlSession对象并传入Executor对象&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Transaction tx = null;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> try {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> final Environment environment = configuration.getEnvironment();
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> final Executor executor = configuration.newExecutor(tx, execType);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> return new DefaultSqlSession(configuration, executor, autoCommit);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> } catch (Exception e) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> closeTransaction(tx); // may have fetched a connection so lets call close()
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> throw ExceptionFactory.wrapException(&amp;#34;Error opening session. Cause: &amp;#34; + e, e);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> } finally {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ErrorContext.instance().reset();
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>调用SqlSession的insert方法&lt;/p>
+&lt;ul>
+&lt;li>调用链路SqlSession#insert -&amp;gt; SqlSession#update -&amp;gt; BaseExecutor#update -&amp;gt; BatchExecutor#doUpdate，BatchExecutor#doUpdate执行了如下步骤：
+&lt;ul>
+&lt;li>获取Connection，调用BaseExecutor#getConnection -&amp;gt; Transaction.getConnection -&amp;gt; SpringManagedTransaction.getConnection -&amp;gt; SpringManagedTransaction.openConnection -&amp;gt; DataSourceUtils.getConnection -&amp;gt; DataSourceUtils.doGetConnection，从下面的代码可知道如果当前数据源绑定了Connection则获取绑定的Connection，如果没有绑定则调用DataScoure对象的getConnection方法获取新的connection方法&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">public static Connection doGetConnection(DataSource dataSource) throws SQLException {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> .......
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> if (conHolder != null &amp;amp;&amp;amp; (conHolder.hasConnection() || conHolder.isSynchronizedWithTransaction())) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> conHolder.requested();
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> if (!conHolder.hasConnection()) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> logger.debug(&amp;#34;Fetching resumed JDBC Connection from DataSource&amp;#34;);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> conHolder.setConnection(fetchConnection(dataSource));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> return conHolder.getConnection();
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> // Else we either got no holder or an empty thread-bound holder here.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> logger.debug(&amp;#34;Fetching JDBC Connection from DataSource&amp;#34;);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Connection con = fetchConnection(dataSource);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ........
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> return con;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">private static Connection fetchConnection(DataSource dataSource) throws SQLException {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Connection con = dataSource.getConnection();
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> if (con == null) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> throw new IllegalStateException(&amp;#34;DataSource returned null from getConnection(): &amp;#34; + dataSource);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> return con;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>准备Statement，设置Connection为上一步获取的Connection&lt;/li>
+&lt;li>执行SQL语句&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="datascoure数据库链接的管理者">DataScoure：数据库链接的管理者
+&lt;/h2>&lt;p>不论是在Spring事务还是mybatisplus执行SQL语句前获取connection，都会调用DataScoure#getConnection方法。如下，DataScoure只提供了两个获取connection方法，由此可知DataScoure最主要的功能就是进行Connection的管理。对DataSource的getConnection方法提供不同的实现可以提供不同的功能，最典型的莫过于连接池和动态数据源。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">public&lt;/span> &lt;span class="n">interface&lt;/span> &lt;span class="n">DataSource&lt;/span> &lt;span class="k">extends&lt;/span> &lt;span class="n">CommonDataSource&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Wrapper&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Connection&lt;/span> &lt;span class="n">getConnection&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="n">throws&lt;/span> &lt;span class="n">SQLException&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Connection&lt;/span> &lt;span class="n">getConnection&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="ne">String&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="ne">String&lt;/span> &lt;span class="n">password&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">throws&lt;/span> &lt;span class="n">SQLException&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="连接池">连接池
+&lt;/h3>&lt;p>我们以HikariCP为例，先介绍其在SpringBoot项目中如何使用，再介绍如何通过其获取Connection&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>SpringBoot集成HikariCP&lt;/p>
+&lt;ul>
+&lt;li>yaml配置&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">spring:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> datasource:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> type: com.zaxxer.hikari.HikariDataSource
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> url: jdbc:mysql://localhost:3306/test?useSSL=false
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> username: root
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> password: 123456
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> driver-class-name: com.mysql.cj.jdbc.Driver
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> hikari:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> pool-name: MyHikariCP
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> minimum-idle: 5
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> maximum-pool-size: 20
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> idle-timeout: 600000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> max-lifetime: 1800000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> connection-timeout: 30000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> connection-test-query: SELECT 1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>数据源属性类&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="err">@&lt;/span>&lt;span class="n">ConfigurationProperties&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">prefix&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;spring.datasource&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="n">DataSourceProperties&lt;/span> &lt;span class="n">implements&lt;/span> &lt;span class="n">BeanClassLoaderAware&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">InitializingBean&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="n">ClassLoader&lt;/span> &lt;span class="n">classLoader&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="ne">String&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="n">boolean&lt;/span> &lt;span class="n">generateUniqueName&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="n">Class&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">?&lt;/span> &lt;span class="k">extends&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">type&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="ne">String&lt;/span> &lt;span class="n">driverClassName&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="ne">String&lt;/span> &lt;span class="n">url&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="ne">String&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="ne">String&lt;/span> &lt;span class="n">password&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>
+&lt;p>Springboot自动配置&lt;/p>
+&lt;p>当我们在yaml文件中指定了&lt;code>type: com.zaxxer.hikari.HikariDataSource&lt;/code>满足了自动配置类&lt;code>@ConditionalOnProperty(name = &amp;quot;spring.datasource.type&amp;quot;, havingValue = &amp;quot;com.zaxxer.hikari.HikariDataSource&amp;quot;,matchIfMissing = true)&lt;/code>的条件，创建HikariDataSource对象并交由Spring管理。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">stract class DataSourceConfiguration {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @Configuration(proxyBeanMethods = false)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @ConditionalOnClass(HikariDataSource.class)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @ConditionalOnMissingBean(DataSource.class)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @ConditionalOnProperty(name = &amp;#34;spring.datasource.type&amp;#34;, havingValue = &amp;#34;com.zaxxer.hikari.HikariDataSource&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> matchIfMissing = true)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> static class Hikari {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @Bean
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @ConfigurationProperties(prefix = &amp;#34;spring.datasource.hikari&amp;#34;)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> HikariDataSource dataSource(DataSourceProperties properties) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> HikariDataSource dataSource = createDataSource(properties, HikariDataSource.class);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> if (StringUtils.hasText(properties.getName())) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> dataSource.setPoolName(properties.getName());
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> return dataSource;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>HikariDataSource实现数据库链接管理
+在没有创建其他数据源的情况下，HikariDataSource会被注入Mybatisplus的MybatisSqlSessionFactoryBean并在执行SQL语句前被获取，HikariDataSource只需要重写getConnection方法就可实现对数据库连接的管理。如下代码，HikariDataSource获取数据库连接的功能最终委托给了HikariPool。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">public&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="n">HikariDataSource&lt;/span> &lt;span class="k">extends&lt;/span> &lt;span class="n">HikariConfig&lt;/span> &lt;span class="n">implements&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Closeable&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="k">static&lt;/span> &lt;span class="n">final&lt;/span> &lt;span class="n">Logger&lt;/span> &lt;span class="n">LOGGER&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">LoggerFactory&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getLogger&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">HikariDataSource&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="k">class&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="n">final&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span> &lt;span class="n">isShutdown&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">AtomicBoolean&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="n">final&lt;/span> &lt;span class="n">HikariPool&lt;/span> &lt;span class="n">fastPathPool&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private&lt;/span> &lt;span class="n">volatile&lt;/span> &lt;span class="n">HikariPool&lt;/span> &lt;span class="n">pool&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">public&lt;/span> &lt;span class="n">HikariDataSource&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">super&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">fastPathPool&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">public&lt;/span> &lt;span class="n">HikariDataSource&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">HikariConfig&lt;/span> &lt;span class="n">configuration&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">configuration&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">validate&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">configuration&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">copyStateTo&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">this&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">LOGGER&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;{} - Starting...&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">configuration&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getPoolName&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">pool&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">fastPathPool&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">HikariPool&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">this&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">LOGGER&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;{} - Start completed.&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">configuration&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getPoolName&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">seal&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="err">@&lt;/span>&lt;span class="n">Override&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">public&lt;/span> &lt;span class="n">Connection&lt;/span> &lt;span class="n">getConnection&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="n">throws&lt;/span> &lt;span class="n">SQLException&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">isClosed&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">throw&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">SQLException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;HikariDataSource &amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">this&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34; has been closed.&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">fastPathPool&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">fastPathPool&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnection&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">//&lt;/span> &lt;span class="n">See&lt;/span> &lt;span class="n">http&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">en&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">wikipedia&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">org&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">wiki&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Double&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">checked_locking&lt;/span>&lt;span class="c1">#Usage_in_Java&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">HikariPool&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pool&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">result&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">synchronized&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">this&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pool&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">result&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">null&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">validate&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">LOGGER&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;{} - Starting...&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">getPoolName&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">try&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">pool&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">HikariPool&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">this&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">this&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">seal&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">catch&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">PoolInitializationException&lt;/span> &lt;span class="n">pie&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">pie&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getCause&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="n">instanceof&lt;/span> &lt;span class="n">SQLException&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">throw&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">SQLException&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">pie&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getCause&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">throw&lt;/span> &lt;span class="n">pie&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">LOGGER&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;{} - Start completed.&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">getPoolName&lt;/span>&lt;span class="p">());&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getConnection&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>HikariPool核心代码如下，&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;img src="HikariDataSource.svg" width="90%" height="90%">
+&lt;h3 id="动态数据源-待补充">动态数据源 (待补充)
+&lt;/h3>&lt;h4 id="编译时动态">编译时动态
+&lt;/h4>&lt;h4 id="运行时动态">运行时动态
+&lt;/h4>&lt;h2 id="mybatisplus-执行-sql时数据源问题总结">mybatisplus 执行 SQL时数据源问题总结
+&lt;/h2>&lt;ul>
+&lt;li>数据源DataScoure是一个管理数据库连接的对象，它与数据库连接是一对多的关联&lt;/li>
+&lt;li>mybatisplus的数据源对象取自SqlSessionFactory对象，在满足第一节Mybatisplus自动配置MybatisSqlSessionFactoryBean的条件下，mybatisplus获取的是优先级最高的（加了@Primary）DataScoure对象&lt;/li>
+&lt;li>指定事务管理器的数据源只会影响@Transactional注解绑定Datasource对象和Connection方法的逻辑，并不会影响mybatisplus实际获取的数据源（mybatisplus从SqlSessionFactory中取数据源）&lt;/li>
+&lt;/ul></description></item></channel></rss>
