@@ -1,0 +1,4233 @@
+{
+    "TaskId": "334443ac882045c7a81cc5baaf3e2eb8",
+    "Transcription": {
+        "AudioInfo": {
+            "Size": 53760044,
+            "Duration": 840000,
+            "SampleRate": 16000,
+            "Language": "cn"
+        },
+        "Paragraphs": [
+            {
+                "ParagraphId": "1756363625900500000",
+                "SpeakerId": "1",
+                "Words": [
+                    {
+                        "Id": 10,
+                        "SentenceId": 1,
+                        "Start": 0,
+                        "End": 642,
+                        "Text": "你好，"
+                    },
+                    {
+                        "Id": 20,
+                        "SentenceId": 1,
+                        "Start": 643,
+                        "End": 1287,
+                        "Text": "小静，"
+                    },
+                    {
+                        "Id": 30,
+                        "SentenceId": 1,
+                        "Start": 1287,
+                        "End": 2250,
+                        "Text": "欢迎您。"
+                    },
+                    {
+                        "Id": 40,
+                        "SentenceId": 2,
+                        "Start": 2252,
+                        "End": 2896,
+                        "Text": "感谢"
+                    },
+                    {
+                        "Id": 50,
+                        "SentenceId": 2,
+                        "Start": 2896,
+                        "End": 3540,
+                        "Text": "两位。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756363631480500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 60,
+                        "SentenceId": 3,
+                        "Start": 5580,
+                        "End": 6411,
+                        "Text": "杨同学"
+                    },
+                    {
+                        "Id": 70,
+                        "SentenceId": 3,
+                        "Start": 6411,
+                        "End": 6965,
+                        "Text": "打开"
+                    },
+                    {
+                        "Id": 80,
+                        "SentenceId": 3,
+                        "Start": 6965,
+                        "End": 7519,
+                        "Text": "全车"
+                    },
+                    {
+                        "Id": 90,
+                        "SentenceId": 3,
+                        "Start": 7519,
+                        "End": 8073,
+                        "Text": "座椅"
+                    },
+                    {
+                        "Id": 100,
+                        "SentenceId": 3,
+                        "Start": 8073,
+                        "End": 8350,
+                        "Text": "门，"
+                    },
+                    {
+                        "Id": 110,
+                        "SentenceId": 3,
+                        "Start": 8350,
+                        "End": 8650,
+                        "Text": "打开"
+                    },
+                    {
+                        "Id": 120,
+                        "SentenceId": 3,
+                        "Start": 8650,
+                        "End": 8950,
+                        "Text": "全车"
+                    },
+                    {
+                        "Id": 130,
+                        "SentenceId": 3,
+                        "Start": 8950,
+                        "End": 9250,
+                        "Text": "座椅"
+                    },
+                    {
+                        "Id": 140,
+                        "SentenceId": 3,
+                        "Start": 9250,
+                        "End": 9550,
+                        "Text": "通风。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756363641960500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 150,
+                        "SentenceId": 4,
+                        "Start": 16060,
+                        "End": 16816,
+                        "Text": "杨同学"
+                    },
+                    {
+                        "Id": 160,
+                        "SentenceId": 4,
+                        "Start": 16816,
+                        "End": 17320,
+                        "Text": "导航"
+                    },
+                    {
+                        "Id": 170,
+                        "SentenceId": 4,
+                        "Start": 17320,
+                        "End": 17572,
+                        "Text": "到"
+                    },
+                    {
+                        "Id": 180,
+                        "SentenceId": 4,
+                        "Start": 17572,
+                        "End": 17824,
+                        "Text": "松"
+                    },
+                    {
+                        "Id": 190,
+                        "SentenceId": 4,
+                        "Start": 17824,
+                        "End": 18328,
+                        "Text": "南城"
+                    },
+                    {
+                        "Id": 200,
+                        "SentenceId": 4,
+                        "Start": 18328,
+                        "End": 19090,
+                        "Text": "芙蓉苑。"
+                    },
+                    {
+                        "Id": 210,
+                        "SentenceId": 5,
+                        "Start": 21900,
+                        "End": 22299,
+                        "Text": "第一个。"
+                    },
+                    {
+                        "Id": 220,
+                        "SentenceId": 6,
+                        "Start": 24830,
+                        "End": 25420,
+                        "Text": "导航。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756363816230500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 230,
+                        "SentenceId": 7,
+                        "Start": 190330,
+                        "End": 190456,
+                        "Text": "你"
+                    },
+                    {
+                        "Id": 240,
+                        "SentenceId": 7,
+                        "Start": 190456,
+                        "End": 190582,
+                        "Text": "在"
+                    },
+                    {
+                        "Id": 250,
+                        "SentenceId": 7,
+                        "Start": 190582,
+                        "End": 190708,
+                        "Text": "说"
+                    },
+                    {
+                        "Id": 260,
+                        "SentenceId": 7,
+                        "Start": 190708,
+                        "End": 191086,
+                        "Text": "怎么了，"
+                    },
+                    {
+                        "Id": 270,
+                        "SentenceId": 7,
+                        "Start": 191090,
+                        "End": 191210,
+                        "Text": "哥？"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756363843340500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 280,
+                        "SentenceId": 8,
+                        "Start": 217440,
+                        "End": 218286,
+                        "Text": "老同学"
+                    },
+                    {
+                        "Id": 290,
+                        "SentenceId": 8,
+                        "Start": 218286,
+                        "End": 218850,
+                        "Text": "播放"
+                    },
+                    {
+                        "Id": 300,
+                        "SentenceId": 8,
+                        "Start": 218850,
+                        "End": 219414,
+                        "Text": "一首"
+                    },
+                    {
+                        "Id": 310,
+                        "SentenceId": 8,
+                        "Start": 219414,
+                        "End": 219980,
+                        "Text": "音乐。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756363866840500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 320,
+                        "SentenceId": 9,
+                        "Start": 240940,
+                        "End": 241254,
+                        "Text": "这个"
+                    },
+                    {
+                        "Id": 330,
+                        "SentenceId": 9,
+                        "Start": 241254,
+                        "End": 241568,
+                        "Text": "可能"
+                    },
+                    {
+                        "Id": 340,
+                        "SentenceId": 9,
+                        "Start": 241568,
+                        "End": 241882,
+                        "Text": "技术"
+                    },
+                    {
+                        "Id": 350,
+                        "SentenceId": 9,
+                        "Start": 241882,
+                        "End": 242196,
+                        "Text": "层面"
+                    },
+                    {
+                        "Id": 360,
+                        "SentenceId": 9,
+                        "Start": 242196,
+                        "End": 242510,
+                        "Text": "还没"
+                    },
+                    {
+                        "Id": 370,
+                        "SentenceId": 9,
+                        "Start": 242510,
+                        "End": 242824,
+                        "Text": "达到。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756363869300500000",
+                "SpeakerId": "3",
+                "Words": [
+                    {
+                        "Id": 380,
+                        "SentenceId": 10,
+                        "Start": 243400,
+                        "End": 245690,
+                        "Text": "我看。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756363882390500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 390,
+                        "SentenceId": 11,
+                        "Start": 256490,
+                        "End": 256673,
+                        "Text": "这"
+                    },
+                    {
+                        "Id": 400,
+                        "SentenceId": 11,
+                        "Start": 256673,
+                        "End": 256856,
+                        "Text": "车"
+                    },
+                    {
+                        "Id": 410,
+                        "SentenceId": 11,
+                        "Start": 256856,
+                        "End": 257039,
+                        "Text": "还"
+                    },
+                    {
+                        "Id": 420,
+                        "SentenceId": 11,
+                        "Start": 257039,
+                        "End": 257222,
+                        "Text": "做"
+                    },
+                    {
+                        "Id": 430,
+                        "SentenceId": 11,
+                        "Start": 257222,
+                        "End": 257588,
+                        "Text": "小镇，"
+                    },
+                    {
+                        "Id": 440,
+                        "SentenceId": 11,
+                        "Start": 257820,
+                        "End": 258076,
+                        "Text": "我也"
+                    },
+                    {
+                        "Id": 450,
+                        "SentenceId": 11,
+                        "Start": 258076,
+                        "End": 258204,
+                        "Text": "挺"
+                    },
+                    {
+                        "Id": 460,
+                        "SentenceId": 11,
+                        "Start": 258204,
+                        "End": 258460,
+                        "Text": "喜欢"
+                    },
+                    {
+                        "Id": 470,
+                        "SentenceId": 11,
+                        "Start": 258460,
+                        "End": 258716,
+                        "Text": "这个"
+                    },
+                    {
+                        "Id": 480,
+                        "SentenceId": 11,
+                        "Start": 258716,
+                        "End": 258844,
+                        "Text": "车"
+                    },
+                    {
+                        "Id": 490,
+                        "SentenceId": 11,
+                        "Start": 258844,
+                        "End": 258980,
+                        "Text": "的。"
+                    },
+                    {
+                        "Id": 500,
+                        "SentenceId": 12,
+                        "Start": 261390,
+                        "End": 261645,
+                        "Text": "L"
+                    },
+                    {
+                        "Id": 510,
+                        "SentenceId": 12,
+                        "Start": 261645,
+                        "End": 261900,
+                        "Text": "6。"
+                    },
+                    {
+                        "Id": 520,
+                        "SentenceId": 13,
+                        "Start": 264130,
+                        "End": 264410,
+                        "Text": "对，"
+                    },
+                    {
+                        "Id": 530,
+                        "SentenceId": 13,
+                        "Start": 264410,
+                        "End": 265402,
+                        "Text": "24款的"
+                    },
+                    {
+                        "Id": 540,
+                        "SentenceId": 13,
+                        "Start": 265402,
+                        "End": 265650,
+                        "Text": "是。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756363897320500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 550,
+                        "SentenceId": 14,
+                        "Start": 271420,
+                        "End": 272362,
+                        "Text": "去年"
+                    },
+                    {
+                        "Id": 560,
+                        "SentenceId": 14,
+                        "Start": 272362,
+                        "End": 272674,
+                        "Text": "买的"
+                    },
+                    {
+                        "Id": 570,
+                        "SentenceId": 14,
+                        "Start": 272674,
+                        "End": 272986,
+                        "Text": "时候"
+                    },
+                    {
+                        "Id": 580,
+                        "SentenceId": 14,
+                        "Start": 272986,
+                        "End": 273298,
+                        "Text": "也是"
+                    },
+                    {
+                        "Id": 590,
+                        "SentenceId": 14,
+                        "Start": 273298,
+                        "End": 273610,
+                        "Text": "贷款"
+                    },
+                    {
+                        "Id": 600,
+                        "SentenceId": 14,
+                        "Start": 273610,
+                        "End": 273766,
+                        "Text": "的，"
+                    },
+                    {
+                        "Id": 610,
+                        "SentenceId": 14,
+                        "Start": 274420,
+                        "End": 274910,
+                        "Text": "去年"
+                    },
+                    {
+                        "Id": 620,
+                        "SentenceId": 14,
+                        "Start": 274910,
+                        "End": 275400,
+                        "Text": "买的"
+                    },
+                    {
+                        "Id": 630,
+                        "SentenceId": 14,
+                        "Start": 275400,
+                        "End": 275890,
+                        "Text": "时候"
+                    },
+                    {
+                        "Id": 640,
+                        "SentenceId": 14,
+                        "Start": 275890,
+                        "End": 276380,
+                        "Text": "还有"
+                    },
+                    {
+                        "Id": 650,
+                        "SentenceId": 14,
+                        "Start": 276380,
+                        "End": 276870,
+                        "Text": "这个"
+                    },
+                    {
+                        "Id": 660,
+                        "SentenceId": 14,
+                        "Start": 276870,
+                        "End": 277360,
+                        "Text": "利率，"
+                    },
+                    {
+                        "Id": 670,
+                        "SentenceId": 14,
+                        "Start": 277710,
+                        "End": 278102,
+                        "Text": "不是"
+                    },
+                    {
+                        "Id": 680,
+                        "SentenceId": 14,
+                        "Start": 278102,
+                        "End": 278886,
+                        "Text": "11月份，"
+                    },
+                    {
+                        "Id": 690,
+                        "SentenceId": 14,
+                        "Start": 279060,
+                        "End": 279668,
+                        "Text": "12月份，"
+                    },
+                    {
+                        "Id": 700,
+                        "SentenceId": 14,
+                        "Start": 279670,
+                        "End": 279984,
+                        "Text": "它是"
+                    },
+                    {
+                        "Id": 710,
+                        "SentenceId": 14,
+                        "Start": 279984,
+                        "End": 280141,
+                        "Text": "有"
+                    },
+                    {
+                        "Id": 720,
+                        "SentenceId": 14,
+                        "Start": 280141,
+                        "End": 280455,
+                        "Text": "免息"
+                    },
+                    {
+                        "Id": 730,
+                        "SentenceId": 14,
+                        "Start": 280455,
+                        "End": 280769,
+                        "Text": "政策，"
+                    },
+                    {
+                        "Id": 740,
+                        "SentenceId": 14,
+                        "Start": 280770,
+                        "End": 282681,
+                        "Text": "那会儿"
+                    },
+                    {
+                        "Id": 750,
+                        "SentenceId": 14,
+                        "Start": 282681,
+                        "End": 283955,
+                        "Text": "没有"
+                    },
+                    {
+                        "Id": 760,
+                        "SentenceId": 14,
+                        "Start": 283955,
+                        "End": 284592,
+                        "Text": "空"
+                    },
+                    {
+                        "Id": 770,
+                        "SentenceId": 14,
+                        "Start": 284592,
+                        "End": 285230,
+                        "Text": "选。"
+                    },
+                    {
+                        "Id": 780,
+                        "SentenceId": 15,
+                        "Start": 287620,
+                        "End": 287962,
+                        "Text": "现在"
+                    },
+                    {
+                        "Id": 790,
+                        "SentenceId": 15,
+                        "Start": 287962,
+                        "End": 288304,
+                        "Text": "我在"
+                    },
+                    {
+                        "Id": 800,
+                        "SentenceId": 15,
+                        "Start": 288304,
+                        "End": 288646,
+                        "Text": "父母"
+                    },
+                    {
+                        "Id": 810,
+                        "SentenceId": 15,
+                        "Start": 288646,
+                        "End": 288988,
+                        "Text": "在在"
+                    },
+                    {
+                        "Id": 820,
+                        "SentenceId": 15,
+                        "Start": 288988,
+                        "End": 289330,
+                        "Text": "老家"
+                    },
+                    {
+                        "Id": 830,
+                        "SentenceId": 15,
+                        "Start": 289330,
+                        "End": 289672,
+                        "Text": "那边"
+                    },
+                    {
+                        "Id": 840,
+                        "SentenceId": 15,
+                        "Start": 289672,
+                        "End": 289843,
+                        "Text": "开，"
+                    },
+                    {
+                        "Id": 850,
+                        "SentenceId": 15,
+                        "Start": 290080,
+                        "End": 290400,
+                        "Text": "他们"
+                    },
+                    {
+                        "Id": 860,
+                        "SentenceId": 15,
+                        "Start": 290400,
+                        "End": 290560,
+                        "Text": "在"
+                    },
+                    {
+                        "Id": 870,
+                        "SentenceId": 15,
+                        "Start": 290560,
+                        "End": 290720,
+                        "Text": "用，"
+                    },
+                    {
+                        "Id": 880,
+                        "SentenceId": 15,
+                        "Start": 291070,
+                        "End": 291457,
+                        "Text": "因为我"
+                    },
+                    {
+                        "Id": 890,
+                        "SentenceId": 15,
+                        "Start": 291457,
+                        "End": 291715,
+                        "Text": "这边"
+                    },
+                    {
+                        "Id": 900,
+                        "SentenceId": 15,
+                        "Start": 291715,
+                        "End": 291973,
+                        "Text": "平时"
+                    },
+                    {
+                        "Id": 910,
+                        "SentenceId": 15,
+                        "Start": 291973,
+                        "End": 292102,
+                        "Text": "也"
+                    },
+                    {
+                        "Id": 920,
+                        "SentenceId": 15,
+                        "Start": 292102,
+                        "End": 292231,
+                        "Text": "用"
+                    },
+                    {
+                        "Id": 930,
+                        "SentenceId": 15,
+                        "Start": 292231,
+                        "End": 292360,
+                        "Text": "不"
+                    },
+                    {
+                        "Id": 940,
+                        "SentenceId": 15,
+                        "Start": 292360,
+                        "End": 292620,
+                        "Text": "上车。"
+                    },
+                    {
+                        "Id": 950,
+                        "SentenceId": 16,
+                        "Start": 296470,
+                        "End": 296810,
+                        "Text": "他家"
+                    },
+                    {
+                        "Id": 960,
+                        "SentenceId": 16,
+                        "Start": 296810,
+                        "End": 297150,
+                        "Text": "里边"
+                    },
+                    {
+                        "Id": 970,
+                        "SentenceId": 16,
+                        "Start": 297150,
+                        "End": 297490,
+                        "Text": "油车"
+                    },
+                    {
+                        "Id": 980,
+                        "SentenceId": 16,
+                        "Start": 297490,
+                        "End": 297830,
+                        "Text": "换成"
+                    },
+                    {
+                        "Id": 990,
+                        "SentenceId": 16,
+                        "Start": 297830,
+                        "End": 298170,
+                        "Text": "那个"
+                    },
+                    {
+                        "Id": 1000,
+                        "SentenceId": 16,
+                        "Start": 298170,
+                        "End": 298340,
+                        "Text": "车。"
+                    },
+                    {
+                        "Id": 1010,
+                        "SentenceId": 17,
+                        "Start": 301530,
+                        "End": 301760,
+                        "Text": "对，"
+                    },
+                    {
+                        "Id": 1020,
+                        "SentenceId": 17,
+                        "Start": 301760,
+                        "End": 302036,
+                        "Text": "听"
+                    },
+                    {
+                        "Id": 1030,
+                        "SentenceId": 17,
+                        "Start": 302036,
+                        "End": 302588,
+                        "Text": "我们"
+                    },
+                    {
+                        "Id": 1040,
+                        "SentenceId": 17,
+                        "Start": 302588,
+                        "End": 303140,
+                        "Text": "东北"
+                    },
+                    {
+                        "Id": 1050,
+                        "SentenceId": 17,
+                        "Start": 303140,
+                        "End": 303692,
+                        "Text": "不是"
+                    },
+                    {
+                        "Id": 1060,
+                        "SentenceId": 17,
+                        "Start": 303692,
+                        "End": 304244,
+                        "Text": "西北"
+                    },
+                    {
+                        "Id": 1070,
+                        "SentenceId": 17,
+                        "Start": 304244,
+                        "End": 304796,
+                        "Text": "的话，"
+                    },
+                    {
+                        "Id": 1080,
+                        "SentenceId": 17,
+                        "Start": 305190,
+                        "End": 305546,
+                        "Text": "比较"
+                    },
+                    {
+                        "Id": 1090,
+                        "SentenceId": 17,
+                        "Start": 305546,
+                        "End": 305902,
+                        "Text": "喜欢"
+                    },
+                    {
+                        "Id": 1100,
+                        "SentenceId": 17,
+                        "Start": 305902,
+                        "End": 306258,
+                        "Text": "这种"
+                    },
+                    {
+                        "Id": 1110,
+                        "SentenceId": 17,
+                        "Start": 306258,
+                        "End": 306436,
+                        "Text": "增"
+                    },
+                    {
+                        "Id": 1120,
+                        "SentenceId": 17,
+                        "Start": 306436,
+                        "End": 306792,
+                        "Text": "程式"
+                    },
+                    {
+                        "Id": 1130,
+                        "SentenceId": 17,
+                        "Start": 306792,
+                        "End": 306970,
+                        "Text": "纯"
+                    },
+                    {
+                        "Id": 1140,
+                        "SentenceId": 17,
+                        "Start": 306970,
+                        "End": 307148,
+                        "Text": "电，"
+                    },
+                    {
+                        "Id": 1150,
+                        "SentenceId": 17,
+                        "Start": 307680,
+                        "End": 308000,
+                        "Text": "比较"
+                    },
+                    {
+                        "Id": 1160,
+                        "SentenceId": 17,
+                        "Start": 308000,
+                        "End": 308160,
+                        "Text": "冷。"
+                    },
+                    {
+                        "Id": 1170,
+                        "SentenceId": 18,
+                        "Start": 309240,
+                        "End": 309410,
+                        "Text": "对，"
+                    },
+                    {
+                        "Id": 1180,
+                        "SentenceId": 18,
+                        "Start": 309410,
+                        "End": 309714,
+                        "Text": "春天"
+                    },
+                    {
+                        "Id": 1190,
+                        "SentenceId": 18,
+                        "Start": 309714,
+                        "End": 310018,
+                        "Text": "比较"
+                    },
+                    {
+                        "Id": 1200,
+                        "SentenceId": 18,
+                        "Start": 310018,
+                        "End": 310170,
+                        "Text": "冷。"
+                    },
+                    {
+                        "Id": 1210,
+                        "SentenceId": 19,
+                        "Start": 310530,
+                        "End": 311020,
+                        "Text": "西北、"
+                    },
+                    {
+                        "Id": 1220,
+                        "SentenceId": 19,
+                        "Start": 311170,
+                        "End": 311634,
+                        "Text": "东北"
+                    },
+                    {
+                        "Id": 1230,
+                        "SentenceId": 19,
+                        "Start": 311634,
+                        "End": 311866,
+                        "Text": "卖"
+                    },
+                    {
+                        "Id": 1240,
+                        "SentenceId": 19,
+                        "Start": 311866,
+                        "End": 312098,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 1250,
+                        "SentenceId": 19,
+                        "Start": 312098,
+                        "End": 312562,
+                        "Text": "非常"
+                    },
+                    {
+                        "Id": 1260,
+                        "SentenceId": 19,
+                        "Start": 312562,
+                        "End": 312800,
+                        "Text": "好。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756363951160500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 1270,
+                        "SentenceId": 20,
+                        "Start": 325260,
+                        "End": 325390,
+                        "Text": "对，"
+                    },
+                    {
+                        "Id": 1280,
+                        "SentenceId": 20,
+                        "Start": 325390,
+                        "End": 325738,
+                        "Text": "那个"
+                    },
+                    {
+                        "Id": 1290,
+                        "SentenceId": 20,
+                        "Start": 325738,
+                        "End": 326086,
+                        "Text": "车子"
+                    },
+                    {
+                        "Id": 1300,
+                        "SentenceId": 20,
+                        "Start": 326086,
+                        "End": 326434,
+                        "Text": "油耗"
+                    },
+                    {
+                        "Id": 1310,
+                        "SentenceId": 20,
+                        "Start": 326434,
+                        "End": 326608,
+                        "Text": "就"
+                    },
+                    {
+                        "Id": 1320,
+                        "SentenceId": 20,
+                        "Start": 326608,
+                        "End": 327304,
+                        "Text": "6到8格，"
+                    },
+                    {
+                        "Id": 1330,
+                        "SentenceId": 20,
+                        "Start": 328550,
+                        "End": 328906,
+                        "Text": "亏电"
+                    },
+                    {
+                        "Id": 1340,
+                        "SentenceId": 20,
+                        "Start": 328906,
+                        "End": 329440,
+                        "Text": "什么的，"
+                    },
+                    {
+                        "Id": 1350,
+                        "SentenceId": 20,
+                        "Start": 329440,
+                        "End": 329594,
+                        "Text": "它"
+                    },
+                    {
+                        "Id": 1360,
+                        "SentenceId": 20,
+                        "Start": 329594,
+                        "End": 329748,
+                        "Text": "就"
+                    },
+                    {
+                        "Id": 1370,
+                        "SentenceId": 20,
+                        "Start": 329748,
+                        "End": 330056,
+                        "Text": "油耗"
+                    },
+                    {
+                        "Id": 1380,
+                        "SentenceId": 20,
+                        "Start": 330056,
+                        "End": 330210,
+                        "Text": "就"
+                    },
+                    {
+                        "Id": 1390,
+                        "SentenceId": 20,
+                        "Start": 330210,
+                        "End": 330364,
+                        "Text": "那"
+                    },
+                    {
+                        "Id": 1400,
+                        "SentenceId": 20,
+                        "Start": 330364,
+                        "End": 330520,
+                        "Text": "啥。"
+                    },
+                    {
+                        "Id": 1410,
+                        "SentenceId": 21,
+                        "Start": 332790,
+                        "End": 332942,
+                        "Text": "你"
+                    },
+                    {
+                        "Id": 1420,
+                        "SentenceId": 21,
+                        "Start": 332942,
+                        "End": 333246,
+                        "Text": "那款"
+                    },
+                    {
+                        "Id": 1430,
+                        "SentenceId": 21,
+                        "Start": 333246,
+                        "End": 333550,
+                        "Text": "电脑"
+                    },
+                    {
+                        "Id": 1440,
+                        "SentenceId": 21,
+                        "Start": 333550,
+                        "End": 333854,
+                        "Text": "油耗"
+                    },
+                    {
+                        "Id": 1450,
+                        "SentenceId": 21,
+                        "Start": 333854,
+                        "End": 334158,
+                        "Text": "咋样"
+                    },
+                    {
+                        "Id": 1460,
+                        "SentenceId": 21,
+                        "Start": 334158,
+                        "End": 334310,
+                        "Text": "的？"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364008410500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 1470,
+                        "SentenceId": 22,
+                        "Start": 382510,
+                        "End": 382950,
+                        "Text": "对，"
+                    },
+                    {
+                        "Id": 1480,
+                        "SentenceId": 22,
+                        "Start": 383500,
+                        "End": 384355,
+                        "Text": "杨同学"
+                    },
+                    {
+                        "Id": 1490,
+                        "SentenceId": 22,
+                        "Start": 384355,
+                        "End": 384925,
+                        "Text": "导航"
+                    },
+                    {
+                        "Id": 1500,
+                        "SentenceId": 22,
+                        "Start": 384925,
+                        "End": 385210,
+                        "Text": "到"
+                    },
+                    {
+                        "Id": 1510,
+                        "SentenceId": 22,
+                        "Start": 385210,
+                        "End": 385780,
+                        "Text": "理想"
+                    },
+                    {
+                        "Id": 1520,
+                        "SentenceId": 22,
+                        "Start": 385780,
+                        "End": 386350,
+                        "Text": "车东"
+                    },
+                    {
+                        "Id": 1530,
+                        "SentenceId": 22,
+                        "Start": 386350,
+                        "End": 386920,
+                        "Text": "理想"
+                    },
+                    {
+                        "Id": 1540,
+                        "SentenceId": 22,
+                        "Start": 386920,
+                        "End": 387490,
+                        "Text": "汽车"
+                    },
+                    {
+                        "Id": 1550,
+                        "SentenceId": 22,
+                        "Start": 387490,
+                        "End": 388630,
+                        "Text": "服务中心"
+                    },
+                    {
+                        "Id": 1560,
+                        "SentenceId": 22,
+                        "Start": 388630,
+                        "End": 389210,
+                        "Text": "一个。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364025140500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 1570,
+                        "SentenceId": 23,
+                        "Start": 399240,
+                        "End": 399646,
+                        "Text": "多少"
+                    },
+                    {
+                        "Id": 1580,
+                        "SentenceId": 23,
+                        "Start": 399646,
+                        "End": 399849,
+                        "Text": "瓦？"
+                    },
+                    {
+                        "Id": 1590,
+                        "SentenceId": 24,
+                        "Start": 401940,
+                        "End": 402870,
+                        "Text": "120那也"
+                    },
+                    {
+                        "Id": 1600,
+                        "SentenceId": 24,
+                        "Start": 402870,
+                        "End": 403242,
+                        "Text": "挺快"
+                    },
+                    {
+                        "Id": 1610,
+                        "SentenceId": 24,
+                        "Start": 403242,
+                        "End": 403614,
+                        "Text": "的那"
+                    },
+                    {
+                        "Id": 1620,
+                        "SentenceId": 24,
+                        "Start": 403614,
+                        "End": 403800,
+                        "Text": "你"
+                    },
+                    {
+                        "Id": 1630,
+                        "SentenceId": 24,
+                        "Start": 403800,
+                        "End": 404172,
+                        "Text": "平时"
+                    },
+                    {
+                        "Id": 1640,
+                        "SentenceId": 24,
+                        "Start": 404172,
+                        "End": 404358,
+                        "Text": "跑"
+                    },
+                    {
+                        "Id": 1650,
+                        "SentenceId": 24,
+                        "Start": 404358,
+                        "End": 404730,
+                        "Text": "高速"
+                    },
+                    {
+                        "Id": 1660,
+                        "SentenceId": 24,
+                        "Start": 404730,
+                        "End": 405102,
+                        "Text": "是用"
+                    },
+                    {
+                        "Id": 1670,
+                        "SentenceId": 24,
+                        "Start": 405102,
+                        "End": 405474,
+                        "Text": "燃油，"
+                    },
+                    {
+                        "Id": 1680,
+                        "SentenceId": 24,
+                        "Start": 405480,
+                        "End": 405635,
+                        "Text": "对"
+                    },
+                    {
+                        "Id": 1690,
+                        "SentenceId": 24,
+                        "Start": 405635,
+                        "End": 405790,
+                        "Text": "吧？"
+                    },
+                    {
+                        "Id": 1700,
+                        "SentenceId": 25,
+                        "Start": 405790,
+                        "End": 405952,
+                        "Text": "光"
+                    },
+                    {
+                        "Id": 1710,
+                        "SentenceId": 25,
+                        "Start": 405952,
+                        "End": 406114,
+                        "Text": "用"
+                    },
+                    {
+                        "Id": 1720,
+                        "SentenceId": 25,
+                        "Start": 406114,
+                        "End": 406440,
+                        "Text": "燃油。"
+                    },
+                    {
+                        "Id": 1730,
+                        "SentenceId": 26,
+                        "Start": 408530,
+                        "End": 408866,
+                        "Text": "对他"
+                    },
+                    {
+                        "Id": 1740,
+                        "SentenceId": 26,
+                        "Start": 408866,
+                        "End": 409370,
+                        "Text": "很多人"
+                    },
+                    {
+                        "Id": 1750,
+                        "SentenceId": 26,
+                        "Start": 409370,
+                        "End": 409706,
+                        "Text": "切换"
+                    },
+                    {
+                        "Id": 1760,
+                        "SentenceId": 26,
+                        "Start": 409706,
+                        "End": 409874,
+                        "Text": "成"
+                    },
+                    {
+                        "Id": 1770,
+                        "SentenceId": 26,
+                        "Start": 409874,
+                        "End": 410042,
+                        "Text": "油"
+                    },
+                    {
+                        "Id": 1780,
+                        "SentenceId": 26,
+                        "Start": 410042,
+                        "End": 410210,
+                        "Text": "电"
+                    },
+                    {
+                        "Id": 1790,
+                        "SentenceId": 26,
+                        "Start": 410210,
+                        "End": 410546,
+                        "Text": "混合，"
+                    },
+                    {
+                        "Id": 1800,
+                        "SentenceId": 26,
+                        "Start": 410550,
+                        "End": 410856,
+                        "Text": "这"
+                    },
+                    {
+                        "Id": 1810,
+                        "SentenceId": 26,
+                        "Start": 410856,
+                        "End": 411468,
+                        "Text": "其实"
+                    },
+                    {
+                        "Id": 1820,
+                        "SentenceId": 26,
+                        "Start": 411468,
+                        "End": 412080,
+                        "Text": "那样"
+                    },
+                    {
+                        "Id": 1830,
+                        "SentenceId": 26,
+                        "Start": 412080,
+                        "End": 412998,
+                        "Text": "没意思，"
+                    },
+                    {
+                        "Id": 1840,
+                        "SentenceId": 26,
+                        "Start": 413000,
+                        "End": 413362,
+                        "Text": "而且"
+                    },
+                    {
+                        "Id": 1850,
+                        "SentenceId": 26,
+                        "Start": 413362,
+                        "End": 413724,
+                        "Text": "还不"
+                    },
+                    {
+                        "Id": 1860,
+                        "SentenceId": 26,
+                        "Start": 413724,
+                        "End": 413905,
+                        "Text": "保"
+                    },
+                    {
+                        "Id": 1870,
+                        "SentenceId": 26,
+                        "Start": 413905,
+                        "End": 414086,
+                        "Text": "电，"
+                    },
+                    {
+                        "Id": 1880,
+                        "SentenceId": 26,
+                        "Start": 414650,
+                        "End": 414832,
+                        "Text": "这"
+                    },
+                    {
+                        "Id": 1890,
+                        "SentenceId": 26,
+                        "Start": 414832,
+                        "End": 415014,
+                        "Text": "车"
+                    },
+                    {
+                        "Id": 1900,
+                        "SentenceId": 26,
+                        "Start": 415014,
+                        "End": 415196,
+                        "Text": "不"
+                    },
+                    {
+                        "Id": 1910,
+                        "SentenceId": 26,
+                        "Start": 415196,
+                        "End": 415378,
+                        "Text": "保"
+                    },
+                    {
+                        "Id": 1920,
+                        "SentenceId": 26,
+                        "Start": 415378,
+                        "End": 415560,
+                        "Text": "电"
+                    },
+                    {
+                        "Id": 1930,
+                        "SentenceId": 26,
+                        "Start": 415560,
+                        "End": 415924,
+                        "Text": "比较"
+                    },
+                    {
+                        "Id": 1940,
+                        "SentenceId": 26,
+                        "Start": 415924,
+                        "End": 416106,
+                        "Text": "费"
+                    },
+                    {
+                        "Id": 1950,
+                        "SentenceId": 26,
+                        "Start": 416106,
+                        "End": 416290,
+                        "Text": "油。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364050310500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 1960,
+                        "SentenceId": 27,
+                        "Start": 424410,
+                        "End": 424630,
+                        "Text": "对。"
+                    },
+                    {
+                        "Id": 1970,
+                        "SentenceId": 28,
+                        "Start": 428210,
+                        "End": 428758,
+                        "Text": "听不出来。"
+                    },
+                    {
+                        "Id": 1980,
+                        "SentenceId": 29,
+                        "Start": 429070,
+                        "End": 429180,
+                        "Text": "对。"
+                    },
+                    {
+                        "Id": 1990,
+                        "SentenceId": 30,
+                        "Start": 431480,
+                        "End": 431600,
+                        "Text": "他"
+                    },
+                    {
+                        "Id": 2000,
+                        "SentenceId": 30,
+                        "Start": 431600,
+                        "End": 431960,
+                        "Text": "这会儿"
+                    },
+                    {
+                        "Id": 2010,
+                        "SentenceId": 30,
+                        "Start": 431960,
+                        "End": 432200,
+                        "Text": "是在"
+                    },
+                    {
+                        "Id": 2020,
+                        "SentenceId": 30,
+                        "Start": 432200,
+                        "End": 432320,
+                        "Text": "弄，"
+                    },
+                    {
+                        "Id": 2030,
+                        "SentenceId": 30,
+                        "Start": 432320,
+                        "End": 432440,
+                        "Text": "是"
+                    },
+                    {
+                        "Id": 2040,
+                        "SentenceId": 30,
+                        "Start": 432440,
+                        "End": 432560,
+                        "Text": "吧，"
+                    },
+                    {
+                        "Id": 2050,
+                        "SentenceId": 30,
+                        "Start": 432560,
+                        "End": 432780,
+                        "Text": "哥。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364072810500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 2060,
+                        "SentenceId": 31,
+                        "Start": 446910,
+                        "End": 448870,
+                        "Text": "对。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364074770500000",
+                "SpeakerId": "1",
+                "Words": [
+                    {
+                        "Id": 2070,
+                        "SentenceId": 32,
+                        "Start": 448870,
+                        "End": 450830,
+                        "Text": "对。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364083920500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 2080,
+                        "SentenceId": 33,
+                        "Start": 458020,
+                        "End": 458500,
+                        "Text": "刚刚好。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364158490500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 2090,
+                        "SentenceId": 34,
+                        "Start": 532590,
+                        "End": 533108,
+                        "Text": "他"
+                    },
+                    {
+                        "Id": 2100,
+                        "SentenceId": 34,
+                        "Start": 533108,
+                        "End": 533364,
+                        "Text": "没有"
+                    },
+                    {
+                        "Id": 2110,
+                        "SentenceId": 34,
+                        "Start": 533364,
+                        "End": 533620,
+                        "Text": "那么"
+                    },
+                    {
+                        "Id": 2120,
+                        "SentenceId": 34,
+                        "Start": 533620,
+                        "End": 533748,
+                        "Text": "大"
+                    },
+                    {
+                        "Id": 2130,
+                        "SentenceId": 34,
+                        "Start": 533748,
+                        "End": 533876,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 2140,
+                        "SentenceId": 34,
+                        "Start": 533876,
+                        "End": 534132,
+                        "Text": "原因，"
+                    },
+                    {
+                        "Id": 2150,
+                        "SentenceId": 34,
+                        "Start": 534140,
+                        "End": 534490,
+                        "Text": "就是"
+                    },
+                    {
+                        "Id": 2160,
+                        "SentenceId": 34,
+                        "Start": 534490,
+                        "End": 534840,
+                        "Text": "因为"
+                    },
+                    {
+                        "Id": 2170,
+                        "SentenceId": 34,
+                        "Start": 534840,
+                        "End": 535190,
+                        "Text": "万一"
+                    },
+                    {
+                        "Id": 2180,
+                        "SentenceId": 34,
+                        "Start": 535190,
+                        "End": 535715,
+                        "Text": "急刹车"
+                    },
+                    {
+                        "Id": 2190,
+                        "SentenceId": 34,
+                        "Start": 535715,
+                        "End": 535890,
+                        "Text": "了，"
+                    },
+                    {
+                        "Id": 2200,
+                        "SentenceId": 34,
+                        "Start": 535890,
+                        "End": 536162,
+                        "Text": "就是"
+                    },
+                    {
+                        "Id": 2210,
+                        "SentenceId": 34,
+                        "Start": 536162,
+                        "End": 536434,
+                        "Text": "容易"
+                    },
+                    {
+                        "Id": 2220,
+                        "SentenceId": 34,
+                        "Start": 536434,
+                        "End": 536570,
+                        "Text": "伤"
+                    },
+                    {
+                        "Id": 2230,
+                        "SentenceId": 34,
+                        "Start": 536570,
+                        "End": 536706,
+                        "Text": "到"
+                    },
+                    {
+                        "Id": 2240,
+                        "SentenceId": 34,
+                        "Start": 536706,
+                        "End": 536978,
+                        "Text": "颈椎，"
+                    },
+                    {
+                        "Id": 2250,
+                        "SentenceId": 34,
+                        "Start": 536980,
+                        "End": 537374,
+                        "Text": "所以"
+                    },
+                    {
+                        "Id": 2260,
+                        "SentenceId": 34,
+                        "Start": 537374,
+                        "End": 537768,
+                        "Text": "没有"
+                    },
+                    {
+                        "Id": 2270,
+                        "SentenceId": 34,
+                        "Start": 537768,
+                        "End": 538162,
+                        "Text": "设计"
+                    },
+                    {
+                        "Id": 2280,
+                        "SentenceId": 34,
+                        "Start": 538162,
+                        "End": 538556,
+                        "Text": "那么"
+                    },
+                    {
+                        "Id": 2290,
+                        "SentenceId": 34,
+                        "Start": 538556,
+                        "End": 538753,
+                        "Text": "大。"
+                    },
+                    {
+                        "Id": 2300,
+                        "SentenceId": 35,
+                        "Start": 540250,
+                        "End": 540850,
+                        "Text": "还好"
+                    },
+                    {
+                        "Id": 2310,
+                        "SentenceId": 35,
+                        "Start": 540850,
+                        "End": 541150,
+                        "Text": "这"
+                    },
+                    {
+                        "Id": 2320,
+                        "SentenceId": 35,
+                        "Start": 541150,
+                        "End": 541750,
+                        "Text": "起到"
+                    },
+                    {
+                        "Id": 2330,
+                        "SentenceId": 35,
+                        "Start": 541750,
+                        "End": 542350,
+                        "Text": "一个"
+                    },
+                    {
+                        "Id": 2340,
+                        "SentenceId": 35,
+                        "Start": 542350,
+                        "End": 542950,
+                        "Text": "减缓"
+                    },
+                    {
+                        "Id": 2350,
+                        "SentenceId": 35,
+                        "Start": 542950,
+                        "End": 543250,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 2360,
+                        "SentenceId": 35,
+                        "Start": 543250,
+                        "End": 543850,
+                        "Text": "作用。"
+                    },
+                    {
+                        "Id": 2370,
+                        "SentenceId": 36,
+                        "Start": 544140,
+                        "End": 544432,
+                        "Text": "对开"
+                    },
+                    {
+                        "Id": 2380,
+                        "SentenceId": 36,
+                        "Start": 544432,
+                        "End": 544578,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 2390,
+                        "SentenceId": 36,
+                        "Start": 544578,
+                        "End": 544870,
+                        "Text": "支架，"
+                    },
+                    {
+                        "Id": 2400,
+                        "SentenceId": 36,
+                        "Start": 545410,
+                        "End": 545565,
+                        "Text": "我"
+                    },
+                    {
+                        "Id": 2410,
+                        "SentenceId": 36,
+                        "Start": 545565,
+                        "End": 545875,
+                        "Text": "全程"
+                    },
+                    {
+                        "Id": 2420,
+                        "SentenceId": 36,
+                        "Start": 545875,
+                        "End": 546185,
+                        "Text": "刚刚"
+                    },
+                    {
+                        "Id": 2430,
+                        "SentenceId": 36,
+                        "Start": 546185,
+                        "End": 546495,
+                        "Text": "一直"
+                    },
+                    {
+                        "Id": 2440,
+                        "SentenceId": 36,
+                        "Start": 546495,
+                        "End": 546650,
+                        "Text": "用"
+                    },
+                    {
+                        "Id": 2450,
+                        "SentenceId": 36,
+                        "Start": 546650,
+                        "End": 546960,
+                        "Text": "这个"
+                    },
+                    {
+                        "Id": 2460,
+                        "SentenceId": 36,
+                        "Start": 546960,
+                        "End": 547270,
+                        "Text": "支架。"
+                    },
+                    {
+                        "Id": 2470,
+                        "SentenceId": 37,
+                        "Start": 549890,
+                        "End": 550286,
+                        "Text": "平时"
+                    },
+                    {
+                        "Id": 2480,
+                        "SentenceId": 37,
+                        "Start": 550286,
+                        "End": 550484,
+                        "Text": "我"
+                    },
+                    {
+                        "Id": 2490,
+                        "SentenceId": 37,
+                        "Start": 550484,
+                        "End": 550682,
+                        "Text": "到"
+                    },
+                    {
+                        "Id": 2500,
+                        "SentenceId": 37,
+                        "Start": 550682,
+                        "End": 550880,
+                        "Text": "过"
+                    },
+                    {
+                        "Id": 2510,
+                        "SentenceId": 37,
+                        "Start": 550880,
+                        "End": 551276,
+                        "Text": "刚刚"
+                    },
+                    {
+                        "Id": 2520,
+                        "SentenceId": 37,
+                        "Start": 551276,
+                        "End": 551672,
+                        "Text": "过来"
+                    },
+                    {
+                        "Id": 2530,
+                        "SentenceId": 37,
+                        "Start": 551672,
+                        "End": 551870,
+                        "Text": "找"
+                    },
+                    {
+                        "Id": 2540,
+                        "SentenceId": 37,
+                        "Start": 551870,
+                        "End": 552068,
+                        "Text": "您"
+                    },
+                    {
+                        "Id": 2550,
+                        "SentenceId": 37,
+                        "Start": 552068,
+                        "End": 552266,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 2560,
+                        "SentenceId": 37,
+                        "Start": 552266,
+                        "End": 552662,
+                        "Text": "时候，"
+                    },
+                    {
+                        "Id": 2570,
+                        "SentenceId": 37,
+                        "Start": 552670,
+                        "End": 553104,
+                        "Text": "也是"
+                    },
+                    {
+                        "Id": 2580,
+                        "SentenceId": 37,
+                        "Start": 553104,
+                        "End": 553321,
+                        "Text": "开"
+                    },
+                    {
+                        "Id": 2590,
+                        "SentenceId": 37,
+                        "Start": 553321,
+                        "End": 553755,
+                        "Text": "智能"
+                    },
+                    {
+                        "Id": 2600,
+                        "SentenceId": 37,
+                        "Start": 553755,
+                        "End": 554189,
+                        "Text": "驾驶，"
+                    },
+                    {
+                        "Id": 2610,
+                        "SentenceId": 37,
+                        "Start": 555600,
+                        "End": 555912,
+                        "Text": "偶尔"
+                    },
+                    {
+                        "Id": 2620,
+                        "SentenceId": 37,
+                        "Start": 555912,
+                        "End": 556068,
+                        "Text": "会"
+                    },
+                    {
+                        "Id": 2630,
+                        "SentenceId": 37,
+                        "Start": 556068,
+                        "End": 556224,
+                        "Text": "去"
+                    },
+                    {
+                        "Id": 2640,
+                        "SentenceId": 37,
+                        "Start": 556224,
+                        "End": 556536,
+                        "Text": "观察"
+                    },
+                    {
+                        "Id": 2650,
+                        "SentenceId": 37,
+                        "Start": 556536,
+                        "End": 556692,
+                        "Text": "过"
+                    },
+                    {
+                        "Id": 2660,
+                        "SentenceId": 37,
+                        "Start": 556692,
+                        "End": 557010,
+                        "Text": "几次。"
+                    },
+                    {
+                        "Id": 2670,
+                        "SentenceId": 38,
+                        "Start": 560340,
+                        "End": 560990,
+                        "Text": "20号之后，"
+                    },
+                    {
+                        "Id": 2680,
+                        "SentenceId": 38,
+                        "Start": 560990,
+                        "End": 561169,
+                        "Text": "就"
+                    },
+                    {
+                        "Id": 2690,
+                        "SentenceId": 38,
+                        "Start": 561169,
+                        "End": 561527,
+                        "Text": "这个"
+                    },
+                    {
+                        "Id": 2700,
+                        "SentenceId": 38,
+                        "Start": 561527,
+                        "End": 561706,
+                        "Text": "V"
+                    },
+                    {
+                        "Id": 2710,
+                        "SentenceId": 38,
+                        "Start": 561706,
+                        "End": 561885,
+                        "Text": "I"
+                    },
+                    {
+                        "Id": 2720,
+                        "SentenceId": 38,
+                        "Start": 561885,
+                        "End": 562064,
+                        "Text": "V"
+                    },
+                    {
+                        "Id": 2730,
+                        "SentenceId": 38,
+                        "Start": 562064,
+                        "End": 562243,
+                        "Text": "就"
+                    },
+                    {
+                        "Id": 2740,
+                        "SentenceId": 38,
+                        "Start": 562243,
+                        "End": 562601,
+                        "Text": "瓷器"
+                    },
+                    {
+                        "Id": 2750,
+                        "SentenceId": 38,
+                        "Start": 562601,
+                        "End": 562780,
+                        "Text": "大"
+                    },
+                    {
+                        "Id": 2760,
+                        "SentenceId": 38,
+                        "Start": 562780,
+                        "End": 563138,
+                        "Text": "模型"
+                    },
+                    {
+                        "Id": 2770,
+                        "SentenceId": 38,
+                        "Start": 563138,
+                        "End": 563496,
+                        "Text": "技术"
+                    },
+                    {
+                        "Id": 2780,
+                        "SentenceId": 38,
+                        "Start": 563496,
+                        "End": 563675,
+                        "Text": "又"
+                    },
+                    {
+                        "Id": 2790,
+                        "SentenceId": 38,
+                        "Start": 563675,
+                        "End": 564033,
+                        "Text": "可以"
+                    },
+                    {
+                        "Id": 2800,
+                        "SentenceId": 38,
+                        "Start": 564033,
+                        "End": 564391,
+                        "Text": "更新"
+                    },
+                    {
+                        "Id": 2810,
+                        "SentenceId": 38,
+                        "Start": 564391,
+                        "End": 564570,
+                        "Text": "了。"
+                    },
+                    {
+                        "Id": 2820,
+                        "SentenceId": 39,
+                        "Start": 566780,
+                        "End": 566935,
+                        "Text": "有"
+                    },
+                    {
+                        "Id": 2830,
+                        "SentenceId": 39,
+                        "Start": 566935,
+                        "End": 567245,
+                        "Text": "全新"
+                    },
+                    {
+                        "Id": 2840,
+                        "SentenceId": 39,
+                        "Start": 567245,
+                        "End": 567400,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 2850,
+                        "SentenceId": 39,
+                        "Start": 567400,
+                        "End": 567710,
+                        "Text": "一套"
+                    },
+                    {
+                        "Id": 2860,
+                        "SentenceId": 39,
+                        "Start": 567710,
+                        "End": 568020,
+                        "Text": "智能"
+                    },
+                    {
+                        "Id": 2870,
+                        "SentenceId": 39,
+                        "Start": 568020,
+                        "End": 568330,
+                        "Text": "驾驶"
+                    },
+                    {
+                        "Id": 2880,
+                        "SentenceId": 39,
+                        "Start": 568330,
+                        "End": 568485,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 2890,
+                        "SentenceId": 39,
+                        "Start": 568485,
+                        "End": 568800,
+                        "Text": "算法。"
+                    },
+                    {
+                        "Id": 2900,
+                        "SentenceId": 40,
+                        "Start": 572340,
+                        "End": 573244,
+                        "Text": "因为"
+                    },
+                    {
+                        "Id": 2910,
+                        "SentenceId": 40,
+                        "Start": 573244,
+                        "End": 573528,
+                        "Text": "你是"
+                    },
+                    {
+                        "Id": 2920,
+                        "SentenceId": 40,
+                        "Start": 573528,
+                        "End": 573812,
+                        "Text": "买的"
+                    },
+                    {
+                        "Id": 2930,
+                        "SentenceId": 40,
+                        "Start": 573812,
+                        "End": 574238,
+                        "Text": "pro"
+                    },
+                    {
+                        "Id": 2940,
+                        "SentenceId": 40,
+                        "Start": 574238,
+                        "End": 574522,
+                        "Text": "版本，"
+                    },
+                    {
+                        "Id": 2950,
+                        "SentenceId": 40,
+                        "Start": 574530,
+                        "End": 574938,
+                        "Text": "它是"
+                    },
+                    {
+                        "Id": 2960,
+                        "SentenceId": 40,
+                        "Start": 574938,
+                        "End": 575142,
+                        "Text": "新"
+                    },
+                    {
+                        "Id": 2970,
+                        "SentenceId": 40,
+                        "Start": 575142,
+                        "End": 575346,
+                        "Text": "算"
+                    },
+                    {
+                        "Id": 2980,
+                        "SentenceId": 40,
+                        "Start": 575346,
+                        "End": 575550,
+                        "Text": "力，"
+                    },
+                    {
+                        "Id": 2990,
+                        "SentenceId": 40,
+                        "Start": 575970,
+                        "End": 576125,
+                        "Text": "刚"
+                    },
+                    {
+                        "Id": 3000,
+                        "SentenceId": 40,
+                        "Start": 576125,
+                        "End": 576435,
+                        "Text": "出来"
+                    },
+                    {
+                        "Id": 3010,
+                        "SentenceId": 40,
+                        "Start": 576435,
+                        "End": 576590,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 3020,
+                        "SentenceId": 40,
+                        "Start": 576590,
+                        "End": 576900,
+                        "Text": "时候"
+                    },
+                    {
+                        "Id": 3030,
+                        "SentenceId": 40,
+                        "Start": 576900,
+                        "End": 577055,
+                        "Text": "二"
+                    },
+                    {
+                        "Id": 3040,
+                        "SentenceId": 40,
+                        "Start": 577055,
+                        "End": 577365,
+                        "Text": "三款"
+                    },
+                    {
+                        "Id": 3050,
+                        "SentenceId": 40,
+                        "Start": 577365,
+                        "End": 578140,
+                        "Text": "2223款，"
+                    },
+                    {
+                        "Id": 3060,
+                        "SentenceId": 40,
+                        "Start": 578140,
+                        "End": 578512,
+                        "Text": "然后"
+                    },
+                    {
+                        "Id": 3070,
+                        "SentenceId": 40,
+                        "Start": 578512,
+                        "End": 578698,
+                        "Text": "它"
+                    },
+                    {
+                        "Id": 3080,
+                        "SentenceId": 40,
+                        "Start": 578698,
+                        "End": 579070,
+                        "Text": "智能"
+                    },
+                    {
+                        "Id": 3090,
+                        "SentenceId": 40,
+                        "Start": 579070,
+                        "End": 579442,
+                        "Text": "驾驶"
+                    },
+                    {
+                        "Id": 3100,
+                        "SentenceId": 40,
+                        "Start": 579442,
+                        "End": 579628,
+                        "Text": "也"
+                    },
+                    {
+                        "Id": 3110,
+                        "SentenceId": 40,
+                        "Start": 579628,
+                        "End": 580970,
+                        "Text": "不成熟。"
+                    },
+                    {
+                        "Id": 3120,
+                        "SentenceId": 41,
+                        "Start": 583610,
+                        "End": 585540,
+                        "Text": "对，"
+                    },
+                    {
+                        "Id": 3130,
+                        "SentenceId": 41,
+                        "Start": 585540,
+                        "End": 586200,
+                        "Text": "看运气。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364224870500000",
+                "SpeakerId": "3",
+                "Words": [
+                    {
+                        "Id": 3140,
+                        "SentenceId": 42,
+                        "Start": 598970,
+                        "End": 602690,
+                        "Text": "嗯嗯。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364280410500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 3150,
+                        "SentenceId": 43,
+                        "Start": 654510,
+                        "End": 655630,
+                        "Text": "真是"
+                    },
+                    {
+                        "Id": 3160,
+                        "SentenceId": 43,
+                        "Start": 655630,
+                        "End": 656440,
+                        "Text": "还好，"
+                    },
+                    {
+                        "Id": 3170,
+                        "SentenceId": 43,
+                        "Start": 656440,
+                        "End": 656620,
+                        "Text": "人"
+                    },
+                    {
+                        "Id": 3180,
+                        "SentenceId": 43,
+                        "Start": 656620,
+                        "End": 656800,
+                        "Text": "你"
+                    },
+                    {
+                        "Id": 3190,
+                        "SentenceId": 43,
+                        "Start": 656800,
+                        "End": 657160,
+                        "Text": "幸好"
+                    },
+                    {
+                        "Id": 3200,
+                        "SentenceId": 43,
+                        "Start": 657160,
+                        "End": 657340,
+                        "Text": "啥"
+                    },
+                    {
+                        "Id": 3210,
+                        "SentenceId": 43,
+                        "Start": 657340,
+                        "End": 657520,
+                        "Text": "人"
+                    },
+                    {
+                        "Id": 3220,
+                        "SentenceId": 43,
+                        "Start": 657520,
+                        "End": 657700,
+                        "Text": "啥"
+                    },
+                    {
+                        "Id": 3230,
+                        "SentenceId": 43,
+                        "Start": 657700,
+                        "End": 657880,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 3240,
+                        "SentenceId": 43,
+                        "Start": 657880,
+                        "End": 658240,
+                        "Text": "事儿"
+                    },
+                    {
+                        "Id": 3250,
+                        "SentenceId": 43,
+                        "Start": 658240,
+                        "End": 658420,
+                        "Text": "都"
+                    },
+                    {
+                        "Id": 3260,
+                        "SentenceId": 43,
+                        "Start": 658420,
+                        "End": 658780,
+                        "Text": "没有，"
+                    },
+                    {
+                        "Id": 3270,
+                        "SentenceId": 43,
+                        "Start": 658790,
+                        "End": 659576,
+                        "Text": "所以说"
+                    },
+                    {
+                        "Id": 3280,
+                        "SentenceId": 43,
+                        "Start": 659576,
+                        "End": 660362,
+                        "Text": "这就是"
+                    },
+                    {
+                        "Id": 3290,
+                        "SentenceId": 43,
+                        "Start": 660362,
+                        "End": 660886,
+                        "Text": "万幸"
+                    },
+                    {
+                        "Id": 3300,
+                        "SentenceId": 43,
+                        "Start": 660886,
+                        "End": 661410,
+                        "Text": "中的"
+                    },
+                    {
+                        "Id": 3310,
+                        "SentenceId": 43,
+                        "Start": 661410,
+                        "End": 661934,
+                        "Text": "万幸。"
+                    },
+                    {
+                        "Id": 3320,
+                        "SentenceId": 44,
+                        "Start": 661940,
+                        "End": 662120,
+                        "Text": "哥，"
+                    },
+                    {
+                        "Id": 3330,
+                        "SentenceId": 44,
+                        "Start": 664180,
+                        "End": 664350,
+                        "Text": "人"
+                    },
+                    {
+                        "Id": 3340,
+                        "SentenceId": 44,
+                        "Start": 664350,
+                        "End": 664690,
+                        "Text": "没事"
+                    },
+                    {
+                        "Id": 3350,
+                        "SentenceId": 44,
+                        "Start": 664690,
+                        "End": 664860,
+                        "Text": "就"
+                    },
+                    {
+                        "Id": 3360,
+                        "SentenceId": 44,
+                        "Start": 664860,
+                        "End": 665030,
+                        "Text": "好，"
+                    },
+                    {
+                        "Id": 3370,
+                        "SentenceId": 44,
+                        "Start": 665960,
+                        "End": 666324,
+                        "Text": "这"
+                    },
+                    {
+                        "Id": 3380,
+                        "SentenceId": 44,
+                        "Start": 666324,
+                        "End": 667052,
+                        "Text": "东西"
+                    },
+                    {
+                        "Id": 3390,
+                        "SentenceId": 44,
+                        "Start": 667052,
+                        "End": 667780,
+                        "Text": "而且"
+                    },
+                    {
+                        "Id": 3400,
+                        "SentenceId": 44,
+                        "Start": 667780,
+                        "End": 668872,
+                        "Text": "也没有"
+                    },
+                    {
+                        "Id": 3410,
+                        "SentenceId": 44,
+                        "Start": 668872,
+                        "End": 669236,
+                        "Text": "说"
+                    },
+                    {
+                        "Id": 3420,
+                        "SentenceId": 44,
+                        "Start": 669236,
+                        "End": 669964,
+                        "Text": "亏了，"
+                    },
+                    {
+                        "Id": 3430,
+                        "SentenceId": 44,
+                        "Start": 669970,
+                        "End": 670232,
+                        "Text": "太"
+                    },
+                    {
+                        "Id": 3440,
+                        "SentenceId": 44,
+                        "Start": 670232,
+                        "End": 670494,
+                        "Text": "亏"
+                    },
+                    {
+                        "Id": 3450,
+                        "SentenceId": 44,
+                        "Start": 670494,
+                        "End": 671018,
+                        "Text": "太多，"
+                    },
+                    {
+                        "Id": 3460,
+                        "SentenceId": 44,
+                        "Start": 672630,
+                        "End": 672842,
+                        "Text": "你"
+                    },
+                    {
+                        "Id": 3470,
+                        "SentenceId": 44,
+                        "Start": 672842,
+                        "End": 673054,
+                        "Text": "也"
+                    },
+                    {
+                        "Id": 3480,
+                        "SentenceId": 44,
+                        "Start": 673054,
+                        "End": 673478,
+                        "Text": "享受"
+                    },
+                    {
+                        "Id": 3490,
+                        "SentenceId": 44,
+                        "Start": 673478,
+                        "End": 673690,
+                        "Text": "了"
+                    },
+                    {
+                        "Id": 3500,
+                        "SentenceId": 44,
+                        "Start": 673690,
+                        "End": 674114,
+                        "Text": "一年，"
+                    },
+                    {
+                        "Id": 3510,
+                        "SentenceId": 44,
+                        "Start": 674430,
+                        "End": 675078,
+                        "Text": "现在"
+                    },
+                    {
+                        "Id": 3520,
+                        "SentenceId": 44,
+                        "Start": 675078,
+                        "End": 676050,
+                        "Text": "也可以"
+                    },
+                    {
+                        "Id": 3530,
+                        "SentenceId": 44,
+                        "Start": 676050,
+                        "End": 676698,
+                        "Text": "用上"
+                    },
+                    {
+                        "Id": 3540,
+                        "SentenceId": 44,
+                        "Start": 676698,
+                        "End": 677350,
+                        "Text": "新车。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364305430500000",
+                "SpeakerId": "3",
+                "Words": [
+                    {
+                        "Id": 3550,
+                        "SentenceId": 45,
+                        "Start": 679530,
+                        "End": 680820,
+                        "Text": "对。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364306720500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 3560,
+                        "SentenceId": 46,
+                        "Start": 680820,
+                        "End": 681588,
+                        "Text": "因祸得福。"
+                    },
+                    {
+                        "Id": 3570,
+                        "SentenceId": 47,
+                        "Start": 683740,
+                        "End": 683873,
+                        "Text": "人"
+                    },
+                    {
+                        "Id": 3580,
+                        "SentenceId": 47,
+                        "Start": 683873,
+                        "End": 684272,
+                        "Text": "没事儿"
+                    },
+                    {
+                        "Id": 3590,
+                        "SentenceId": 47,
+                        "Start": 684272,
+                        "End": 684405,
+                        "Text": "就"
+                    },
+                    {
+                        "Id": 3600,
+                        "SentenceId": 47,
+                        "Start": 684405,
+                        "End": 684540,
+                        "Text": "好。"
+                    },
+                    {
+                        "Id": 3610,
+                        "SentenceId": 48,
+                        "Start": 687050,
+                        "End": 687216,
+                        "Text": "你"
+                    },
+                    {
+                        "Id": 3620,
+                        "SentenceId": 48,
+                        "Start": 687216,
+                        "End": 687548,
+                        "Text": "这人"
+                    },
+                    {
+                        "Id": 3630,
+                        "SentenceId": 48,
+                        "Start": 687548,
+                        "End": 687880,
+                        "Text": "啥事"
+                    },
+                    {
+                        "Id": 3640,
+                        "SentenceId": 48,
+                        "Start": 687880,
+                        "End": 688046,
+                        "Text": "都"
+                    },
+                    {
+                        "Id": 3650,
+                        "SentenceId": 48,
+                        "Start": 688046,
+                        "End": 688378,
+                        "Text": "没有，"
+                    },
+                    {
+                        "Id": 3660,
+                        "SentenceId": 48,
+                        "Start": 688530,
+                        "End": 688781,
+                        "Text": "哥"
+                    },
+                    {
+                        "Id": 3670,
+                        "SentenceId": 48,
+                        "Start": 688781,
+                        "End": 689283,
+                        "Text": "当时"
+                    },
+                    {
+                        "Id": 3680,
+                        "SentenceId": 48,
+                        "Start": 689283,
+                        "End": 689534,
+                        "Text": "那"
+                    },
+                    {
+                        "Id": 3690,
+                        "SentenceId": 48,
+                        "Start": 689534,
+                        "End": 690036,
+                        "Text": "你看"
+                    },
+                    {
+                        "Id": 3700,
+                        "SentenceId": 48,
+                        "Start": 690036,
+                        "End": 690287,
+                        "Text": "咱"
+                    },
+                    {
+                        "Id": 3710,
+                        "SentenceId": 48,
+                        "Start": 690287,
+                        "End": 690538,
+                        "Text": "这"
+                    },
+                    {
+                        "Id": 3720,
+                        "SentenceId": 48,
+                        "Start": 690538,
+                        "End": 691040,
+                        "Text": "还是"
+                    },
+                    {
+                        "Id": 3730,
+                        "SentenceId": 48,
+                        "Start": 691040,
+                        "End": 691793,
+                        "Text": "各方面"
+                    },
+                    {
+                        "Id": 3740,
+                        "SentenceId": 48,
+                        "Start": 691793,
+                        "End": 692044,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 3750,
+                        "SentenceId": 48,
+                        "Start": 692044,
+                        "End": 692546,
+                        "Text": "质量"
+                    },
+                    {
+                        "Id": 3760,
+                        "SentenceId": 48,
+                        "Start": 692546,
+                        "End": 693048,
+                        "Text": "还是"
+                    },
+                    {
+                        "Id": 3770,
+                        "SentenceId": 48,
+                        "Start": 693048,
+                        "End": 693550,
+                        "Text": "靠谱"
+                    },
+                    {
+                        "Id": 3780,
+                        "SentenceId": 48,
+                        "Start": 693550,
+                        "End": 693801,
+                        "Text": "的。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364321160500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 3790,
+                        "SentenceId": 49,
+                        "Start": 695260,
+                        "End": 695806,
+                        "Text": "侧面"
+                    },
+                    {
+                        "Id": 3800,
+                        "SentenceId": 49,
+                        "Start": 695806,
+                        "End": 696079,
+                        "Text": "撞，"
+                    },
+                    {
+                        "Id": 3810,
+                        "SentenceId": 49,
+                        "Start": 696080,
+                        "End": 696599,
+                        "Text": "对对对，"
+                    },
+                    {
+                        "Id": 3820,
+                        "SentenceId": 49,
+                        "Start": 696690,
+                        "End": 697002,
+                        "Text": "正面"
+                    },
+                    {
+                        "Id": 3830,
+                        "SentenceId": 49,
+                        "Start": 697002,
+                        "End": 697158,
+                        "Text": "撞，"
+                    },
+                    {
+                        "Id": 3840,
+                        "SentenceId": 49,
+                        "Start": 698470,
+                        "End": 698816,
+                        "Text": "气囊"
+                    },
+                    {
+                        "Id": 3850,
+                        "SentenceId": 49,
+                        "Start": 698816,
+                        "End": 699335,
+                        "Text": "有时候"
+                    },
+                    {
+                        "Id": 3860,
+                        "SentenceId": 49,
+                        "Start": 699335,
+                        "End": 699854,
+                        "Text": "跳出来，"
+                    },
+                    {
+                        "Id": 3870,
+                        "SentenceId": 49,
+                        "Start": 699860,
+                        "End": 700006,
+                        "Text": "它"
+                    },
+                    {
+                        "Id": 3880,
+                        "SentenceId": 49,
+                        "Start": 700006,
+                        "End": 700444,
+                        "Text": "有时候"
+                    },
+                    {
+                        "Id": 3890,
+                        "SentenceId": 49,
+                        "Start": 700444,
+                        "End": 700590,
+                        "Text": "是"
+                    },
+                    {
+                        "Id": 3900,
+                        "SentenceId": 49,
+                        "Start": 700590,
+                        "End": 700882,
+                        "Text": "不会"
+                    },
+                    {
+                        "Id": 3910,
+                        "SentenceId": 49,
+                        "Start": 700882,
+                        "End": 701320,
+                        "Text": "跳出来"
+                    },
+                    {
+                        "Id": 3920,
+                        "SentenceId": 49,
+                        "Start": 701320,
+                        "End": 701466,
+                        "Text": "的。"
+                    },
+                    {
+                        "Id": 3930,
+                        "SentenceId": 50,
+                        "Start": 701670,
+                        "End": 702104,
+                        "Text": "它是"
+                    },
+                    {
+                        "Id": 3940,
+                        "SentenceId": 50,
+                        "Start": 702104,
+                        "End": 702321,
+                        "Text": "在"
+                    },
+                    {
+                        "Id": 3950,
+                        "SentenceId": 50,
+                        "Start": 702321,
+                        "End": 702755,
+                        "Text": "确保"
+                    },
+                    {
+                        "Id": 3960,
+                        "SentenceId": 50,
+                        "Start": 702755,
+                        "End": 703406,
+                        "Text": "有没有"
+                    },
+                    {
+                        "Id": 3970,
+                        "SentenceId": 50,
+                        "Start": 703406,
+                        "End": 703623,
+                        "Text": "要"
+                    },
+                    {
+                        "Id": 3980,
+                        "SentenceId": 50,
+                        "Start": 703623,
+                        "End": 704057,
+                        "Text": "危险"
+                    },
+                    {
+                        "Id": 3990,
+                        "SentenceId": 50,
+                        "Start": 704057,
+                        "End": 704274,
+                        "Text": "和"
+                    },
+                    {
+                        "Id": 4000,
+                        "SentenceId": 50,
+                        "Start": 704274,
+                        "End": 704491,
+                        "Text": "不"
+                    },
+                    {
+                        "Id": 4010,
+                        "SentenceId": 50,
+                        "Start": 704491,
+                        "End": 704925,
+                        "Text": "危险"
+                    },
+                    {
+                        "Id": 4020,
+                        "SentenceId": 50,
+                        "Start": 704925,
+                        "End": 705142,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 4030,
+                        "SentenceId": 50,
+                        "Start": 705142,
+                        "End": 705576,
+                        "Text": "情况，"
+                    },
+                    {
+                        "Id": 4040,
+                        "SentenceId": 50,
+                        "Start": 705590,
+                        "End": 705911,
+                        "Text": "他"
+                    },
+                    {
+                        "Id": 4050,
+                        "SentenceId": 50,
+                        "Start": 705911,
+                        "End": 706232,
+                        "Text": "会"
+                    },
+                    {
+                        "Id": 4060,
+                        "SentenceId": 50,
+                        "Start": 706232,
+                        "End": 706553,
+                        "Text": "看"
+                    },
+                    {
+                        "Id": 4070,
+                        "SentenceId": 50,
+                        "Start": 706553,
+                        "End": 707195,
+                        "Text": "这个"
+                    },
+                    {
+                        "Id": 4080,
+                        "SentenceId": 50,
+                        "Start": 707195,
+                        "End": 707837,
+                        "Text": "情况"
+                    },
+                    {
+                        "Id": 4090,
+                        "SentenceId": 50,
+                        "Start": 707837,
+                        "End": 708158,
+                        "Text": "的，"
+                    },
+                    {
+                        "Id": 4100,
+                        "SentenceId": 50,
+                        "Start": 708160,
+                        "End": 708321,
+                        "Text": "看"
+                    },
+                    {
+                        "Id": 4110,
+                        "SentenceId": 50,
+                        "Start": 708321,
+                        "End": 708643,
+                        "Text": "情况"
+                    },
+                    {
+                        "Id": 4120,
+                        "SentenceId": 50,
+                        "Start": 708643,
+                        "End": 708804,
+                        "Text": "要"
+                    },
+                    {
+                        "Id": 4130,
+                        "SentenceId": 50,
+                        "Start": 708804,
+                        "End": 708965,
+                        "Text": "调"
+                    },
+                    {
+                        "Id": 4140,
+                        "SentenceId": 50,
+                        "Start": 708965,
+                        "End": 709287,
+                        "Text": "这个"
+                    },
+                    {
+                        "Id": 4150,
+                        "SentenceId": 50,
+                        "Start": 709287,
+                        "End": 709609,
+                        "Text": "气囊。"
+                    },
+                    {
+                        "Id": 4160,
+                        "SentenceId": 51,
+                        "Start": 709860,
+                        "End": 710415,
+                        "Text": "有时候"
+                    },
+                    {
+                        "Id": 4170,
+                        "SentenceId": 51,
+                        "Start": 710415,
+                        "End": 710600,
+                        "Text": "跳"
+                    },
+                    {
+                        "Id": 4180,
+                        "SentenceId": 51,
+                        "Start": 710600,
+                        "End": 710970,
+                        "Text": "气囊"
+                    },
+                    {
+                        "Id": 4190,
+                        "SentenceId": 51,
+                        "Start": 710970,
+                        "End": 711340,
+                        "Text": "未必"
+                    },
+                    {
+                        "Id": 4200,
+                        "SentenceId": 51,
+                        "Start": 711340,
+                        "End": 711525,
+                        "Text": "是"
+                    },
+                    {
+                        "Id": 4210,
+                        "SentenceId": 51,
+                        "Start": 711525,
+                        "End": 711895,
+                        "Text": "一件"
+                    },
+                    {
+                        "Id": 4220,
+                        "SentenceId": 51,
+                        "Start": 711895,
+                        "End": 712265,
+                        "Text": "好事，"
+                    },
+                    {
+                        "Id": 4230,
+                        "SentenceId": 51,
+                        "Start": 713130,
+                        "End": 713300,
+                        "Text": "会"
+                    },
+                    {
+                        "Id": 4240,
+                        "SentenceId": 51,
+                        "Start": 713300,
+                        "End": 713470,
+                        "Text": "伤"
+                    },
+                    {
+                        "Id": 4250,
+                        "SentenceId": 51,
+                        "Start": 713470,
+                        "End": 713640,
+                        "Text": "到"
+                    },
+                    {
+                        "Id": 4260,
+                        "SentenceId": 51,
+                        "Start": 713640,
+                        "End": 713810,
+                        "Text": "人。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364343000500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 4270,
+                        "SentenceId": 52,
+                        "Start": 717100,
+                        "End": 717520,
+                        "Text": "五年，"
+                    },
+                    {
+                        "Id": 4280,
+                        "SentenceId": 52,
+                        "Start": 718150,
+                        "End": 718416,
+                        "Text": "五年"
+                    },
+                    {
+                        "Id": 4290,
+                        "SentenceId": 52,
+                        "Start": 718416,
+                        "End": 718815,
+                        "Text": "也可以"
+                    },
+                    {
+                        "Id": 4300,
+                        "SentenceId": 52,
+                        "Start": 718815,
+                        "End": 718948,
+                        "Text": "贷，"
+                    },
+                    {
+                        "Id": 4310,
+                        "SentenceId": 52,
+                        "Start": 718950,
+                        "End": 719116,
+                        "Text": "你"
+                    },
+                    {
+                        "Id": 4320,
+                        "SentenceId": 52,
+                        "Start": 719116,
+                        "End": 719282,
+                        "Text": "跟"
+                    },
+                    {
+                        "Id": 4330,
+                        "SentenceId": 52,
+                        "Start": 719282,
+                        "End": 719614,
+                        "Text": "他说"
+                    },
+                    {
+                        "Id": 4340,
+                        "SentenceId": 52,
+                        "Start": 719614,
+                        "End": 719780,
+                        "Text": "说，"
+                    },
+                    {
+                        "Id": 4350,
+                        "SentenceId": 52,
+                        "Start": 720060,
+                        "End": 720326,
+                        "Text": "五年"
+                    },
+                    {
+                        "Id": 4360,
+                        "SentenceId": 52,
+                        "Start": 720326,
+                        "End": 720725,
+                        "Text": "也可以"
+                    },
+                    {
+                        "Id": 4370,
+                        "SentenceId": 52,
+                        "Start": 720725,
+                        "End": 720860,
+                        "Text": "贷。"
+                    },
+                    {
+                        "Id": 4380,
+                        "SentenceId": 53,
+                        "Start": 723400,
+                        "End": 723537,
+                        "Text": "满"
+                    },
+                    {
+                        "Id": 4390,
+                        "SentenceId": 53,
+                        "Start": 723537,
+                        "End": 723811,
+                        "Text": "一年"
+                    },
+                    {
+                        "Id": 4400,
+                        "SentenceId": 53,
+                        "Start": 723811,
+                        "End": 724085,
+                        "Text": "之后"
+                    },
+                    {
+                        "Id": 4410,
+                        "SentenceId": 53,
+                        "Start": 724085,
+                        "End": 724359,
+                        "Text": "可以"
+                    },
+                    {
+                        "Id": 4420,
+                        "SentenceId": 53,
+                        "Start": 724359,
+                        "End": 724633,
+                        "Text": "提前"
+                    },
+                    {
+                        "Id": 4430,
+                        "SentenceId": 53,
+                        "Start": 724633,
+                        "End": 724910,
+                        "Text": "还款。"
+                    },
+                    {
+                        "Id": 4440,
+                        "SentenceId": 54,
+                        "Start": 726920,
+                        "End": 727066,
+                        "Text": "他"
+                    },
+                    {
+                        "Id": 4450,
+                        "SentenceId": 54,
+                        "Start": 727066,
+                        "End": 727504,
+                        "Text": "这会儿"
+                    },
+                    {
+                        "Id": 4460,
+                        "SentenceId": 54,
+                        "Start": 727504,
+                        "End": 727650,
+                        "Text": "在"
+                    },
+                    {
+                        "Id": 4470,
+                        "SentenceId": 54,
+                        "Start": 727650,
+                        "End": 727942,
+                        "Text": "沟通"
+                    },
+                    {
+                        "Id": 4480,
+                        "SentenceId": 54,
+                        "Start": 727942,
+                        "End": 728088,
+                        "Text": "说"
+                    },
+                    {
+                        "Id": 4490,
+                        "SentenceId": 54,
+                        "Start": 728088,
+                        "End": 728240,
+                        "Text": "个。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364365220500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 4500,
+                        "SentenceId": 55,
+                        "Start": 739320,
+                        "End": 739475,
+                        "Text": "灯"
+                    },
+                    {
+                        "Id": 4510,
+                        "SentenceId": 55,
+                        "Start": 739475,
+                        "End": 739785,
+                        "Text": "晓得"
+                    },
+                    {
+                        "Id": 4520,
+                        "SentenceId": 55,
+                        "Start": 739785,
+                        "End": 740095,
+                        "Text": "给你"
+                    },
+                    {
+                        "Id": 4530,
+                        "SentenceId": 55,
+                        "Start": 740095,
+                        "End": 740405,
+                        "Text": "打开"
+                    },
+                    {
+                        "Id": 4540,
+                        "SentenceId": 55,
+                        "Start": 740405,
+                        "End": 740560,
+                        "Text": "吗？"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364376180500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 4550,
+                        "SentenceId": 56,
+                        "Start": 750280,
+                        "End": 750566,
+                        "Text": "可以"
+                    },
+                    {
+                        "Id": 4560,
+                        "SentenceId": 56,
+                        "Start": 750566,
+                        "End": 750709,
+                        "Text": "了，"
+                    },
+                    {
+                        "Id": 4570,
+                        "SentenceId": 56,
+                        "Start": 751460,
+                        "End": 751728,
+                        "Text": "我问"
+                    },
+                    {
+                        "Id": 4580,
+                        "SentenceId": 56,
+                        "Start": 751728,
+                        "End": 751996,
+                        "Text": "一下"
+                    },
+                    {
+                        "Id": 4590,
+                        "SentenceId": 56,
+                        "Start": 751996,
+                        "End": 752130,
+                        "Text": "他，"
+                    },
+                    {
+                        "Id": 4600,
+                        "SentenceId": 56,
+                        "Start": 753920,
+                        "End": 754051,
+                        "Text": "你"
+                    },
+                    {
+                        "Id": 4610,
+                        "SentenceId": 56,
+                        "Start": 754051,
+                        "End": 754313,
+                        "Text": "资质"
+                    },
+                    {
+                        "Id": 4620,
+                        "SentenceId": 56,
+                        "Start": 754313,
+                        "End": 754444,
+                        "Text": "是"
+                    },
+                    {
+                        "Id": 4630,
+                        "SentenceId": 56,
+                        "Start": 754444,
+                        "End": 754706,
+                        "Text": "可以"
+                    },
+                    {
+                        "Id": 4640,
+                        "SentenceId": 56,
+                        "Start": 754706,
+                        "End": 754840,
+                        "Text": "的。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364414110500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 4650,
+                        "SentenceId": 57,
+                        "Start": 788210,
+                        "End": 788514,
+                        "Text": "哪个"
+                    },
+                    {
+                        "Id": 4660,
+                        "SentenceId": 57,
+                        "Start": 788514,
+                        "End": 788820,
+                        "Text": "女的？"
+                    },
+                    {
+                        "Id": 4670,
+                        "SentenceId": 58,
+                        "Start": 790990,
+                        "End": 791192,
+                        "Text": "这"
+                    },
+                    {
+                        "Id": 4680,
+                        "SentenceId": 58,
+                        "Start": 791192,
+                        "End": 791596,
+                        "Text": "不是"
+                    },
+                    {
+                        "Id": 4690,
+                        "SentenceId": 58,
+                        "Start": 791596,
+                        "End": 791798,
+                        "Text": "这"
+                    },
+                    {
+                        "Id": 4700,
+                        "SentenceId": 58,
+                        "Start": 791798,
+                        "End": 792404,
+                        "Text": "业务员，"
+                    },
+                    {
+                        "Id": 4710,
+                        "SentenceId": 58,
+                        "Start": 792850,
+                        "End": 793036,
+                        "Text": "这"
+                    },
+                    {
+                        "Id": 4720,
+                        "SentenceId": 58,
+                        "Start": 793036,
+                        "End": 793594,
+                        "Text": "业务员"
+                    },
+                    {
+                        "Id": 4730,
+                        "SentenceId": 58,
+                        "Start": 793594,
+                        "End": 793780,
+                        "Text": "是"
+                    },
+                    {
+                        "Id": 4740,
+                        "SentenceId": 58,
+                        "Start": 793780,
+                        "End": 794152,
+                        "Text": "建设"
+                    },
+                    {
+                        "Id": 4750,
+                        "SentenceId": 58,
+                        "Start": 794152,
+                        "End": 794338,
+                        "Text": "的，"
+                    },
+                    {
+                        "Id": 4760,
+                        "SentenceId": 58,
+                        "Start": 795010,
+                        "End": 795480,
+                        "Text": "没没"
+                    },
+                    {
+                        "Id": 4770,
+                        "SentenceId": 58,
+                        "Start": 795480,
+                        "End": 795715,
+                        "Text": "听"
+                    },
+                    {
+                        "Id": 4780,
+                        "SentenceId": 58,
+                        "Start": 795715,
+                        "End": 795950,
+                        "Text": "清。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364428690500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 4790,
+                        "SentenceId": 59,
+                        "Start": 802790,
+                        "End": 803154,
+                        "Text": "反正"
+                    },
+                    {
+                        "Id": 4800,
+                        "SentenceId": 59,
+                        "Start": 803154,
+                        "End": 803518,
+                        "Text": "我们"
+                    },
+                    {
+                        "Id": 4810,
+                        "SentenceId": 59,
+                        "Start": 803518,
+                        "End": 803882,
+                        "Text": "需要"
+                    },
+                    {
+                        "Id": 4820,
+                        "SentenceId": 59,
+                        "Start": 803882,
+                        "End": 804064,
+                        "Text": "他"
+                    },
+                    {
+                        "Id": 4830,
+                        "SentenceId": 59,
+                        "Start": 804064,
+                        "End": 804428,
+                        "Text": "都要"
+                    },
+                    {
+                        "Id": 4840,
+                        "SentenceId": 59,
+                        "Start": 804428,
+                        "End": 804792,
+                        "Text": "随时"
+                    },
+                    {
+                        "Id": 4850,
+                        "SentenceId": 59,
+                        "Start": 804792,
+                        "End": 805156,
+                        "Text": "待命。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364432210500000",
+                "SpeakerId": "1",
+                "Words": [
+                    {
+                        "Id": 4860,
+                        "SentenceId": 60,
+                        "Start": 806310,
+                        "End": 807525,
+                        "Text": "哼。"
+                    }
+                ]
+            },
+            {
+                "ParagraphId": "1756364433425500000",
+                "SpeakerId": "2",
+                "Words": [
+                    {
+                        "Id": 4870,
+                        "SentenceId": 61,
+                        "Start": 807525,
+                        "End": 808740,
+                        "Text": "对，"
+                    },
+                    {
+                        "Id": 4880,
+                        "SentenceId": 61,
+                        "Start": 808740,
+                        "End": 809638,
+                        "Text": "他们"
+                    },
+                    {
+                        "Id": 4890,
+                        "SentenceId": 61,
+                        "Start": 809638,
+                        "End": 810536,
+                        "Text": "也是"
+                    },
+                    {
+                        "Id": 4900,
+                        "SentenceId": 61,
+                        "Start": 810536,
+                        "End": 811883,
+                        "Text": "一个月"
+                    },
+                    {
+                        "Id": 4910,
+                        "SentenceId": 61,
+                        "Start": 811883,
+                        "End": 813230,
+                        "Text": "几百万、"
+                    },
+                    {
+                        "Id": 4920,
+                        "SentenceId": 61,
+                        "Start": 813230,
+                        "End": 814266,
+                        "Text": "1000万这种"
+                    },
+                    {
+                        "Id": 4930,
+                        "SentenceId": 61,
+                        "Start": 814266,
+                        "End": 814414,
+                        "Text": "就"
+                    },
+                    {
+                        "Id": 4940,
+                        "SentenceId": 61,
+                        "Start": 814414,
+                        "End": 814710,
+                        "Text": "省心。"
+                    },
+                    {
+                        "Id": 4950,
+                        "SentenceId": 62,
+                        "Start": 814760,
+                        "End": 815082,
+                        "Text": "我们"
+                    },
+                    {
+                        "Id": 4960,
+                        "SentenceId": 62,
+                        "Start": 815082,
+                        "End": 815404,
+                        "Text": "都是"
+                    },
+                    {
+                        "Id": 4970,
+                        "SentenceId": 62,
+                        "Start": 815404,
+                        "End": 815565,
+                        "Text": "走"
+                    },
+                    {
+                        "Id": 4980,
+                        "SentenceId": 62,
+                        "Start": 815565,
+                        "End": 815726,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 4990,
+                        "SentenceId": 62,
+                        "Start": 815726,
+                        "End": 816048,
+                        "Text": "这个"
+                    },
+                    {
+                        "Id": 5000,
+                        "SentenceId": 62,
+                        "Start": 816048,
+                        "End": 816209,
+                        "Text": "跟"
+                    },
+                    {
+                        "Id": 5010,
+                        "SentenceId": 62,
+                        "Start": 816209,
+                        "End": 816531,
+                        "Text": "我们"
+                    },
+                    {
+                        "Id": 5020,
+                        "SentenceId": 62,
+                        "Start": 816531,
+                        "End": 816853,
+                        "Text": "合作，"
+                    },
+                    {
+                        "Id": 5030,
+                        "SentenceId": 62,
+                        "Start": 816860,
+                        "End": 817142,
+                        "Text": "你们"
+                    },
+                    {
+                        "Id": 5040,
+                        "SentenceId": 62,
+                        "Start": 817142,
+                        "End": 817283,
+                        "Text": "都"
+                    },
+                    {
+                        "Id": 5050,
+                        "SentenceId": 62,
+                        "Start": 817283,
+                        "End": 817424,
+                        "Text": "走"
+                    },
+                    {
+                        "Id": 5060,
+                        "SentenceId": 62,
+                        "Start": 817424,
+                        "End": 817565,
+                        "Text": "的"
+                    },
+                    {
+                        "Id": 5070,
+                        "SentenceId": 62,
+                        "Start": 817565,
+                        "End": 817706,
+                        "Text": "V"
+                    },
+                    {
+                        "Id": 5080,
+                        "SentenceId": 62,
+                        "Start": 817706,
+                        "End": 817847,
+                        "Text": "I"
+                    },
+                    {
+                        "Id": 5090,
+                        "SentenceId": 62,
+                        "Start": 817847,
+                        "End": 817988,
+                        "Text": "P"
+                    },
+                    {
+                        "Id": 5100,
+                        "SentenceId": 62,
+                        "Start": 817988,
+                        "End": 818270,
+                        "Text": "通道。"
+                    },
+                    {
+                        "Id": 5110,
+                        "SentenceId": 63,
+                        "Start": 819240,
+                        "End": 821730,
+                        "Text": "对对对，"
+                    },
+                    {
+                        "Id": 5120,
+                        "SentenceId": 63,
+                        "Start": 821730,
+                        "End": 822026,
+                        "Text": "我们"
+                    },
+                    {
+                        "Id": 5130,
+                        "SentenceId": 63,
+                        "Start": 822026,
+                        "End": 822174,
+                        "Text": "都"
+                    },
+                    {
+                        "Id": 5140,
+                        "SentenceId": 63,
+                        "Start": 822174,
+                        "End": 822470,
+                        "Text": "固定"
+                    },
+                    {
+                        "Id": 5150,
+                        "SentenceId": 63,
+                        "Start": 822470,
+                        "End": 822618,
+                        "Text": "的。"
+                    },
+                    {
+                        "Id": 5160,
+                        "SentenceId": 64,
+                        "Start": 822620,
+                        "End": 822862,
+                        "Text": "他"
+                    },
+                    {
+                        "Id": 5170,
+                        "SentenceId": 64,
+                        "Start": 822862,
+                        "End": 823104,
+                        "Text": "对"
+                    },
+                    {
+                        "Id": 5180,
+                        "SentenceId": 64,
+                        "Start": 823104,
+                        "End": 823588,
+                        "Text": "他们"
+                    },
+                    {
+                        "Id": 5190,
+                        "SentenceId": 64,
+                        "Start": 823588,
+                        "End": 824072,
+                        "Text": "不用"
+                    },
+                    {
+                        "Id": 5200,
+                        "SentenceId": 64,
+                        "Start": 824072,
+                        "End": 824314,
+                        "Text": "跑"
+                    },
+                    {
+                        "Id": 5210,
+                        "SentenceId": 64,
+                        "Start": 824314,
+                        "End": 824798,
+                        "Text": "业务，"
+                    },
+                    {
+                        "Id": 5220,
+                        "SentenceId": 64,
+                        "Start": 824800,
+                        "End": 825176,
+                        "Text": "就"
+                    },
+                    {
+                        "Id": 5230,
+                        "SentenceId": 64,
+                        "Start": 825176,
+                        "End": 825928,
+                        "Text": "不像"
+                    },
+                    {
+                        "Id": 5240,
+                        "SentenceId": 64,
+                        "Start": 825928,
+                        "End": 826680,
+                        "Text": "我们"
+                    },
+                    {
+                        "Id": 5250,
+                        "SentenceId": 64,
+                        "Start": 826680,
+                        "End": 827432,
+                        "Text": "得要"
+                    },
+                    {
+                        "Id": 5260,
+                        "SentenceId": 64,
+                        "Start": 827432,
+                        "End": 827808,
+                        "Text": "跑"
+                    },
+                    {
+                        "Id": 5270,
+                        "SentenceId": 64,
+                        "Start": 827808,
+                        "End": 828560,
+                        "Text": "业务，"
+                    },
+                    {
+                        "Id": 5280,
+                        "SentenceId": 64,
+                        "Start": 828560,
+                        "End": 828842,
+                        "Text": "他们"
+                    },
+                    {
+                        "Id": 5290,
+                        "SentenceId": 64,
+                        "Start": 828842,
+                        "End": 829265,
+                        "Text": "不需要"
+                    },
+                    {
+                        "Id": 5300,
+                        "SentenceId": 64,
+                        "Start": 829265,
+                        "End": 830280,
+                        "Text": "的。"
+                    },
+                    {
+                        "Id": 5310,
+                        "SentenceId": 65,
+                        "Start": 832490,
+                        "End": 832842,
+                        "Text": "对他"
+                    },
+                    {
+                        "Id": 5320,
+                        "SentenceId": 65,
+                        "Start": 832842,
+                        "End": 833194,
+                        "Text": "啥事"
+                    },
+                    {
+                        "Id": 5330,
+                        "SentenceId": 65,
+                        "Start": 833194,
+                        "End": 833370,
+                        "Text": "都"
+                    },
+                    {
+                        "Id": 5340,
+                        "SentenceId": 65,
+                        "Start": 833370,
+                        "End": 833722,
+                        "Text": "不用"
+                    },
+                    {
+                        "Id": 5350,
+                        "SentenceId": 65,
+                        "Start": 833722,
+                        "End": 833898,
+                        "Text": "干，"
+                    },
+                    {
+                        "Id": 5360,
+                        "SentenceId": 65,
+                        "Start": 833900,
+                        "End": 834180,
+                        "Text": "赚"
+                    },
+                    {
+                        "Id": 5370,
+                        "SentenceId": 65,
+                        "Start": 834180,
+                        "End": 834460,
+                        "Text": "个"
+                    },
+                    {
+                        "Id": 5380,
+                        "SentenceId": 65,
+                        "Start": 834460,
+                        "End": 835580,
+                        "Text": "一二百块"
+                    },
+                    {
+                        "Id": 5390,
+                        "SentenceId": 65,
+                        "Start": 835580,
+                        "End": 835860,
+                        "Text": "钱。"
+                    },
+                    {
+                        "Id": 5400,
+                        "SentenceId": 66,
+                        "Start": 838220,
+                        "End": 839690,
+                        "Text": "对。"
+                    }
+                ]
+            }
+        ],
+        "AudioSegments": [
+            [
+                0,
+                2250
+            ],
+            [
+                2252,
+                3540
+            ],
+            [
+                5580,
+                9550
+            ],
+            [
+                16060,
+                19090
+            ],
+            [
+                21900,
+                22299
+            ],
+            [
+                24830,
+                25420
+            ],
+            [
+                190330,
+                191210
+            ],
+            [
+                217440,
+                219980
+            ],
+            [
+                240940,
+                242824
+            ],
+            [
+                243400,
+                245690
+            ],
+            [
+                256490,
+                258980
+            ],
+            [
+                261390,
+                261900
+            ],
+            [
+                264130,
+                265650
+            ],
+            [
+                271420,
+                285230
+            ],
+            [
+                287620,
+                292620
+            ],
+            [
+                296470,
+                298340
+            ],
+            [
+                301530,
+                308160
+            ],
+            [
+                309240,
+                310170
+            ],
+            [
+                310530,
+                312800
+            ],
+            [
+                325260,
+                330520
+            ],
+            [
+                332790,
+                334310
+            ],
+            [
+                382510,
+                389210
+            ],
+            [
+                399240,
+                399849
+            ],
+            [
+                401940,
+                405790
+            ],
+            [
+                405790,
+                406440
+            ],
+            [
+                408530,
+                416290
+            ],
+            [
+                424410,
+                424630
+            ],
+            [
+                428210,
+                428758
+            ],
+            [
+                429070,
+                429180
+            ],
+            [
+                431480,
+                432780
+            ],
+            [
+                446910,
+                448870
+            ],
+            [
+                448870,
+                450830
+            ],
+            [
+                458020,
+                458500
+            ],
+            [
+                532590,
+                538753
+            ],
+            [
+                540250,
+                543850
+            ],
+            [
+                544140,
+                547270
+            ],
+            [
+                549890,
+                557010
+            ],
+            [
+                560340,
+                564570
+            ],
+            [
+                566780,
+                568800
+            ],
+            [
+                572340,
+                580970
+            ],
+            [
+                583610,
+                586200
+            ],
+            [
+                598970,
+                602690
+            ],
+            [
+                654510,
+                661934
+            ],
+            [
+                661940,
+                677350
+            ],
+            [
+                679530,
+                680820
+            ],
+            [
+                680820,
+                681588
+            ],
+            [
+                683740,
+                684540
+            ],
+            [
+                687050,
+                693801
+            ],
+            [
+                695260,
+                701466
+            ],
+            [
+                701670,
+                709609
+            ],
+            [
+                709860,
+                713810
+            ],
+            [
+                717100,
+                720860
+            ],
+            [
+                723400,
+                724910
+            ],
+            [
+                726920,
+                728240
+            ],
+            [
+                739320,
+                740560
+            ],
+            [
+                750280,
+                754840
+            ],
+            [
+                788210,
+                788820
+            ],
+            [
+                790990,
+                795950
+            ],
+            [
+                802790,
+                805156
+            ],
+            [
+                806310,
+                807525
+            ],
+            [
+                807525,
+                814710
+            ],
+            [
+                814760,
+                818270
+            ],
+            [
+                819240,
+                822618
+            ],
+            [
+                822620,
+                830280
+            ],
+            [
+                832490,
+                835860
+            ],
+            [
+                838220,
+                839690
+            ]
+        ]
+    }
+}

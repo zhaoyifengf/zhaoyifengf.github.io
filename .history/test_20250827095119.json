@@ -1,0 +1,21 @@
+{
+    "fileUrl": "https://bj.bcebos.com/v1/test-internal-cn/test/dm/video/20250723/dm/audio/%E6%99%AE%E9%80%9A%E8%AF%9D-%E9%80%9A%E8%AF%9D-20.mp3?x-bce-security-token=ZjkyZmQ2YmQxZTQ3NDcyNjk0ZTg1ZjYyYjlkZjNjODB8AAAAAJICAAAzzf4pUJxmPKnIDaeHKxiuKnwmHIfhbIHBaCLm9MOgFrk4dVKzyBRVbjmhJLFEhMfRHbuYABBtojdU1Ys1muBJqiqYU3ZQZSGoJD7VvIpEMwptZowf9anHv4dpgGbcZWzna%2F6qulZVRvc7roqHi%2Bwzq9PDn%2BWzANb2svQgC%2FAVr72yNsAn5m7YyS07yYEz6U6GKXeTdg3vAli3Njzcdf4ROXyFkQv2B0h1iwMOfHoskGU2lCmPnOICdnuNhV%2FSY4UnPe96MRlUxJ77IO4XYMuQKohnud0d1Y7KATpujSzE7wGzVVv4%2FgI4Ygv2rkCV2%2BDV95z8MMVVW3eXKFO88x0Kjf2ka7lL5LMlDRrQx7Tm0NsWtFAYQGm%2FX%2FmPUH0mwuUndl%2B4NmtEo%2FmMu5q5ARlEgSpHgQva7gGGu71x%2Be2W5u0uXI3ZFSlmh%2BfhZsuPW2uTrIgKm6p3uHxTyNxRovxp4OItuaSNhPhm4niwYFh6Wk8dWxzSNhk9xV9RN9p3qrs%3D&authorization=bce-auth-v1%2F381f8afd82e811f0896ff57ed2f699d9%2F2025-08-27T09%3A50%3A31Z%2F1440%2F%2F0fc7222b4dd4e7cd461d7602d38652584a9049ad9c47279d5d3f4981a9823939",
+    "sourceLanguage": "cn",
+    "audioChannelMode": "mix",
+    "Parameters": {
+        "IdentityRecognitionEnabled": true,
+        "IdentityRecognition": {
+            "SceneIntroduction": "汽车门店线下销售场景",
+            "IdentityContents": [
+                {
+                    "Name": "销售",
+                    "Description": "介绍车辆的不同配置、性能与技术、舒适性与便利性等"
+                },
+                {
+                    "Name": "客户",
+                    "Description": "对车辆提出疑问，表达使用感受等"
+                }
+            ]
+        }
+    }
+}

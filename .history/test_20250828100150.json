@@ -1,0 +1,28 @@
+{
+    "sourceLanguage": "cn",
+    "diarizationEnabled": true,
+    "audioChannelMode": "mix",
+    "speakerCount": 0,
+    "identityRecognitionEnabled": true,
+    "identityRecognition": {
+        "SceneIntroduction": "汽车试驾场景",
+        "IdentityContents": [
+            {
+                "Name": "销售",
+                "Description": "介绍车辆的不同配置、性能与技术、舒适性与便利性、解释客户提问等"
+            },
+            {
+                "Name": "客户",
+                "Description": "对车辆提出疑问，表达使用感受、询问车型信息及价格等"
+            },
+            {
+                "Name": "导航",
+                "Description": "播报行驶路线，例如前方路口左拐，前方红绿灯直行"
+            },
+            {
+                "Name": "车机助手",
+                "Description": "响应车内人员指令，例如已为您打开通风、空调已打开、已关闭音乐"
+            }
+        ]
+    }
+}

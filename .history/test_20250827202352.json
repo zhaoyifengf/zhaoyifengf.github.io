@@ -1,0 +1,24 @@
+{
+    "sourceLanguage": "cn",
+    "diarizationEnabled": true,
+    "audioChannelMode": "mix",
+    "speakerCount": 0,
+    "identityRecognitionEnabled": true,
+    "identityRecognition": {
+        "SceneIntroduction": "汽车门店试驾场景",
+        "IdentityContents": [
+            {
+                "Name": "销售",
+                "Description": "介绍车辆的不同配置、性能与技术、舒适性与便利性等"
+            },
+            {
+                "Name": "客户",
+                "Description": "对车辆提出疑问，表达使用感受等"
+            },
+            {
+                "Name": "理想车机",
+                "Description": "与客户互动，执行客户指令，播放音乐等"
+            }
+        ]
+    }
+}

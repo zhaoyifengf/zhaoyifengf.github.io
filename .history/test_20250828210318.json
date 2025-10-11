@@ -1,0 +1,39 @@
+{
+    "TaskId": "32116162e19047939934ad8e997a2d62",
+    "Transcription": {
+        "AudioInfo": {
+            "Size": 187099,
+            "Duration": 62366,
+            "SampleRate": 16000,
+            "Language": "cn"
+        },
+        "Paragraphs": [
+            {
+                "ParagraphId": "1756275720723500000",
+                "SpeakerId": "1",
+                "Words": [
+                    {
+                        "Id": 10,
+                        "SentenceId": 1,
+                        "Start": 370,
+                        "End": 1770,
+                        "Text": "你好，"
+                    },
+                    {
+                        "Id": 20,
+                        "SentenceId": 1,
+                        "Start": 1770,
+                        "End": 2190,
+                        "Text": "哪位？"
+                    }
+                ]
+            }
+        ],
+        "AudioSegments": [
+            [
+                370,
+                2190
+            ]
+        ]
+    }
+}

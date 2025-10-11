@@ -1,0 +1,15 @@
+{
+    "TaskId": "32116162e19047939934ad8e997a2d62",
+    "IdentityRecognition": {
+        "IdentityResults": [
+            {
+                "SpeakerId": "1",
+                "Identity": "客户"
+            },
+            {
+                "SpeakerId": "2",
+                "Identity": "销售"
+            }
+        ]
+    }
+}

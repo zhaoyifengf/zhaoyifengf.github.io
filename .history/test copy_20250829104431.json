@@ -1,0 +1,382 @@
+{
+    "transaction": {
+        "TaskId": "ebee1fe4d00746efa67a5c77803126b9",
+        "Transcription": {
+            "AudioInfo": {
+                "Size": 96399404,
+                "Duration": 1506240,
+                "SampleRate": 16000,
+                "Language": "cn"
+            },
+            "Paragraphs": [
+                {
+                    "ParagraphId": "1756375897102500000",
+                    "SpeakerId": "1",
+                    "Words": [
+                        {
+                            "Id": 10,
+                            "SentenceId": 1,
+                            "Start": 1450,
+                            "End": 1828,
+                            "Text": "哪个"
+                        },
+                        {
+                            "Id": 20,
+                            "SentenceId": 1,
+                            "Start": 1828,
+                            "End": 2206,
+                            "Text": "那边"
+                        },
+                        {
+                            "Id": 30,
+                            "SentenceId": 1,
+                            "Start": 2206,
+                            "End": 2584,
+                            "Text": "不能"
+                        },
+                        {
+                            "Id": 40,
+                            "SentenceId": 1,
+                            "Start": 2584,
+                            "End": 2773,
+                            "Text": "再"
+                        },
+                        {
+                            "Id": 50,
+                            "SentenceId": 1,
+                            "Start": 2773,
+                            "End": 2962,
+                            "Text": "弄"
+                        },
+                        {
+                            "Id": 60,
+                            "SentenceId": 1,
+                            "Start": 2962,
+                            "End": 3340,
+                            "Text": "扶手"
+                        },
+                        {
+                            "Id": 70,
+                            "SentenceId": 1,
+                            "Start": 3340,
+                            "End": 3529,
+                            "Text": "了，"
+                        },
+                        {
+                            "Id": 80,
+                            "SentenceId": 1,
+                            "Start": 3530,
+                            "End": 3633,
+                            "Text": "你"
+                        },
+                        {
+                            "Id": 90,
+                            "SentenceId": 1,
+                            "Start": 3633,
+                            "End": 3736,
+                            "Text": "弄"
+                        },
+                        {
+                            "Id": 100,
+                            "SentenceId": 1,
+                            "Start": 3736,
+                            "End": 3942,
+                            "Text": "扶手"
+                        },
+                        {
+                            "Id": 110,
+                            "SentenceId": 1,
+                            "Start": 3942,
+                            "End": 4148,
+                            "Text": "的话，"
+                        },
+                        {
+                            "Id": 120,
+                            "SentenceId": 1,
+                            "Start": 4150,
+                            "End": 4266,
+                            "Text": "你"
+                        },
+                        {
+                            "Id": 130,
+                            "SentenceId": 1,
+                            "Start": 4266,
+                            "End": 4498,
+                            "Text": "下车"
+                        },
+                        {
+                            "Id": 140,
+                            "SentenceId": 1,
+                            "Start": 4498,
+                            "End": 4614,
+                            "Text": "不"
+                        },
+                        {
+                            "Id": 150,
+                            "SentenceId": 1,
+                            "Start": 4614,
+                            "End": 4846,
+                            "Text": "方便。"
+                        },
+                        {
+                            "Id": 160,
+                            "SentenceId": 2,
+                            "Start": 4850,
+                            "End": 4962,
+                            "Text": "他"
+                        },
+                        {
+                            "Id": 170,
+                            "SentenceId": 2,
+                            "Start": 4962,
+                            "End": 5186,
+                            "Text": "就是"
+                        },
+                        {
+                            "Id": 180,
+                            "SentenceId": 2,
+                            "Start": 5186,
+                            "End": 5410,
+                            "Text": "扶手"
+                        },
+                        {
+                            "Id": 190,
+                            "SentenceId": 2,
+                            "Start": 5410,
+                            "End": 5522,
+                            "Text": "在"
+                        },
+                        {
+                            "Id": 200,
+                            "SentenceId": 2,
+                            "Start": 5522,
+                            "End": 5746,
+                            "Text": "那个"
+                        },
+                        {
+                            "Id": 210,
+                            "SentenceId": 2,
+                            "Start": 5746,
+                            "End": 5970,
+                            "Text": "门上。"
+                        },
+                        {
+                            "Id": 220,
+                            "SentenceId": 3,
+                            "Start": 7820,
+                            "End": 7963,
+                            "Text": "你"
+                        },
+                        {
+                            "Id": 230,
+                            "SentenceId": 3,
+                            "Start": 7963,
+                            "End": 8249,
+                            "Text": "下车，"
+                        },
+                        {
+                            "Id": 240,
+                            "SentenceId": 3,
+                            "Start": 8250,
+                            "End": 8357,
+                            "Text": "你"
+                        },
+                        {
+                            "Id": 250,
+                            "SentenceId": 3,
+                            "Start": 8357,
+                            "End": 8678,
+                            "Text": "比如说"
+                        },
+                        {
+                            "Id": 260,
+                            "SentenceId": 3,
+                            "Start": 8678,
+                            "End": 8892,
+                            "Text": "那边"
+                        },
+                        {
+                            "Id": 270,
+                            "SentenceId": 3,
+                            "Start": 8892,
+                            "End": 9106,
+                            "Text": "如果"
+                        },
+                        {
+                            "Id": 280,
+                            "SentenceId": 3,
+                            "Start": 9106,
+                            "End": 9213,
+                            "Text": "有"
+                        },
+                        {
+                            "Id": 290,
+                            "SentenceId": 3,
+                            "Start": 9213,
+                            "End": 9427,
+                            "Text": "扶手，"
+                        },
+                        {
+                            "Id": 300,
+                            "SentenceId": 3,
+                            "Start": 9430,
+                            "End": 9650,
+                            "Text": "每次"
+                        },
+                        {
+                            "Id": 310,
+                            "SentenceId": 3,
+                            "Start": 9650,
+                            "End": 9870,
+                            "Text": "下车"
+                        },
+                        {
+                            "Id": 320,
+                            "SentenceId": 3,
+                            "Start": 9870,
+                            "End": 9980,
+                            "Text": "你"
+                        },
+                        {
+                            "Id": 330,
+                            "SentenceId": 3,
+                            "Start": 9980,
+                            "End": 10200,
+                            "Text": "都要"
+                        },
+                        {
+                            "Id": 340,
+                            "SentenceId": 3,
+                            "Start": 10200,
+                            "End": 10530,
+                            "Text": "抬起来，"
+                        },
+                        {
+                            "Id": 350,
+                            "SentenceId": 3,
+                            "Start": 11150,
+                            "End": 11476,
+                            "Text": "每次"
+                        },
+                        {
+                            "Id": 360,
+                            "SentenceId": 3,
+                            "Start": 11476,
+                            "End": 11802,
+                            "Text": "上车"
+                        },
+                        {
+                            "Id": 370,
+                            "SentenceId": 3,
+                            "Start": 11802,
+                            "End": 12128,
+                            "Text": "之后"
+                        },
+                        {
+                            "Id": 380,
+                            "SentenceId": 3,
+                            "Start": 12128,
+                            "End": 12291,
+                            "Text": "再"
+                        },
+                        {
+                            "Id": 390,
+                            "SentenceId": 3,
+                            "Start": 12291,
+                            "End": 12454,
+                            "Text": "放"
+                        },
+                        {
+                            "Id": 400,
+                            "SentenceId": 3,
+                            "Start": 12454,
+                            "End": 12780,
+                            "Text": "下来"
+                        },
+                        {
+                            "Id": 410,
+                            "SentenceId": 3,
+                            "Start": 12780,
+                            "End": 12943,
+                            "Text": "不"
+                        },
+                        {
+                            "Id": 420,
+                            "SentenceId": 3,
+                            "Start": 12943,
+                            "End": 13270,
+                            "Text": "方便。"
+                        },
+                        {
+                            "Id": 430,
+                            "SentenceId": 4,
+                            "Start": 16110,
+                            "End": 16386,
+                            "Text": "前面"
+                        },
+                        {
+                            "Id": 440,
+                            "SentenceId": 4,
+                            "Start": 16386,
+                            "End": 16524,
+                            "Text": "有"
+                        },
+                        {
+                            "Id": 450,
+                            "SentenceId": 4,
+                            "Start": 16524,
+                            "End": 16800,
+                            "Text": "苔藓，"
+                        },
+                        {
+                            "Id": 460,
+                            "SentenceId": 4,
+                            "Start": 16970,
+                            "End": 17813,
+                            "Text": "待会儿"
+                        },
+                        {
+                            "Id": 470,
+                            "SentenceId": 4,
+                            "Start": 17813,
+                            "End": 18375,
+                            "Text": "试驾"
+                        },
+                        {
+                            "Id": 480,
+                            "SentenceId": 4,
+                            "Start": 18375,
+                            "End": 18656,
+                            "Text": "的。"
+                        }
+                    ]
+                }
+            ],
+            "AudioSegments": [
+                [
+                    1450,
+                    4846
+                ]
+            ]
+        }
+    },
+    "introspection": {
+        "TaskId": "ebee1fe4d00746efa67a5c77803126b9",
+        "IdentityRecognition": {
+            "IdentityResults": [
+                {
+                    "SpeakerId": "1",
+                    "Identity": "销售"
+                },
+                {
+                    "SpeakerId": "2",
+                    "Identity": "客户"
+                },
+                {
+                    "SpeakerId": "3",
+                    "Identity": "导航"
+                }
+            ]
+        }
+    }
+}
